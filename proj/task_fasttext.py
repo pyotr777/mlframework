@@ -1,6 +1,8 @@
 from __future__ import absolute_import, unicode_literals
 from .celery import app
 
+import time
+
 from sklearn.cross_validation import train_test_split, KFold
 from sklearn.preprocessing import normalize
 import numpy as np
@@ -36,6 +38,16 @@ optimizer = optimizers.SGD()
 def echo():
     print "Called echo"
     return "Hello world!"
+
+@app.task
+def power2(arr):
+    print "Called power2"
+    s = 0
+    for x in arr:
+        s = 2 ** x
+        print s
+        time.sleep(2)
+    return s
 
 
 @app.task
