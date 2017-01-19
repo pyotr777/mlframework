@@ -13,6 +13,6 @@ if [ -n "$cont" ]; then
 	docker rm some-celery
 fi
 echo "Starting some-celery"
-docker run -ti --link some-rabbit:rabbit -v "$(pwd)":/root --name some-celery --rm pyotr777/chainer-celery /bin/bash
-
-#docker exec -ti some-celery celery status
+docker run -d --link some-rabbit:rabbit -v "$(pwd)":/root --name celery-chainer pyotr777/celery-chainer
+sleep 2
+docker run --link some-rabbit:rabbit --rm pyotr777/celery-chainer celery status

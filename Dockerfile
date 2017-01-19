@@ -32,4 +32,8 @@ RUN pip install celery=="$CELERY_VERSION"
 RUN pip install -U sklearn
 RUN pip install -U scipy
 
+ENV CELERY_BROKER_URL amqp://guest@rabbit
+
 WORKDIR /root
+
+CMD ["celery", "worker"]
