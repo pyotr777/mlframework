@@ -9,8 +9,22 @@ import chainer
 from chainer import cuda, Function, FunctionSet, gradient_check, Variable, optimizers, serializers
 from .preprocessing import convert_sparse_array_to_variable, convert_numpy_array_to_variable
 import sys
-import json
+import json, codecs
 
+
+def unjsonify(a):
+    try:
+        arr = json.loads(a)
+        np_arr = np.array(arr)
+        return np_arr
+    except TypeError:
+        print  "unjsonify recieved object of type",type(a)
+        return a
+
+
+def jsonify(numpy_array):
+    a = numpy_array.tolist()
+    return a
 
 @app.task
 def echo():
@@ -29,7 +43,29 @@ def power2(arr):
 
 
 @app.task
-def train(X_all, Y_all, index_tr, index_te, n_epoches, model, optimizer):
+def train(index_tr_s, index_te_s, n_epoches):
+    index_tr = unjsonify(index_tr_s)
+    index_te = unjsonify(index_te_s)
+
+    # default values
+    n_emb = 50
+    dropout_rate = 0.3
+    minibatch_size = 50
+
+    # Load data
+    import proj.datasets.twenty_ng as dataset
+    X_all, Y_all = dataset.load(subset="all", tfidf=True)
+    idx_word = dataset.load_vocaburary()
+
+    """ global parameters """
+    n_all_samples, n_vocab = X_all.shape
+    n_classes = np.unique(Y_all).shape[0]
+    print "N samples=",n_all_samples, "N vocab=", n_vocab, "N classes=", n_classes
+
+    from .baselines.fasttext import Model
+    model = Model(n_vocab, n_emb, n_classes)
+    optimizer = optimizers.SGD()
+
     X_tr, Y_tr = X_all[index_tr], Y_all[index_tr]
     X_te, Y_te = X_all[index_te], Y_all[index_te]
     n_train = X_tr.shape[0]
@@ -94,5 +130,6 @@ def train(X_all, Y_all, index_tr, index_te, n_epoches, model, optimizer):
             max_test_acc = avg_test_acc.data
             argmax_epoch = epoch + 1
 
-    return min_train_loss, max_train_acc, max_test_acc
+    return jsonify(min_train_loss), jsonify(max_train_acc), jsonify(max_test_acc)
+
 
