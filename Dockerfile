@@ -1,5 +1,8 @@
 FROM ubuntu:14.04
 
+# Celery master container. Should run on same host with RabbitMQ container.
+# Use --link rabbit-broker:rabbit to connect RabbitMQ container.
+
 MAINTAINER Bryzgalov Peter <peterbryz@yahoo.com>
 
 RUN apt-get -y update && apt-get -y upgrade
@@ -36,4 +39,4 @@ ENV CELERY_BROKER_URL amqp://guest@rabbit
 
 WORKDIR /root
 
-CMD ["celery", "worker"]
+CMD ["/bin/bash"]
