@@ -28,10 +28,10 @@ def unjsonify(a):
 
 if __name__ == '__main__':
 
-    n_folds = 2
+    n_folds = 5
     random_state = 0
-    n_epoches = 5
-
+    n_epoches = 10
+    print n_folds, "folds x ",n_epoches, "epoches"
     # Load data
     import proj.datasets.twenty_ng as dataset
     X_all, Y_all = dataset.load(subset="all", tfidf=True)
