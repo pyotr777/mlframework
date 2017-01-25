@@ -27,18 +27,19 @@ def jsonify(numpy_array):
     return a
 
 @app.task
-def echo():
-    print "Called echo"
-    return "Hello world!"
+def echo(self, s="Hello world!"):
+    print "Echo: "+str(s)
+    return "!"+str(s)
 
-@app.task
-def power2(arr):
+@app.task(bind=True)
+def power2(self, arr):
     print "Called power2"
     s = 0
     for x in arr:
         s = 2 ** x
         print s
-        time.sleep(2)
+        self.update_state(state="PROGRESS",meta={x : s})
+        time.sleep(1)
     return s
 
 

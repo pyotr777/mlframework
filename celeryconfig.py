@@ -1,2 +1,2 @@
 import os
-BROKER_URL = os.environ.get('CELERY_BROKER_URL', 'amqp://')
+broker_url = os.environ.get('CELERY_BROKER_URL', 'amqp://')

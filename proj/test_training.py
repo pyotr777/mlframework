@@ -22,7 +22,7 @@ def unjsonify(a):
         np_arr = np.array(arr)
         return np_arr
     except TypeError:
-        print  "unjsonify recieved object of type",type(a)
+        #print  "unjsonify recieved object of type",type(a)
         return a
 
 
