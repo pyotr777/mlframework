@@ -11,6 +11,12 @@
 # For containers (master and worker) started locally with this script
 # Docker link is used and no environment setup is necessary.
 
+# Copyright (C) 2017 Bryzgalov Peter @ Stair Lab CHITECH
+
+# TODO
+# [ ] Add CL option for project name
+# [ ] Add CL option for starting worker containers (default 1)
+
 rabbit_name="rabbit"
 cont=$(docker ps -a | grep $rabbit_name)
 if [ -z "$cont" ]; then
@@ -44,11 +50,13 @@ fi
 cont_name="celery-flower"
 cont=$(docker ps -a | grep $cont_name)
 if [ -n "$cont" ]; then
-	docker kill $cont_name
+	docker kill $cont_name 2>/dev/null
 	docker rm $cont_name
 fi
 
 # Start Celery master with flower port open
-echo "Starting Celery master"
-docker run -ti --link $rabbit_name:rabbit -v "$(pwd)":/root --name $cont_name -p 5555:5555 pyotr777/celery-chainer bash
+echo "Starting Celery master with Flower"
+docker run -d --link $rabbit_name:rabbit -v "$(pwd)":/root --name $cont_name -p 5555:5555 pyotr777/celery-chainer-flower
+sleep 3
+open http://localhost:5555
 

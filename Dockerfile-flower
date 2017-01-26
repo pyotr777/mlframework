@@ -1,0 +1,8 @@
+FROM pyotr777/celery-chainer:latest
+# Install Flower
+
+MAINTAINER Bryzgalov Peter <peterbryz@yahoo.com>
+
+RUN pip install flower
+
+CMD ["celery","flower"]
