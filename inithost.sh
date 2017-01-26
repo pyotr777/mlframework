@@ -90,6 +90,27 @@ if [[ -z "$START_MASTER" ]] && [[ -z "$BROKER_ADDRESS" ]]; then
 	exit 0
 fi
 
+
+RemoteExec() {
+	cmd=$1
+	host=$2
+	filename="remote_command.sh"
+	echo "Executing commands on $host"
+	#echo "tmp file: $filename"
+	echo "#!/bin/bash" > $filename
+	printf "$cmd" >> $filename
+	echo "" >> $filename
+	printf "rm $filename" >> $filename
+	chmod +x $filename
+	{
+		scp $filename $host:
+	} &>/dev/null
+	{
+		ssh $host ./$filename
+	} 2>/dev/null
+}
+
+
 #set -x
 
 IFS="," remote_hosts=$REMOTE
@@ -119,16 +140,17 @@ for rhost in ${remote_hosts[@]}; do
 	echo $SSH_COM
 
 	echo "Testing SSH connection to $rhost with ssh $SSH_COM"
-	HOSTNAME="$(ssh "$SSH_COM" hostname)"
+	HOSTNAME="$(RemoteExec hostname "$SSH_COM")"
 	if [[ -z "$HOSTNAME" ]]; then
 		echo "Cannot connect with ssh $SSH_COM."
 		exit 1
 	fi
 	echo $HOSTNAME
+	exit 0
 
 	if [[ -z "$BROKER_ADDRESS" ]] && [[ -z "$LOCAL_EXTERNAL_IP" ]]; then
 		# Get local machine external address
-		sshconnection=( $(ssh $SSH_COM echo '$SSH_CONNECTION') )
+		sshconnection=( $(RemoteExec "echo '$SSH_CONNECTION'" "$SSH_COM") )
 		LOCAL_EXTERNAL_IP=${sshconnection[0]}
 
 		if [[ -z "$LOCAL_EXTERNAL_IP" ]]; then
