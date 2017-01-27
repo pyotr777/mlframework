@@ -28,10 +28,10 @@ while test $# -gt 0; do
             exit 0
             ;;
         -l)
-            PROJ_FOLDER="$2";shift;
+            proj_folder="$2";shift;
             ;;
         -b)
-            BROKER_ADDRESS="$2";shift;
+            broker_address="$2";shift;
             ;;
         --)
             shift
@@ -44,23 +44,14 @@ while test $# -gt 0; do
     shift
 done
 
-# Removing existing containers
-cont_name="celery-worker"
-IFS=$'\n'; arr=( $(docker ps -a | grep $cont_name | awk '{ print $1 }') )
-if [ ${#arr[@]} -gt 0 ]; then
-	echo "Cleaning worker containers"
-fi
-for cont in "${arr[@]}"; do
-	if [ -n "$cont" ]; then
-		docker kill "$cont" 2>/dev/null
-		docker rm "$cont"
-	fi
-done
+# Clean old conatiners
+./clean_celery_worker.sh
 
-
-if [[ -n "$BROKER_ADDRESS" ]]; then
-	BROKER_OPT="-e CELERY_BROKER_URL=$BROKER_ADDRESS"
+if [[ -n "$broker_address" ]]; then
+	BROKER_OPT="-e CELERY_BROKER_URL=amqp://guest@$broker_address"
 fi
 
 # Starting worker container with workers
-docker run -d -v "$(pwd)":/root $BROKER_OPT --name celery-worker pyotr777/celery-chainer-worker celery -A $PROJ_FOLDER worker --loglevel=info -E
+cmd="docker run -d -v "$(pwd)":/root $BROKER_OPT --name celery-worker pyotr777/celery-chainer-worker celery -A $proj_folder worker --loglevel=info -E"
+#echo $cmd
+eval $cmd

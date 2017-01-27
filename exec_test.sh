@@ -10,7 +10,7 @@ RemoteExec() {
 	echo "#!/bin/bash" > $filename
 	printf "$cmd" >> $filename
 	echo "" >> $filename
-	printf "rm $filename" >> $filename
+	#printf "rm $filename" >> $filename
 	chmod +x $filename
 	{
 		scp $filename $host:
@@ -24,12 +24,13 @@ cmd=$(cat <<CMDBLOCK
 echo "Start"
 hostname
 whoami
+echo "\$SSH_CONNECTION"
 echo "end"
 CMDBLOCK)
 
-host="stairlab"
+host="power"
 
-#RemoteExec "$cmd" "$host"
-#echo "---"
-var=$(RemoteExec hostname "$host")
-echo "var = $var"
+RemoteExec "$cmd" "$host"
+echo "---"
+#var=$(RemoteExec hostname "$host")
+#echo "var = $var"

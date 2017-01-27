@@ -92,13 +92,10 @@ fi
 
 
 RemoteExec() {
-	cmd=$1
+	filename=$1
 	host=$2
-	filename="remote_command.sh"
-	echo "Executing commands on $host"
-	#echo "tmp file: $filename"
-	echo "#!/bin/bash" > $filename
-	printf "$cmd" >> $filename
+	#filename="remote_command.sh"
+	#echo "Executing commands from $filename on $host"
 	echo "" >> $filename
 	printf "rm $filename" >> $filename
 	chmod +x $filename
@@ -110,6 +107,15 @@ RemoteExec() {
 	} 2>/dev/null
 }
 
+LocalExec() {
+	filename=$1
+	#echo "Executing commands from $filename on local machine/"
+	echo "" >> $filename
+	printf "rm $filename" >> $filename
+	chmod +x $filename
+	./$filename
+}
+
 
 #set -x
 
@@ -119,14 +125,18 @@ IFS="," remote_hosts=$REMOTE
 remote_hosts=( localhost ${remote_hosts[@]} )
 # echo "Remote hosts: ${remote_hosts[@]}"
 
-
 if [[ -n "$START_WORKER" ]]; then
-	IFS="," worker_hosts=${START_WORKER//local/0}
+	IFS="," read -ra worker_hosts <<< "${START_WORKER//local/0}"
+	#echo "Worker hosts: ${worker_hosts[@]}"
+	#echo "Remote hosts: ${remote_hosts[@]}"
 fi
 
-echo "Have ${#remote_hosts[@]} remote hosts: ${remote_hosts[@]}"
+cmd_filename="remote_command.sh"
+
+echo "Have ${#remote_hosts[@]} hosts: ${remote_hosts[@]}"
+echo "Have ${#worker_hosts[@]} worker hosts: ${worker_hosts[@]}"
 # Copy files to remote locations
-for rhost in ${remote_hosts[@]}; do
+for rhost in "${remote_hosts[@]}"; do
 	#echo $rhost
 	if [[ "$rhost" == "localhost" ]]; then
 		continue
@@ -137,21 +147,24 @@ for rhost in ${remote_hosts[@]}; do
 	else
 		SSH_COM="$rhost"
 	fi
-	echo $SSH_COM
+	#echo $SSH_COM
 
 	echo "Testing SSH connection to $rhost with ssh $SSH_COM"
-	HOSTNAME="$(RemoteExec hostname "$SSH_COM")"
+	printf "hostname" > $cmd_filename
+	HOSTNAME="$(RemoteExec $cmd_filename "$SSH_COM")"
 	if [[ -z "$HOSTNAME" ]]; then
 		echo "Cannot connect with ssh $SSH_COM."
 		exit 1
 	fi
 	echo $HOSTNAME
-	exit 0
 
 	if [[ -z "$BROKER_ADDRESS" ]] && [[ -z "$LOCAL_EXTERNAL_IP" ]]; then
 		# Get local machine external address
-		sshconnection=( $(RemoteExec "echo '$SSH_CONNECTION'" "$SSH_COM") )
-		LOCAL_EXTERNAL_IP=${sshconnection[0]}
+		printf "echo \"\$SSH_CONNECTION\"" > $cmd_filename
+		echo "" >> $cmd_filename
+		output_string="$(RemoteExec $cmd_filename "$SSH_COM")"
+		IFS=" " read -ra arr <<< "$output_string"
+		LOCAL_EXTERNAL_IP=${arr[0]}
 
 		if [[ -z "$LOCAL_EXTERNAL_IP" ]]; then
 			echo "Could not determine external IP address."
@@ -172,23 +185,34 @@ for rhost in ${remote_hosts[@]}; do
 done
 
 
+
 # Starting master
 if [[ -n "$START_MASTER" ]]; then
 	if [[ "$START_MASTER" == "local" ]]; then
 		START_MASTER=0
 	fi
 	master_host=${remote_hosts[$START_MASTER]}
-	if [[ "$master_host" == "localhost" ]]; then
-		ssh_com=""
-		change_dir=""
-	else
-		ssh_com="ssh $KEY $master_host"
-		change_dir="cd $REMOTE_PATH &&"
+
+	cat <<- CMDBLOCK > $cmd_filename
+	docker ps -a
+	echo "Starting master at $master_host"
+	CMDBLOCK
+
+	if [[ "$master_host" != "localhost" ]]; then
+		echo "cd $REMOTE_PATH" >> $cmd_filename
 	fi
-	eval $ssh_com docker ps -a
-	echo "Starting Master on $master_host."
-	eval $ssh_com $change_dir ./celery_rabbit.sh
-	eval $ssh_com docker ps -a
+
+	cat <<- CMDBLOCK2 >> $cmd_filename
+	./celery_rabbit.sh
+	docker ps -a
+	CMDBLOCK2
+	echo "Command file:"
+	cat $cmd_filename
+	if [[ "$master_host" == "localhost" ]]; then
+		LocalExec $cmd_filename
+	else
+		RemoteExec $cmd_filename $master_host
+	fi
 	if [[ -z "$BROKER_ADDRESS" ]]; then
 		if [[ "$master_host" == "localhost" ]]; then
 			BROKER_ADDRESS=$LOCAL_EXTERNAL_IP
@@ -200,22 +224,34 @@ if [[ -n "$START_MASTER" ]]; then
 fi
 
 
-
 # Starting workers
 if [[ -n "$START_WORKER" ]]; then
-	for i in $worker_hosts; do
+	echo "Workers: ${#worker_hosts[@]}"
+	for i in "${worker_hosts[@]}"; do
+		echo $i
 		host=${remote_hosts[$i]}
+		cat <<- CMDBLOCK3 > $cmd_filename
+		echo "Starting workers at $host. BROKER_ADDRESS=$BROKER_ADDRESS; PROJ_FOLDER=$PROJ_FOLDER"
+		CMDBLOCK3
+
+		if [[ "$host" != "localhost" ]]; then
+			echo "cd $REMOTE_PATH" >> $cmd_filename
+		fi
+		cat <<- CMDBLOCK4 >> $cmd_filename
+		hostname
+		pwd && ls -l
+		./start_celery_worker.sh -b $BROKER_ADDRESS -l $PROJ_FOLDER
+		docker ps -a
+		CMDBLOCK4
+
 		if [[ "$host" == "localhost" ]];then
-			docker ps -a
-			echo "Starting workers on $host."
-			./start_celery_worker.sh -b $BROKER_ADDRESS -l $PROJ_FOLDER
-			docker ps -a
+			LocalExec "$cmd_filename"
 		else
+			#set -x
 			ssh_com="$KEY $host"
-			eval ssh $ssh_com "docker ps -a"
-			echo "Starting workers on $host with $ssh_com."
-			eval ssh $ssh_com "hostname && pwd && cd '$HOME/'$REMOTE_PATH && ./start_celery_worker.sh -b $BROKER_ADDRESS -l $PROJ_FOLDER"
-			eval ssh $ssh_com "docker ps -a"
+			cat $cmd_filename
+			output_string="$(RemoteExec $cmd_filename "$SSH_COM")"
+			echo "$output_string"
 		fi
 	done
 fi
