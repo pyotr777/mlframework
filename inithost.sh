@@ -31,7 +31,7 @@ fi
 
 KEY=""
 REMOTE=""
-SSH_COM=""
+ssh_com=""
 
 while test $# -gt 0; do
     case "$1" in
@@ -143,17 +143,17 @@ for rhost in "${remote_hosts[@]}"; do
 	fi
 
 	if [[ -n "$KEY" ]]; then
-		SSH_COM="$KEY $rhost"
+		ssh_com="$KEY $rhost"
 	else
-		SSH_COM="$rhost"
+		ssh_com="$rhost"
 	fi
-	#echo $SSH_COM
+	#echo $ssh_com
 
-	echo "Testing SSH connection to $rhost with ssh $SSH_COM"
+	echo "Testing SSH connection to $rhost with ssh $ssh_com"
 	printf "hostname" > $cmd_filename
-	HOSTNAME="$(RemoteExec $cmd_filename "$SSH_COM")"
+	HOSTNAME="$(RemoteExec $cmd_filename "$ssh_com")"
 	if [[ -z "$HOSTNAME" ]]; then
-		echo "Cannot connect with ssh $SSH_COM."
+		echo "Cannot connect with ssh $ssh_com."
 		exit 1
 	fi
 	echo $HOSTNAME
@@ -162,7 +162,7 @@ for rhost in "${remote_hosts[@]}"; do
 		# Get local machine external address
 		printf "echo \"\$SSH_CONNECTION\"" > $cmd_filename
 		echo "" >> $cmd_filename
-		output_string="$(RemoteExec $cmd_filename "$SSH_COM")"
+		output_string="$(RemoteExec $cmd_filename "$ssh_com")"
 		IFS=" " read -ra arr <<< "$output_string"
 		LOCAL_EXTERNAL_IP=${arr[0]}
 
@@ -248,9 +248,13 @@ if [[ -n "$START_WORKER" ]]; then
 			LocalExec "$cmd_filename"
 		else
 			#set -x
-			ssh_com="$KEY $host"
+			if [[ -n "$KEY" ]]; then
+				ssh_com="$KEY $host"
+			else
+				ssh_com="$host"
+			fi
 			cat $cmd_filename
-			output_string="$(RemoteExec $cmd_filename "$ssh_com")"
+			output_string="$(RemoteExec $cmd_filename $ssh_com)"
 			echo "$output_string"
 		fi
 	done
