@@ -250,7 +250,7 @@ if [[ -n "$START_WORKER" ]]; then
 			#set -x
 			ssh_com="$KEY $host"
 			cat $cmd_filename
-			output_string="$(RemoteExec $cmd_filename "$SSH_COM")"
+			output_string="$(RemoteExec $cmd_filename "$ssh_com")"
 			echo "$output_string"
 		fi
 	done
