@@ -6,7 +6,7 @@
 # TODO
 # [ ] Check that remote folders exist (before calling rsync)
 # [ ] Check that docker installed
-# [ ] Check taht docker images exist
+# [?] Check taht docker images exist. Pushed images with Chainer to dockerhub.
 # [ ] Before starting RabbitMQ and Celery Flower containers check that ports are not used
 # [ ] Use better terms for explaining broker, project folder, task, framework
 
