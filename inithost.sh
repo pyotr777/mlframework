@@ -117,6 +117,19 @@ LocalExec() {
 }
 
 
+SaveHostData() {
+	filename=$1
+	hosts=$2
+	master=$3
+	broker=$4
+	workers=$5
+	echo "hosts, $hosts" > $filename
+	echo "master,$master" >> $filename
+	echo "broker,$broker" >> $filename
+	echo "workers,$workers" >> $filename
+	#cat $filename
+}
+
 #set -x
 
 IFS="," remote_hosts=$REMOTE
@@ -130,6 +143,40 @@ if [[ -n "$START_WORKER" ]]; then
 	#echo "Worker hosts: ${worker_hosts[@]}"
 	#echo "Remote hosts: ${remote_hosts[@]}"
 fi
+
+if [[ "$START_MASTER" == "local" ]]; then
+	START_MASTER=0
+fi
+master_host=${remote_hosts[$START_MASTER]}
+
+
+CSV_file="infra.csv"
+SaveHostData "$CSV_file" "localhost,$REMOTE" "$START_MASTER" "$START_MASTER" "${START_WORKER//local/0}"
+
+# Create infrastructure cleaning script
+clean_script="infra_clean.sh"
+echo "#!/bin/bash" > $clean_script
+for i in "${worker_hosts[@]}"; do
+	# echo "$i ${remote_hosts[$i]}"
+	if [[ "${remote_hosts[$i]}" != "localhost" ]];then
+		cmd="ssh $KEY ${remote_hosts[$i]} $REMOTE_PATH/clean_celery_worker.sh"
+	else
+		cmd="./clean_celery_worker.sh"
+	fi
+	echo $cmd >> $clean_script
+done
+
+if [[ "$master_host" != "localhost" ]]; then
+	cmd="ssh $KEY $master_host $REMOTE_PATH/clean_celery_master.sh"
+else
+	cmd="./clean_celery_master.sh"
+fi
+echo $cmd >> $clean_script
+echo "rm $CSV_file" >> $clean_script
+echo "rm $clean_script" >> $clean_script
+
+chmod +x $clean_script
+
 
 cmd_filename="remote_command.sh"
 
@@ -188,13 +235,7 @@ done
 
 # Starting master
 if [[ -n "$START_MASTER" ]]; then
-	if [[ "$START_MASTER" == "local" ]]; then
-		START_MASTER=0
-	fi
-	master_host=${remote_hosts[$START_MASTER]}
-
 	cat <<- CMDBLOCK > $cmd_filename
-	docker ps -a
 	echo "Starting master at $master_host"
 	CMDBLOCK
 
@@ -203,8 +244,8 @@ if [[ -n "$START_MASTER" ]]; then
 	fi
 
 	cat <<- CMDBLOCK2 >> $cmd_filename
-	./celery_rabbit.sh
-	docker ps -a
+	./start_celery_master.sh
+	docker ps
 	CMDBLOCK2
 	echo "Command file:"
 	cat $cmd_filename
@@ -238,10 +279,9 @@ if [[ -n "$START_WORKER" ]]; then
 			echo "cd $REMOTE_PATH" >> $cmd_filename
 		fi
 		cat <<- CMDBLOCK4 >> $cmd_filename
-		hostname
-		pwd && ls -l
+		echo "$(hostname):$(pwd)"
 		./start_celery_worker.sh -b $BROKER_ADDRESS -l $PROJ_FOLDER
-		docker ps -a
+		docker ps
 		CMDBLOCK4
 
 		if [[ "$host" == "localhost" ]];then
