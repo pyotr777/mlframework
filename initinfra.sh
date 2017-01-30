@@ -123,19 +123,21 @@ SaveHostData() {
 	master=$3
 	broker=$4
 	workers=$5
-	echo "hosts, $hosts" > $filename
+	echo "hosts,$hosts" > $filename
 	echo "master,$master" >> $filename
 	echo "broker,$broker" >> $filename
 	echo "workers,$workers" >> $filename
+	echo "remote_path,$REMOTE_PATH" >> $filename
+	echo "folder,$PROJ_FOLDER" >> $filename
 	#cat $filename
 }
 
-#set -x
+set -e
 
 IFS="," remote_hosts=$REMOTE
 
 # Add localhost to remote hosts array as element 0.
-remote_hosts=( localhost ${remote_hosts[@]} )
+remote_hosts=(localhost ${remote_hosts[@]})
 # echo "Remote hosts: ${remote_hosts[@]}"
 
 if [[ -n "$START_WORKER" ]]; then

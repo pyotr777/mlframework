@@ -25,12 +25,32 @@ def unjsonify(a):
         #print  "unjsonify recieved object of type",type(a)
         return a
 
+def report_state(msg):
+    status = msg[u'status']
+    res = msg[u'result']
+    if status == "SUCCESS":
+        print "Finished with result ", res
+        min_train_loss, max_train_acc, max_test_acc = res
+        cv_train_loss_list.append(unjsonify(min_train_loss))
+        cv_train_acc_list.append(unjsonify(max_train_acc))
+        cv_test_acc_list.append(float(unjsonify(max_test_acc)))
+        return
+
+    # Intermediate results
+    if type(res) is dict:
+        for k in res:
+            print k,":",res[k]
+    else:
+        print res
+
 
 if __name__ == '__main__':
-
-    n_folds = 5
+    n_folds = 3
     random_state = 0
-    n_epoches = 10
+    n_epoches = 3
+    n_emb = 50
+    dropout_rate = 0.3
+    minibatch_size = 50
     print n_folds, "folds x ",n_epoches, "epoches"
     # Load data
     import proj.datasets.twenty_ng as dataset
@@ -48,30 +68,16 @@ if __name__ == '__main__':
     results = []
 
     for index_tr, index_te in kf:
-        result = train.delay(jsonify(index_tr), jsonify(index_te), n_epoches)
+        result = train.delay(jsonify(index_tr), jsonify(index_te), n_epoches, n_emb, dropout_rate, minibatch_size)
         results.append(result)
 
     print "All tasks sent"
-
-    allready = False
     ready = 0
-    while allready is False:
-        print "Not ready..."
-        time.sleep(2)
-        allready = True
-        for r in results:
-            print r.get()
-            if r.ready() is False:
-                allready = False
-            else:
-                ready += 1
-                print ready, " result(s) ready"
-                min_train_loss, max_train_acc, max_test_acc = r.get()
-                cv_train_loss_list.append(unjsonify(min_train_loss))
-                cv_train_acc_list.append(unjsonify(max_train_acc))
-                cv_test_acc_list.append(float(unjsonify(max_test_acc)))
+    for r in results:
+        r.get(on_message=report_state, propagate=False)
+
+
 
     print "--------------------------------- Summary: average test accuracy, std. ---------------------------------"
     print np.mean(cv_test_acc_list), np.std(cv_test_acc_list)
-
 

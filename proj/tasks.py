@@ -25,3 +25,4 @@ def unjsonify(a):
         return a
 
 @app.task(bind=True)
+def train(index_tr_s, index_te_s, n_epoches=5, n_emb = 50, dropout_rate = 0.3, minibatch_size = 50):

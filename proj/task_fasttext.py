@@ -26,6 +26,10 @@ def jsonify(numpy_array):
     a = numpy_array.tolist()
     return a
 
+@app.task(bind=True)
+def report(self, message):
+    self.update_state(state="PROGRESS",meta={message})
+
 @app.task
 def echo(self, s="Hello world!"):
     print "Echo: "+str(s)
@@ -38,20 +42,14 @@ def power2(self, arr):
     for x in arr:
         s = 2 ** x
         print s
-        self.update_state(state="PROGRESS",meta={x : s})
+        self.update_state(state="PROGRESS",meta={x:s})
         time.sleep(1)
-    return s
+    return s,12
 
-
-@app.task
-def train(index_tr_s, index_te_s, n_epoches):
+@app.task(bind=True)
+def train(self, index_tr_s, index_te_s, n_epoches=5, n_emb = 50, dropout_rate = 0.3, minibatch_size = 50):
     index_tr = unjsonify(index_tr_s)
     index_te = unjsonify(index_te_s)
-
-    # default values
-    n_emb = 50
-    dropout_rate = 0.3
-    minibatch_size = 50
 
     # Load data
     import proj.datasets.twenty_ng as dataset
@@ -61,7 +59,9 @@ def train(index_tr_s, index_te_s, n_epoches):
     """ global parameters """
     n_all_samples, n_vocab = X_all.shape
     n_classes = np.unique(Y_all).shape[0]
-    print "N samples=",n_all_samples, "N vocab=", n_vocab, "N classes=", n_classes
+    s = "N samples="+str(n_all_samples)+ " N vocab="+str(n_vocab)+" N classes="+str(n_classes)
+    print s,"n_emb=",n_emb, " dropout rate=",dropout_rate, " minibatch=",minibatch_size
+    report(s)
 
     from .baselines.fasttext import Model
     model = Model(n_vocab, n_emb, n_classes)
