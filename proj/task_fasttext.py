@@ -26,7 +26,6 @@ def jsonify(numpy_array):
     a = numpy_array.tolist()
     return a
 
-@app.task(bind=True)
 def report(self, message):
     self.update_state(state="PROGRESS",meta={"message":message})
 
@@ -43,7 +42,7 @@ def power2(self, arr):
         s = 2 ** x
         print s
         # self.update_state(state="PROGRESS",meta={x:s})
-        report("2**"+str(x)+"="+str(s))
+        report(self,"2**"+str(x)+"="+str(s))
         time.sleep(1)
     return s,12
 
@@ -62,7 +61,7 @@ def train(self, index_tr_s, index_te_s, n_epoches=5, n_emb = 50, dropout_rate = 
     n_classes = np.unique(Y_all).shape[0]
     s = "N samples="+str(n_all_samples)+ " N vocab="+str(n_vocab)+" N classes="+str(n_classes)
     print s,"n_emb=",n_emb, " dropout rate=",dropout_rate, " minibatch=",minibatch_size
-    report(s)
+    report(self, s)
 
     from .baselines.fasttext import Model
     model = Model(n_vocab, n_emb, n_classes)
@@ -123,8 +122,11 @@ def train(self, index_tr_s, index_te_s, n_epoches=5, n_emb = 50, dropout_rate = 
         avg_test_acc /= n_test
         avg_test_loss /= n_test
 
+        interm = 'epoch {:3d}: train loss = {:f}, train acc = {:f}, test acc= = {:f}'.format(epoch + 1, avg_train_loss.data, avg_train_acc.data, avg_test_acc.data)
+        report(self, interm)
         print "epoch %3d: train loss = %e, train acc = %e, test acc = %e"\
               % (epoch + 1, avg_train_loss.data, avg_train_acc.data, avg_test_acc.data)
+
 
         if max_test_acc < avg_test_acc.data:
             min_train_loss = avg_train_loss.data

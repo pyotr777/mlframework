@@ -26,6 +26,7 @@ def unjsonify(a):
         return a
 
 def report_state(msg):
+    print "Got message"
     status = msg[u'status']
     res = msg[u'result']
     if status == "SUCCESS":
@@ -72,7 +73,6 @@ if __name__ == '__main__':
         results.append(result)
 
     print "All tasks sent"
-    ready = 0
     for r in results:
         r.get(on_message=report_state, propagate=False)
 
