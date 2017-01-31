@@ -11,11 +11,12 @@ usage=$(cat <<USAGEBLOCK
 Update files on remote hosts with rsync.
 Remote hosts read from infra.csv file, which must exist.
 
-$0 -a <[user@]host1,[user@]host2...> [-i identity file] -l <dirname>
+$0 -a <[user@]host1,[user@]host2...> [-i identity file] -l <dirname> -r <path>
 
 Options:
 	-a	Remote hosts addresses, comma-separated list.
 	-l	Local folder with task (project) files.
+	-r	Remote path for storing task and framework files relative to home dir..
 USAGEBLOCK
 )
 

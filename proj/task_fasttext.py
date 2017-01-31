@@ -28,7 +28,7 @@ def jsonify(numpy_array):
 
 @app.task(bind=True)
 def report(self, message):
-    self.update_state(state="PROGRESS",meta={message})
+    self.update_state(state="PROGRESS",meta={"message":message})
 
 @app.task
 def echo(self, s="Hello world!"):
@@ -42,7 +42,8 @@ def power2(self, arr):
     for x in arr:
         s = 2 ** x
         print s
-        self.update_state(state="PROGRESS",meta={x:s})
+        # self.update_state(state="PROGRESS",meta={x:s})
+        report("2**"+str(x)+"="+str(s))
         time.sleep(1)
     return s,12
 
