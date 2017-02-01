@@ -60,7 +60,7 @@ def train(self, index_tr_s, index_te_s, n_epoches=5, n_emb = 50, dropout_rate = 
     n_all_samples, n_vocab = X_all.shape
     n_classes = np.unique(Y_all).shape[0]
     s = "N samples="+str(n_all_samples)+ " N vocab="+str(n_vocab)+" N classes="+str(n_classes)
-    print s,"n_emb=",n_emb, " dropout rate=",dropout_rate, " minibatch=",minibatch_size
+    print s,"n_emb="+str(n_emb)+" dropout rate="+str(dropout_rate)+" minibatch="+str(minibatch_size)
     report(self, s)
 
     from .baselines.fasttext import Model
@@ -123,11 +123,9 @@ def train(self, index_tr_s, index_te_s, n_epoches=5, n_emb = 50, dropout_rate = 
         avg_test_loss /= n_test
         print "epoch %3d: train loss = %e, train acc = %e, test acc = %e"\
               % (epoch + 1, avg_train_loss.data, avg_train_acc.data, avg_test_acc.data)
-        print type(avg_train_loss.data)
-        s1 = "epoch {:3d}: train loss = {:e}".format(epoch + 1, float(avg_train_loss.data))
-        s2 = "train acc = {:e}, test acc = {:e}".format(float(avg_train_acc.data), float(avg_test_acc.data))
-        interm = s1 + s2
-        report(self, interm)
+        message = "epoch {:3d}: train loss = {:f}, train acc = {:e}, test acc = {:e}".\
+            format(epoch + 1, float(avg_train_loss.data),float(avg_train_acc.data), float(avg_test_acc.data))
+        report(self, message)
 
 
         if max_test_acc < avg_test_acc.data:
