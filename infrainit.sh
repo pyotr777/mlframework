@@ -72,10 +72,12 @@ while test $# -gt 0; do
 done
 
 
-if [[ -z "$REMOTE" ]] || [[ -z "$REMOTE_PATH" ]] || [[ -z "$PROJ_FOLDER" ]]; then
-	echo "$usage"
-	echo "Necessary options: remote address (-a), project folder (-l) and remote path (-r)."
-	exit 0
+if [[ -n "$REMOTE" ]]; then
+	if [[ -z "$REMOTE_PATH" ]] || [[ -z "$PROJ_FOLDER" ]]; then
+		echo "$usage"
+		echo "Necessary options: remote address (-a), project folder (-l) and remote path (-r)."
+		exit 0
+	fi
 fi
 
 if [[ -z "$START_MASTER" ]] && [[ -z "$START_WORKER" ]]; then
@@ -109,7 +111,9 @@ RemoteExec() {
 
 LocalExec() {
 	filename=$1
-	#echo "Executing commands from $filename on local machine/"
+	echo "Executing commands from $filename on local machine"
+	cat $filename
+	echo "---"
 	echo "" >> $filename
 	printf "rm $filename" >> $filename
 	chmod +x $filename
@@ -266,15 +270,22 @@ if [[ -n "$START_MASTER" ]]; then
 	fi
 fi
 
-
 # Starting workers
 if [[ -n "$START_WORKER" ]]; then
 	echo "Workers: ${#worker_hosts[@]}"
 	for i in "${worker_hosts[@]}"; do
-		echo $i
+		echo "worker $((i+1))"
 		host=${remote_hosts[$i]}
+
+		if [[ -n "$BROKER_ADDRESS" ]]; then
+			BROKER_OPTIONS="-b $BROKER_ADDRESS"
+		fi
+		if [[ -n "$PROJ_FOLDER" ]]; then
+			PROJ_FOLDER_OPTIONS="-l $PROJ_FOLDER"
+		fi
+
 		cat <<- CMDBLOCK3 > $cmd_filename
-		echo "Starting workers at $host. BROKER_ADDRESS=$BROKER_ADDRESS; PROJ_FOLDER=$PROJ_FOLDER"
+		echo "Starting workers at $host. BROKER_ADDRESS=$BROKER_ADDRESS PROJ_FOLDER=$PROJ_FOLDER"
 		CMDBLOCK3
 
 		if [[ "$host" != "localhost" ]]; then
@@ -282,7 +293,7 @@ if [[ -n "$START_WORKER" ]]; then
 		fi
 		cat <<- CMDBLOCK4 >> $cmd_filename
 		echo "$(hostname):$(pwd)"
-		./start_celery_worker.sh -b $BROKER_ADDRESS -l $PROJ_FOLDER
+		./start_celery_worker.sh $BROKER_options $PROJ_FOLDER_OPTIONS
 		docker ps
 		CMDBLOCK4
 

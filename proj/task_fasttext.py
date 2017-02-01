@@ -121,11 +121,13 @@ def train(self, index_tr_s, index_te_s, n_epoches=5, n_emb = 50, dropout_rate = 
             avg_test_loss += model.loss
         avg_test_acc /= n_test
         avg_test_loss /= n_test
-
-        interm = 'epoch {:3d}: train loss = {:f}, train acc = {:f}, test acc= = {:f}'.format(epoch + 1, avg_train_loss.data, avg_train_acc.data, avg_test_acc.data)
-        report(self, interm)
         print "epoch %3d: train loss = %e, train acc = %e, test acc = %e"\
               % (epoch + 1, avg_train_loss.data, avg_train_acc.data, avg_test_acc.data)
+        print type(avg_train_loss.data)
+        s1 = "epoch {:3d}: train loss = {:e}".format(epoch + 1, float(avg_train_loss.data))
+        s2 = "train acc = {:e}, test acc = {:e}".format(float(avg_train_acc.data), float(avg_test_acc.data))
+        interm = s1 + s2
+        report(self, interm)
 
 
         if max_test_acc < avg_test_acc.data:

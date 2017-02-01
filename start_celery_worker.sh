@@ -49,6 +49,10 @@ done
 
 if [[ -n "$broker_address" ]]; then
 	BROKER_OPT="-e CELERY_BROKER_URL=amqp://guest@$broker_address"
+    echo "Using BROKER_OPT:$BROKER_OPT"
+else
+    BROKER_OPT="--link rabbit"
+    echo "Starting worker with link to rabbit container."
 fi
 
 # Starting worker container with workers

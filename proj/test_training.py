@@ -26,7 +26,6 @@ def unjsonify(a):
         return a
 
 def report_state(msg):
-    print "Got message"
     status = msg[u'status']
     res = msg[u'result']
     if status == "SUCCESS":
@@ -46,12 +45,12 @@ def report_state(msg):
 
 
 if __name__ == '__main__':
-    n_folds = 3
+    n_folds = 2
     random_state = 0
-    n_epoches = 3
+    n_epoches = 1
     n_emb = 50
     dropout_rate = 0.3
-    minibatch_size = 50
+    minibatch_size = 20
     print n_folds, "folds x ",n_epoches, "epoches"
     # Load data
     import proj.datasets.twenty_ng as dataset
