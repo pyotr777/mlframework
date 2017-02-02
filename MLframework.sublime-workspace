@@ -1,0 +1,1213 @@
+{
+	"auto_complete":
+	{
+		"selected_items":
+		[
+			[
+				"optionslis",
+				"optionslist_global"
+			],
+			[
+				"offer",
+				"offers_all"
+			],
+			[
+				"offers_",
+				"offers_GPU_filtered"
+			],
+			[
+				"offe",
+				"offers_Provide_filtered"
+			],
+			[
+				"last_",
+				"last_offer"
+			],
+			[
+				"simp",
+				"simple_name"
+			],
+			[
+				"BR",
+				"BROKER_ADDRESS"
+			],
+			[
+				"mini",
+				"minibatch_size"
+			],
+			[
+				"dr",
+				"dropout_rate"
+			],
+			[
+				"clea",
+				"clean_script"
+			],
+			[
+				"cl",
+				"start_celery_worker"
+			],
+			[
+				"clean",
+				"clean_script"
+			],
+			[
+				"worker",
+				"worker_hosts"
+			],
+			[
+				"RE",
+				"REMOTE"
+			],
+			[
+				"con",
+				"container"
+			],
+			[
+				"cle",
+				"celery-chainer-worker"
+			],
+			[
+				"wo",
+				"worker_hosts"
+			],
+			[
+				"ssh",
+				"sshconnection"
+			],
+			[
+				"P",
+				"PROJ_FOLDER"
+			],
+			[
+				"Exec",
+				"LocalExec"
+			],
+			[
+				"Re",
+				"RemoteExec"
+			],
+			[
+				"L",
+				"LocalExec"
+			],
+			[
+				"cmd",
+				"cmd_filename"
+			],
+			[
+				"SSH",
+				"SSH_CONNECTION"
+			],
+			[
+				"local",
+				"localhost"
+			],
+			[
+				"S",
+				"START_MASTER"
+			],
+			[
+				"master",
+				"master_host"
+			],
+			[
+				"LOCAL",
+				"LOCAL_EXTERNAL_IP"
+			],
+			[
+				"B",
+				"BROKER_ADDRESS"
+			],
+			[
+				"remote",
+				"remote_hosts"
+			],
+			[
+				"REMOTE",
+				"REMOTE_PATH"
+			],
+			[
+				"l",
+				"LOCAL_PATH"
+			],
+			[
+				"Star",
+				"START_MASTER"
+			],
+			[
+				"STA",
+				"START_MASTER"
+			],
+			[
+				"months",
+				"months-1"
+			],
+			[
+				"un",
+				"unjsonify"
+			],
+			[
+				"num",
+				"numpy_array"
+			],
+			[
+				"base",
+				"base_currency"
+			],
+			[
+				"some",
+				"some-celery"
+			],
+			[
+				"max",
+				"max_y"
+			],
+			[
+				"d",
+				"div"
+			],
+			[
+				"color",
+				"color_i"
+			],
+			[
+				"slice_c",
+				"slice_cost"
+			],
+			[
+				"memo",
+				"memory"
+			],
+			[
+				"point",
+				"point_index"
+			],
+			[
+				"gpu",
+				"gpu_model"
+			],
+			[
+				"plotl",
+				"plotly_hover"
+			],
+			[
+				"in",
+				"inline-block"
+			],
+			[
+				"bac",
+				"background-color"
+			],
+			[
+				"colo",
+				"color_i"
+			],
+			[
+				"memory",
+				"memory_trace"
+			],
+			[
+				"lege",
+				"legend_size"
+			],
+			[
+				"apache",
+				"apache_port"
+			],
+			[
+				"docker",
+				"docker_status"
+			],
+			[
+				"filter",
+				"filterProvider"
+			],
+			[
+				"on",
+				"onchange\tAttr"
+			],
+			[
+				"get",
+				"getElementById"
+			],
+			[
+				"off",
+				"offers"
+			],
+			[
+				"length",
+				"length-1"
+			],
+			[
+				"to",
+				"toLowerCase"
+			],
+			[
+				"parse",
+				"parseInt"
+			],
+			[
+				"accum",
+				"accumulated_months_days"
+			],
+			[
+				"costs_",
+				"costs_gpu"
+			],
+			[
+				"costs",
+				"costs_gpu"
+			],
+			[
+				"offers",
+				"offers_all"
+			],
+			[
+				"y_",
+				"y_cpu"
+			],
+			[
+				"hours_",
+				"hours_day"
+			],
+			[
+				"hours",
+				"hours_year"
+			],
+			[
+				"period_",
+				"period_m"
+			],
+			[
+				"hos",
+				"host_name"
+			],
+			[
+				"job",
+				"job_cpus"
+			],
+			[
+				"job_",
+				"job_nodes"
+			],
+			[
+				"fil",
+				"filename_base"
+			],
+			[
+				"apt",
+				"apt-get"
+			],
+			[
+				"re",
+				"response"
+			],
+			[
+				"merged",
+				"merged_z0"
+			],
+			[
+				"Para",
+				"ParaView-4"
+			],
+			[
+				"paravi",
+				"Paraview"
+			],
+			[
+				"I",
+				"INCLUDE_DIR"
+			],
+			[
+				"val",
+				"value"
+			],
+			[
+				"parsed",
+				"parsed_yaml"
+			],
+			[
+				"a",
+				"appname"
+			],
+			[
+				"Docker",
+				"Dockerfile"
+			],
+			[
+				"this",
+				"this_elm"
+			],
+			[
+				"scro",
+				"scroll"
+			],
+			[
+				"text",
+				"textarea"
+			],
+			[
+				"thi",
+				"this_elm"
+			],
+			[
+				"scroll",
+				"scrollTo"
+			],
+			[
+				"sc",
+				"scrollToElm"
+			],
+			[
+				"s",
+				"scrollPos"
+			],
+			[
+				"sco",
+				"scrollTop"
+			],
+			[
+				"pa",
+				"padding"
+			],
+			[
+				"pad",
+				"padding-bottom"
+			],
+			[
+				"padding-",
+				"padding-left"
+			],
+			[
+				"paddin",
+				"padding-left"
+			],
+			[
+				"next",
+				"next_elem"
+			],
+			[
+				"Mini",
+				"Miniconda2-latest-Linux-x86_64"
+			],
+			[
+				"kp",
+				"kportal_conf"
+			],
+			[
+				"b",
+				"b_counter"
+			],
+			[
+				"dict",
+				"dict_name"
+			],
+			[
+				"nex",
+				"next_block"
+			],
+			[
+				"use",
+				"use_saved_block"
+			],
+			[
+				"F",
+				"False"
+			],
+			[
+				"scena",
+				"scenario"
+			],
+			[
+				"sce",
+				"Scenario"
+			],
+			[
+				"allowe",
+				"allowed_vars"
+			],
+			[
+				"all",
+				"allowed_vars"
+			],
+			[
+				"col",
+				"colon_split"
+			],
+			[
+				"ex",
+				"exclude"
+			],
+			[
+				"comma",
+				"command"
+			],
+			[
+				"REMO",
+				"REMOTEDIR"
+			],
+			[
+				"exec",
+				"exec_button_"
+			],
+			[
+				"test",
+				"teststr2"
+			],
+			[
+				"tr",
+				"teststr1"
+			],
+			[
+				"testr",
+				"teststr1"
+			],
+			[
+				"br",
+				"br_counter"
+			],
+			[
+				"block",
+				"block_counter"
+			],
+			[
+				"refre",
+				"refresh_script"
+			],
+			[
+				"bloc",
+				"block_counter"
+			],
+			[
+				"is",
+				"isfile"
+			],
+			[
+				"batc",
+				"batch_size"
+			],
+			[
+				"blo",
+				"block_counter"
+			],
+			[
+				"run",
+				"run_flag"
+			],
+			[
+				"write",
+				"write_flag"
+			],
+			[
+				"line",
+				"line_counter"
+			],
+			[
+				"block_cou",
+				"block_counter"
+			],
+			[
+				"ece",
+				"exec_button_NNN"
+			],
+			[
+				"outpu",
+				"output_file_handler"
+			]
+		]
+	},
+	"buffers":
+	[
+		{
+			"file": "infrainit.sh",
+			"settings":
+			{
+				"buffer_size": 7786,
+				"line_ending": "Unix"
+			}
+		}
+	],
+	"build_system": "",
+	"build_system_choices":
+	[
+	],
+	"build_varint": "",
+	"command_palette":
+	{
+		"height": 392.0,
+		"last_filter": "Package Re",
+		"selected_items":
+		[
+			[
+				"Package Re",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"Package Control: ",
+				"Package Control: List Packages"
+			],
+			[
+				"Package ",
+				"Package Control: Remove Package"
+			],
+			[
+				"Pack",
+				"Package Control: List Packages"
+			],
+			[
+				"PackageControl : Ins",
+				"Package Control: List Unmanaged Packages"
+			],
+			[
+				"Package",
+				"Package Control: Remove Package"
+			],
+			[
+				"perl",
+				"PerlTidy: Tidy"
+			],
+			[
+				"Perl",
+				"PerlTidy: Tidy"
+			],
+			[
+				"pac",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Control: li",
+				"Package Control: List Packages"
+			],
+			[
+				"package control ",
+				"Package Control: List Packages"
+			],
+			[
+				"Python ",
+				"User: Python PEP8 Autoformat"
+			],
+			[
+				"Flake",
+				"User: Jump to next Flake8 Lint error"
+			],
+			[
+				"Flak",
+				"User: Jump to next Flake8 Lint error"
+			],
+			[
+				"",
+				"Anaconda: Set Python interpreter"
+			],
+			[
+				"package control: in",
+				"Package Control: Install Package"
+			],
+			[
+				"PackageCon",
+				"Package Control: Install Package"
+			],
+			[
+				"Packege",
+				"Package Control: List Packages"
+			],
+			[
+				"Packa",
+				"Package Control: Install Package"
+			],
+			[
+				"package",
+				"Package Control: Install Package"
+			],
+			[
+				"Resou",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"PackageRes",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"PackageResou",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"Packager",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"PackagerR",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"PackageRe",
+				"PackageResourceViewer: Open Resource"
+			],
+			[
+				"Colors",
+				"Colorsublime: Install Theme"
+			],
+			[
+				"Export to html",
+				"Export to HTML: Show Export Menu"
+			],
+			[
+				"Export To htm",
+				"Export to HTML: Show Export Menu"
+			],
+			[
+				"ExportH",
+				"Export to HTML: Show Export Menu"
+			],
+			[
+				"Expo",
+				"Export to BBCode: Show Export Menu"
+			],
+			[
+				"Export",
+				"Export to HTML: Show Export Menu"
+			],
+			[
+				"ExportHtmp",
+				"Export to HTML: Show Export Menu"
+			],
+			[
+				"Package Control: IN",
+				"Package Control: Install Package"
+			],
+			[
+				"Package Contr",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: List Pac",
+				"Package Control: List Packages"
+			],
+			[
+				"Package Control: Li",
+				"Package Control: List Packages"
+			]
+		],
+		"width": 449.0
+	},
+	"console":
+	{
+		"height": 126.0,
+		"history":
+		[
+			"Package Control:"
+		]
+	},
+	"distraction_free":
+	{
+		"menu_visible": true,
+		"show_minimap": false,
+		"show_open_files": false,
+		"show_tabs": false,
+		"side_bar_visible": false,
+		"status_bar_visible": false
+	},
+	"expanded_folders":
+	[
+		"/Users/peterbryzgalov/work/ML/mlframework"
+	],
+	"file_history":
+	[
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/plotting2.js",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/lib.js",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/index2.html",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/index.html",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/plotting.js",
+		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_worker.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/proj/task_fasttext.py",
+		"/Users/peterbryzgalov/work/ML/mlframework/infrainit.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/proj/baselines/fasttext.py",
+		"/Users/peterbryzgalov/work/ML/mlframework/proj/test_training.py",
+		"/Users/peterbryzgalov/work/ML/mlframework/initinfra.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_master.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/inithost.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/celery_rabbit.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/proj/test_echo.py",
+		"/Users/peterbryzgalov/work/ML/mlframework/send-rabbit.py",
+		"/Users/peterbryzgalov/work/kportal/release/install",
+		"/Users/peterbryzgalov/work/ML/mlframework/Dockerfile-worker",
+		"/Users/peterbryzgalov/work/ML/mlframework/Dockerfile-flower",
+		"/Users/peterbryzgalov/work/kportal/release/sync_up.sh",
+		"/Users/peterbryzgalov/work/ML/bowcnn/baselines/fasttext.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/cv_baseline.py",
+		"/Users/peterbryzgalov/work/ML/New Framework/proj/model_fasttext.py",
+		"/Users/peterbryzgalov/work/ML/New Framework/celeryconfig.py",
+		"/Users/peterbryzgalov/work/ML/New Framework/proj/celery.py",
+		"/Users/peterbryzgalov/work/ML/New Framework/proj/tasks.py",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/sync.sh",
+		"/Users/peterbryzgalov/work/ML/New Framework/proj/datasets/twenty_ng.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/model_fasttext.py",
+		"/Users/peterbryzgalov/work/ML/chainer/install_in_docker/Dockerfile",
+		"/Users/peterbryzgalov/work/ML/chainer/install_in_docker/Dockerfile-size",
+		"/Users/peterbryzgalov/work/ML/keras/Dockerfile-keras",
+		"/Users/peterbryzgalov/work/ML/chainer/install_in_docker/Dockerfile-16",
+		"/Users/peterbryzgalov/work/ML/chainer/Dockerfile",
+		"/Users/peterbryzgalov/work/ML/chainer/Dockerfile-time",
+		"/Users/peterbryzgalov/work/ML/chainer/install_in_docker/docker.py",
+		"/Users/peterbryzgalov/work/ML/New Framework/celery_rabbit.sh",
+		"/Users/peterbryzgalov/work/ML/New Framework/proj/task.py",
+		"/Users/peterbryzgalov/work/ML/New Framework/task.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/celery_rabbit.sh",
+		"/Users/peterbryzgalov/work/ML/bowcnn/datasets/twenty_ng.py",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/cost-performance.csv",
+		"/Users/peterbryzgalov/work/ML/bowcnn/cv.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/models/trained_models/cnn.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/models/model2.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/models/trained_models/download.sh",
+		"/Users/peterbryzgalov/work/ML/bowcnn/models/trained_models/download_model.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/trained_models/download_model.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/models/model3.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/trained_models/download.sh",
+		"/Users/peterbryzgalov/work/ML/bowcnn/net.py",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/style.css",
+		"/Users/peterbryzgalov/work/ML/bowcnn/start_container.sh",
+		"/Users/peterbryzgalov/work/ML/bowcnn/models/mycnn/model2.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/models/model4.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/models/model5.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/models/model6.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/models/model7.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/models/model8.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/models/model9.py",
+		"/Users/peterbryzgalov/work/ML/bowcnn/Dockerfile-jupyter",
+		"/Users/peterbryzgalov/work/ML/bowcnn/datasets/Cade12/download.sh",
+		"/Users/peterbryzgalov/work/ML/bowcnn/preprocessing.py",
+		"/Users/peterbryzgalov/Downloads/image_tutorial-7.py",
+		"/Users/peterbryzgalov/Downloads/J11819365011480999755.sh.o5517107",
+		"/Users/peterbryzgalov/Downloads/J62085247371480998219.sh.o5517058",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/CMPI/run.sh",
+		"/Users/peterbryzgalov/work/kportal/release/visual_server/start_server_container.sh",
+		"/Users/peterbryzgalov/work/kportal/release/visual_server/vis_server",
+		"/Users/peterbryzgalov/Downloads/J12600190201480924166.sh",
+		"/Users/peterbryzgalov/Downloads/job.e5515132",
+		"/Users/peterbryzgalov/work/ML/keras/run_docker.sh",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/mixerVessel2D/sample/change_case_pars.sh",
+		"/Users/peterbryzgalov/work/kportal/release/visual_server/Dockerfile",
+		"/Users/peterbryzgalov/work/kportal/release/visual_server/server.py",
+		"/Users/peterbryzgalov/work/kportal/release/visual_server/make_cell_images.py",
+		"/Users/peterbryzgalov/work/kportal/release/visual_server/colors.py",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/mixerVessel2D/post.sh",
+		"/Users/peterbryzgalov/work/kportal/release/visual_server/Kmake_movie.sh",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/mixerVessel2D/run_mixer_sample.sh",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/mixerVessel2D/sample/system/controlDict",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/mixerVessel2D/sample/constant/fvOptions",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/mixerVessel2D/sample/constant/polyMesh/blockMeshDict.m4",
+		"/Users/peterbryzgalov/Downloads/J58055100791480072816.sh",
+		"/Users/peterbryzgalov/Downloads/J58055100791480072816.info",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/plotting..html",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/C3/c3-0.4.11/c3.css",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/index 2.html",
+		"/Users/peterbryzgalov/Library/Application Support/Sublime Text 3/Packages/GoSublime/USAGE.md",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/2016-weather-data-seattle.csv",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/cost-period.csv",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/2014_apple_stock.csv",
+		"/Users/peterbryzgalov/work/ML/Cloud Providers/Comparison table updated 2.txt",
+		"/Users/peterbryzgalov/work/OpenFOAM/samples/interFoam/laminar/J29155334941477976881/sample/VTK/sample_46.vtk",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/tmp/jobinspect/job.o5469532",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/tmp/jobinspect/J34845364551478254718_post.sh",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/tmp/jobinspect/job.e5469532",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/tmp/jobinspect/sample/parameters.txt",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/tmp/jobinspect/job.e5469528",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/tmp/jobinspect/job.o5469528",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/job.o5466885",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/J72945527361478082697.sh",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/sample/change_case_pars.sh",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/mail_body.txt",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/pre.log",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/J72945527361478082697.info",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J62435606341478073885/job.o5466643",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J62435606341478073885/J62435606341478073885.sh",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J62435606341478073885/sample/change_case_pars.sh",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J62435606341478073885/J62435606341478073885_post.sh",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J39076085011478058042/job.i5466152",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J39076085011478058042/job.o5466152",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J41126667171478055213/J41126667171478055213.sh",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J41126667171478055213/J41126667171478055213.sh.e5466107",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J84855404161478053002/J84855404161478053002.sh",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J15343284181478046201/J15343284181478046201.sh",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J15343284181478046201/run_mixer_sample.sh",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J15343284181478046201/job.o5465716",
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/mixerVessel2D/change_case_pars.sh",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J81878555691478051263/run_mixer_sample.sh",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J29155334941477976881/J29155334941477976881_post.sh",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J29155334941477976881/pre.log",
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J63352192061477969367/movie.mp4",
+		"/Users/peterbryzgalov/Desktop/sshfs/OpenFOAM/run/multiphase/interDyMFoam/ras/mixerVesselAMI/log.interDyMFoam",
+		"/Users/peterbryzgalov/Desktop/sshfs/OpenFOAM/run/FoamCases/mixerVesselAMI2D/system/topoSetDict",
+		"/Users/peterbryzgalov/Desktop/sshfs/OpenFOAM/run/multiphase/interDyMFoam/ras/job_mixerAMI_libscotch.o5458222",
+		"/Users/peterbryzgalov/Desktop/sshfs/OpenFOAM/run/multiphase/interDyMFoam/ras/mixerVesselAMI/constant/dynamicMeshDict",
+		"/Users/peterbryzgalov/Desktop/sshfs/OpenFOAM/run/multiphase/interDyMFoam/ras/mixerVesselAMI/constant/RASProperties"
+	],
+	"find":
+	{
+		"height": 24.0
+	},
+	"find_in_files":
+	{
+		"height": 93.0,
+		"where_history":
+		[
+			"/Users/peterbryzgalov/work/docker-fork/docker/",
+			"/Users/peterbryzgalov/work/docker-fork/docker/runconfig",
+			"/Users/peterbryzgalov/work/docker-fork/docker/api/server",
+			"/Users/peterbryzgalov/work/docker-fork/docker/api/client",
+			""
+		]
+	},
+	"find_state":
+	{
+		"case_sensitive": false,
+		"find_history":
+		[
+			"layout",
+			"traces",
+			"new_trace",
+			"providerlist",
+			"provider_list",
+			"filterAll",
+			"Clicked",
+			"providers-select",
+			"option",
+			"filterProvider",
+			"link",
+			"ssh_com",
+			"SSH_COM",
+			"remote_hosts",
+			"BROKER_ADDRESS",
+			"PROJ_FOLDER",
+			"sshconnection",
+			"CHDIR",
+			"SSH_COM",
+			"ssh ",
+			"LOCAL_PATH",
+			"displaySlice",
+			"displayTime",
+			"legend",
+			"count",
+			"filname",
+			"convert_currency",
+			"dst",
+			"prepDates",
+			"getQuote4Hours",
+			"plotPeriod",
+			"cpu_color",
+			"displayTime",
+			"displayPerformanceScatter",
+			"ButtonOver",
+			"CurrencyFormat",
+			"NumberFormat",
+			"baseline",
+			"time",
+			"console.log",
+			"per ",
+			"getColor(",
+			"hover_info",
+			"initmodel",
+			"oncl",
+			"Clicked ",
+			"/log",
+			">>>",
+			"continue_proc",
+			"slice_performance",
+			"costs_period",
+			"myDiv1",
+			"displaySlice",
+			"disp_time",
+			"period_m",
+			"har",
+			"Calcula",
+			"Calucla",
+			"layout",
+			"prepData",
+			"cell",
+			"scalars",
+			"mixerVessel2D",
+			"Movie",
+			"movie",
+			"../../../../",
+			"mixerVesselAMI",
+			"^\\d\\.\\d\\.\\d*\\s+(.+)",
+			"^\\d\\.\\d*\\s+(.+)",
+			"^\\s+\\d\\.\\d*\\s+(.+)",
+			"\\d\\.\\d(\\.\\d)*\\s+(.+)",
+			"init_block",
+			"glob",
+			"TODO",
+			"SSL",
+			"python-tk",
+			"val hashingTF = new",
+			"echo \"[^\"]+\"",
+			"Writing output to file",
+			"Use raw block",
+			"URL",
+			"Proceed",
+			"/next",
+			"refresh",
+			"git",
+			"image",
+			"Force next",
+			"suppose",
+			"Scrolling to",
+			"Found",
+			"onresize",
+			"Set max-height",
+			"scroll",
+			"resi",
+			"ui",
+			"resize",
+			"div",
+			"conf",
+			"maxHeight",
+			"resizeElm",
+			"displayblock",
+			"smooth",
+			"Raw",
+			"scroll",
+			"COMMAND",
+			"startup",
+			"start_apache",
+			"kp_server",
+			"apply=[websocket]",
+			"/readoutput",
+			"readoutput",
+			"/next",
+			"shutdown",
+			"()\n",
+			"]Get next",
+			"Loading next",
+			"Server address",
+			"Load next",
+			"Refresh",
+			"Loading next block",
+			"]No session",
+			"SESSION",
+			"shutdown",
+			"Exectuing",
+			"OK",
+			"<div",
+			"OK",
+			"result"
+		],
+		"highlight": true,
+		"in_selection": false,
+		"preserve_case": false,
+		"regex": false,
+		"replace_history":
+		[
+			"/home/ra000007/a03106/OpenFOAM/OpenFOAM-2.4.0/",
+			"<h4>$1</h4>",
+			"<h3>$1</h3>",
+			"<h3>$2",
+			"<h3>$2</h3>",
+			"$2",
+			"$3",
+			"$1 $2 $3",
+			"$1",
+			"\\1",
+			"",
+			"textarea",
+			"parseVars",
+			"\\033",
+			"$DOCKER_COMMAND",
+			"",
+			"KP_SKIP_TARS",
+			"KP_SKIP_SSL_CERT",
+			"KP_SKIP_APACHE",
+			"KP_SKIP_DOCKER",
+			"KP_SKIP_KPSERVER",
+			"KP_SKIP_USER",
+			"$SOURCE_DIR",
+			"group",
+			"rowspa",
+			"\\t\\t$1",
+			"$1",
+			"",
+			"if debug_level > 0 {",
+			"const debug_level int = 0",
+			"const debug_level int = 1",
+			"if debug_level > 0",
+			"gitDir",
+			"forcecommandlog",
+			"",
+			"\\$",
+			"$1\\t$2",
+			"",
+			"$1 $2",
+			"",
+			"$1 $2",
+			"$1 ",
+			"%1 ",
+			"$1 ",
+			"> ",
+			"",
+			"\\n$ ",
+			"$ ",
+			"",
+			", ",
+			"",
+			", ",
+			"",
+			"\t \t \t",
+			"$0 \t",
+			"$0\\t\t",
+			"\t\t\t",
+			"$0\\t",
+			"$0   ",
+			"$0  ",
+			"$0 ",
+			", ",
+			"$0/",
+			"$1/",
+			""
+		],
+		"reverse": false,
+		"show_context": false,
+		"use_buffer2": false,
+		"whole_word": false,
+		"wrap": true
+	},
+	"groups":
+	[
+		{
+			"selected": 0,
+			"sheets":
+			[
+				{
+					"buffer": 0,
+					"file": "infrainit.sh",
+					"semi_transient": false,
+					"settings":
+					{
+						"buffer_size": 7786,
+						"regions":
+						{
+						},
+						"selection":
+						[
+							[
+								0,
+								0
+							]
+						],
+						"settings":
+						{
+							"syntax": "Packages/ShellScript/Shell-Unix-Generic.sublime-syntax",
+							"translate_tabs_to_spaces": false
+						},
+						"translation.x": 0.0,
+						"translation.y": 0.0,
+						"zoom_level": 1.0
+					},
+					"stack_index": 0,
+					"type": "text"
+				}
+			]
+		}
+	],
+	"incremental_find":
+	{
+		"height": 24.0
+	},
+	"input":
+	{
+		"height": 33.0
+	},
+	"layout":
+	{
+		"cells":
+		[
+			[
+				0,
+				0,
+				1,
+				1
+			]
+		],
+		"cols":
+		[
+			0.0,
+			1.0
+		],
+		"rows":
+		[
+			0.0,
+			1.0
+		]
+	},
+	"menu_visible": true,
+	"output.9o:///Users/peterbryzgalov/work/python/webint":
+	{
+		"height": 106.0
+	},
+	"output.GoSublime-main-output":
+	{
+		"height": 118.0
+	},
+	"output.GoSublime-output":
+	{
+		"height": 106.0
+	},
+	"output.MarGo-output":
+	{
+		"height": 106.0
+	},
+	"output.anaconda_documentation":
+	{
+		"height": 27.0
+	},
+	"output.find_results":
+	{
+		"height": 186.0
+	},
+	"pinned_build_system": "",
+	"project": "MLframework.sublime-project",
+	"replace":
+	{
+		"height": 44.0
+	},
+	"save_all_on_build": true,
+	"select_file":
+	{
+		"height": 0.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 0.0
+	},
+	"select_project":
+	{
+		"height": 500.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 380.0
+	},
+	"select_symbol":
+	{
+		"height": 392.0,
+		"last_filter": "",
+		"selected_items":
+		[
+		],
+		"width": 392.0
+	},
+	"selected_group": 0,
+	"settings":
+	{
+	},
+	"show_minimap": true,
+	"show_open_files": true,
+	"show_tabs": true,
+	"side_bar_visible": false,
+	"side_bar_width": 197.0,
+	"status_bar_visible": true,
+	"template_settings":
+	{
+	}
+}

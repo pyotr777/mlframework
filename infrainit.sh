@@ -4,8 +4,8 @@
 # Copyright (C) 2017 Bryzgalov Peter @ Stair Lab CHITECH
 
 # TODO
-# [ ] Check that remote folders exist (before calling rsync)
-# [ ] Check that docker installed
+# [V] Check that remote folders exist (before calling rsync)
+# [V] Check that docker installed
 # [?] Check taht docker images exist. Pushed images with Chainer to dockerhub.
 # [ ] Before starting RabbitMQ and Celery Flower containers check that ports are not used
 # [ ] Use better terms for explaining broker, project folder, task, framework
@@ -13,14 +13,15 @@
 
 usage=$(cat <<USAGEBLOCK
 Usage:
-$0 -a <[user@]host1,[user@]host2...> [-i identity file] -l <dirname> -r <path> [-b <broker address>] [-m local/N] [-w local,N1,N2...]
+$0 -a <[user@]host1,[user@]host2...> [-f] [-i <ssh key file>] -l <dirname> -r <path> [-b <broker address>] [-m local/N] [-w local,N1,N2...]
 Options:
 	-a	Remote hosts addresses, comma-separated list.
-	-l	Local folder with task (project) files.
-	-r	Remote path for storing task and framework files relative to home dir.
+	-d	Local directory with task (project) files.
+	-r	Remote path for storing task and framework files relative to home directory.
 	-b	External address of the machine with Master and Broker containers.
 	-m	Start Celery master and broker on local machine or on host N (N is a number).
 	-w	Start workers on specified hosts. N1,N2... - comma separated numbers of hosts, listed in -a. First host has number 1.
+	-f	Read all the above options from file config.sh. If -f option not used config.sh will be overwritten with new options provided as arguments to this script.
 USAGEBLOCK
 )
 
@@ -28,6 +29,8 @@ if [[ $# < 1 ]]; then
     echo "$usage"
     exit 0
 fi
+
+config_file="config.sh"
 
 KEY=""
 REMOTE=""
@@ -45,7 +48,7 @@ while test $# -gt 0; do
         -a)
             REMOTE="$2";shift;
             ;;
-        -l)
+        -d)
             PROJ_FOLDER="$2";shift;
             ;;
         -r)
@@ -60,6 +63,9 @@ while test $# -gt 0; do
         -w)
             START_WORKER="$2";shift;
             ;;
+        -f)
+			READ_FROM_CONFIG=YES
+			;;
         --)
             shift
             break;;
@@ -71,6 +77,20 @@ while test $# -gt 0; do
     shift
 done
 
+# Output variable assignment statement for configuration file
+function saveVar {
+	var=$1
+	eval "val=\$$var"
+	if [[ -n "$val" ]]; then
+		echo "$var=\"$val\""
+	fi
+}
+
+
+if [[ -n "$READ_FROM_CONFIG" ]]; then
+	echo "Reading configuration from $config_file"
+	. $config_file
+fi
 
 if [[ -n "$REMOTE" ]]; then
 	if [[ -z "$REMOTE_PATH" ]] || [[ -z "$PROJ_FOLDER" ]]; then
@@ -93,20 +113,38 @@ if [[ -z "$START_MASTER" ]] && [[ -z "$BROKER_ADDRESS" ]]; then
 fi
 
 
+
+# Save configuration
+cat <<- CMDBLOCK_CFG > $config_file
+$(saveVar REMOTE_PATH)
+$(saveVar PROJ_FOLDER)
+$(saveVar REMOTE)
+$(saveVar KEY)
+$(saveVar BROKER_ADDRESS)
+$(saveVar START_MASTER)
+$(saveVar START_WORKER)
+CMDBLOCK_CFG
+
+
 RemoteExec() {
 	filename=$1
 	host=$2
+	key=$3
 	#filename="remote_command.sh"
-	#echo "Executing commands from $filename on $host"
+	#echo "(RemoteExec) Executing commands from $filename on $host with ssh key $key"
 	echo "" >> $filename
 	printf "rm $filename" >> $filename
 	chmod +x $filename
 	{
-		scp $filename $host:
-	} &>/dev/null
+		cmd="scp $key $filename $host:"
+		#echo "Executing command: $cmd"
+		eval $cmd
+	}
 	{
-		ssh $host ./$filename
-	} 2>/dev/null
+		cmd="ssh $key $host ./$filename"
+		#echo "Executing command: $cmd"
+		eval $cmd
+	} 2> /dev/null
 }
 
 LocalExec() {
@@ -135,6 +173,19 @@ SaveHostData() {
 	echo "folder,$PROJ_FOLDER" >> $filename
 	#cat $filename
 }
+
+function message {
+    echo ""
+    echo -en "\033[38;5;70m $1\033[m\n"
+    echo " "
+}
+
+function error_message {
+    echo ""
+    echo -en "\033[38;5;124m $1\033[m\n"
+    echo " "
+}
+
 
 set -e
 
@@ -195,27 +246,48 @@ for rhost in "${remote_hosts[@]}"; do
 		continue
 	fi
 
-	if [[ -n "$KEY" ]]; then
-		ssh_com="$KEY $rhost"
-	else
-		ssh_com="$rhost"
-	fi
-	#echo $ssh_com
+	echo "Testing SSH connection to $rhost with ssh key $KEY"
 
-	echo "Testing SSH connection to $rhost with ssh $ssh_com"
-	printf "hostname" > $cmd_filename
-	HOSTNAME="$(RemoteExec $cmd_filename "$ssh_com")"
+	cat <<- CMDBLOCK0 > $cmd_filename
+	{
+		if [[ ! -d $REMOTE_PATH ]]; then
+			mkdir -p $REMOTE_PATH
+		fi
+	} &>/dev/null
+	hostname
+	CMDBLOCK0
+	#RemoteExec $cmd_filename $rhost $KEY
+	HOSTNAME=$(RemoteExec $cmd_filename $rhost $KEY)
 	if [[ -z "$HOSTNAME" ]]; then
-		echo "Cannot connect with ssh $ssh_com."
+		echo "Cannot connect with ssh $KEY $rhost."
 		exit 1
 	fi
 	echo $HOSTNAME
+
+	# Testing docker on remote hosts
+	echo "Testing installed docker version on $rhost"
+	cat <<- CMDBLOCK_docker > $cmd_filename
+	{
+		docker version | grep -i "version"
+	} 2>/dev/null
+	echo \$version
+	CMDBLOCK_docker
+	#RemoteExec $cmd_filename $rhost $KEY
+	docker_version=$(RemoteExec $cmd_filename $rhost $KEY)
+	if [[ -z "$docker_version" ]]; then
+		error_message "Docker is not installed on $rhost."
+		exit 1
+	else
+		echo "On $rhost installed docker $docker_version."
+	fi
+
+
 
 	if [[ -z "$BROKER_ADDRESS" ]] && [[ -z "$LOCAL_EXTERNAL_IP" ]]; then
 		# Get local machine external address
 		printf "echo \"\$SSH_CONNECTION\"" > $cmd_filename
 		echo "" >> $cmd_filename
-		output_string="$(RemoteExec $cmd_filename "$ssh_com")"
+		output_string=$(RemoteExec $cmd_filename $rhost $KEY)
 		IFS=" " read -ra arr <<< "$output_string"
 		LOCAL_EXTERNAL_IP=${arr[0]}
 
@@ -225,18 +297,23 @@ for rhost in "${remote_hosts[@]}"; do
 		fi
 		echo "Local machine external IP: $LOCAL_EXTERNAL_IP"
 	fi
-
+	set +x
 	OPT="-av"
-	SSH_KEY="-e 'ssh -i $KEY'"
+	if [[ -n "$KEY" ]]; then
+		SSH_KEY="-e \"ssh $KEY\""
+	else
+		SSH_KEY=""
+	fi
 
-	echo "Compare ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	message "Sync ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
 	# Copy task files to remote
-	eval rsync $OPT $KEY --exclude-from "rsyncexclude_task.txt" --size-only  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/
-
+	cmd="rsync $OPT $SSH_KEY --exclude-from rsyncexclude_task.txt --size-only  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	message $cmd
+	eval $cmd
+	message "Sync ./ with $rhost:$REMOTE_PATH"
 	# Copy framework files to remote
-	eval rsync $OPT $KEY --include-from "rsyncinclude_framework.txt" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/
+	eval rsync $OPT $SSH_KEY --include-from "rsyncinclude_framework.txt" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/
 done
-
 
 
 # Starting master
@@ -258,7 +335,7 @@ if [[ -n "$START_MASTER" ]]; then
 	if [[ "$master_host" == "localhost" ]]; then
 		LocalExec $cmd_filename
 	else
-		RemoteExec $cmd_filename $master_host
+		RemoteExec $cmd_filename $master_host $KEY
 	fi
 	if [[ -z "$BROKER_ADDRESS" ]]; then
 		if [[ "$master_host" == "localhost" ]]; then
@@ -269,6 +346,7 @@ if [[ -n "$START_MASTER" ]]; then
 		echo "Set Broker address to $BROKER_ADDRESS."
 	fi
 fi
+
 
 # Starting workers
 if [[ -n "$START_WORKER" ]]; then
@@ -300,14 +378,7 @@ if [[ -n "$START_WORKER" ]]; then
 		if [[ "$host" == "localhost" ]];then
 			LocalExec "$cmd_filename"
 		else
-			#set -x
-			if [[ -n "$KEY" ]]; then
-				ssh_com="$KEY $host"
-			else
-				ssh_com="$host"
-			fi
-			cat $cmd_filename
-			output_string="$(RemoteExec $cmd_filename $ssh_com)"
+			output_string=$(RemoteExec $cmd_filename $host $KEY)
 			echo "$output_string"
 		fi
 	done
