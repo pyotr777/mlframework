@@ -6,9 +6,9 @@
 
 usage=$(cat <<USAGEBLOCK
 Usage:
-$0 [-b <broker address>] -l <dirname>
+$0 [-b <broker address>] -d <dirname>
 Options:
-	-l	Local folder with task files.
+	-d	Local folder with task files.
 	-b	External address of the machine with Master and Broker containers.
 USAGEBLOCK
 )
@@ -27,7 +27,7 @@ while test $# -gt 0; do
             echo $usage
             exit 0
             ;;
-        -l)
+        -d)
             proj_folder="$2";shift;
             ;;
         -b)
@@ -45,17 +45,18 @@ while test $# -gt 0; do
 done
 
 # Clean old conatiners
-./clean_celery_worker.sh
+./clean_celery_worker.sh 1>/dev/null
 
 if [[ -n "$broker_address" ]]; then
-	BROKER_OPT="-e CELERY_BROKER_URL=amqp://guest@$broker_address"
-    echo "Using BROKER_OPT:$BROKER_OPT"
+	BROKER_OPT="-e CELERY_BROKER_URL=amqp://guest@$broker_address -e RABBIT_PORT=tcp://$broker_address:4369"
+    #echo "Using BROKER_OPT:$BROKER_OPT"
 else
     BROKER_OPT="--link rabbit"
-    echo "Starting worker with link to rabbit container."
+    #echo "Starting worker with link to rabbit container."
 fi
 
 # Starting worker container with workers
 cmd="docker run -d -v "$(pwd)":/root $BROKER_OPT --name celery-worker pyotr777/celery-chainer-worker celery -A $proj_folder worker --loglevel=info -E"
 #echo $cmd
 eval $cmd
+

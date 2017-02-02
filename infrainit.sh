@@ -36,6 +36,8 @@ KEY=""
 REMOTE=""
 ssh_com=""
 
+debug="1"
+
 while test $# -gt 0; do
     case "$1" in
         -h | --help)
@@ -65,6 +67,9 @@ while test $# -gt 0; do
             ;;
         -f)
 			READ_FROM_CONFIG=YES
+			;;
+		--debug)
+			debug=YES
 			;;
         --)
             shift
@@ -131,7 +136,6 @@ RemoteExec() {
 	host=$2
 	key=$3
 	#filename="remote_command.sh"
-	#echo "(RemoteExec) Executing commands from $filename on $host with ssh key $key"
 	echo "" >> $filename
 	printf "rm $filename" >> $filename
 	chmod +x $filename
@@ -139,7 +143,7 @@ RemoteExec() {
 		cmd="scp $key $filename $host:"
 		#echo "Executing command: $cmd"
 		eval $cmd
-	}
+	} &> /dev/null
 	{
 		cmd="ssh $key $host ./$filename"
 		#echo "Executing command: $cmd"
@@ -149,9 +153,10 @@ RemoteExec() {
 
 LocalExec() {
 	filename=$1
-	echo "Executing commands from $filename on local machine"
-	cat $filename
-	echo "---"
+	if [[ -n "$debug" ]]; then
+		echo "Executing commands from $filename on local machine"
+		cat $filename
+	fi
 	echo "" >> $filename
 	printf "rm $filename" >> $filename
 	chmod +x $filename
@@ -237,8 +242,10 @@ chmod +x $clean_script
 
 cmd_filename="remote_command.sh"
 
-echo "Have ${#remote_hosts[@]} hosts: ${remote_hosts[@]}"
-echo "Have ${#worker_hosts[@]} worker hosts: ${worker_hosts[@]}"
+if [[ -n "$debug" ]]; then
+	echo "Have ${#remote_hosts[@]} hosts: ${remote_hosts[@]}"
+	echo "Have ${#worker_hosts[@]} worker hosts: ${worker_hosts[@]}"
+fi
 # Copy files to remote locations
 for rhost in "${remote_hosts[@]}"; do
 	#echo $rhost
@@ -246,7 +253,9 @@ for rhost in "${remote_hosts[@]}"; do
 		continue
 	fi
 
-	echo "Testing SSH connection to $rhost with ssh key $KEY"
+	if [[ -n "$debug" ]]; then
+		echo "Testing SSH connection to $rhost with ssh key $KEY"
+	fi
 
 	cat <<- CMDBLOCK0 > $cmd_filename
 	{
@@ -259,13 +268,17 @@ for rhost in "${remote_hosts[@]}"; do
 	#RemoteExec $cmd_filename $rhost $KEY
 	HOSTNAME=$(RemoteExec $cmd_filename $rhost $KEY)
 	if [[ -z "$HOSTNAME" ]]; then
-		echo "Cannot connect with ssh $KEY $rhost."
+		error_message "Cannot connect with ssh $KEY $rhost."
 		exit 1
 	fi
-	echo $HOSTNAME
+	if [[ -n "$debug" ]]; then
+		echo $HOSTNAME
+	fi
 
 	# Testing docker on remote hosts
-	echo "Testing installed docker version on $rhost"
+	if [[ -n "$debug" ]]; then
+		echo "Testing installed docker version on $rhost"
+	fi
 	cat <<- CMDBLOCK_docker > $cmd_filename
 	{
 		docker version | grep -i "version"
@@ -278,7 +291,9 @@ for rhost in "${remote_hosts[@]}"; do
 		error_message "Docker is not installed on $rhost."
 		exit 1
 	else
-		echo "On $rhost installed docker $docker_version."
+		if [[ -n "$debug" ]]; then
+			echo "On $rhost installed docker $docker_version."
+		fi
 	fi
 
 
@@ -292,12 +307,14 @@ for rhost in "${remote_hosts[@]}"; do
 		LOCAL_EXTERNAL_IP=${arr[0]}
 
 		if [[ -z "$LOCAL_EXTERNAL_IP" ]]; then
-			echo "Could not determine external IP address."
+			error_message "Could not determine external IP address of local machine."
 			exit 1
 		fi
-		echo "Local machine external IP: $LOCAL_EXTERNAL_IP"
+		if [[ -n "$debug" ]]; then
+			echo "Local machine external IP: $LOCAL_EXTERNAL_IP"
+		fi
 	fi
-	set +x
+
 	OPT="-av"
 	if [[ -n "$KEY" ]]; then
 		SSH_KEY="-e \"ssh $KEY\""
@@ -305,82 +322,129 @@ for rhost in "${remote_hosts[@]}"; do
 		SSH_KEY=""
 	fi
 
-	message "Sync ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	message "Copying files"
+
+	if [[ -n "$debug" ]]; then
+		echo "Sync ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	fi
 	# Copy task files to remote
-	cmd="rsync $OPT $SSH_KEY --exclude-from rsyncexclude_task.txt --size-only  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
-	message $cmd
-	eval $cmd
-	message "Sync ./ with $rhost:$REMOTE_PATH"
+	cmd="rsync $OPT $SSH_KEY --exclude-from rsyncexclude_task.txt ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	#message $cmd
+	if [[ -n "$debug" ]]; then
+		echo $cmd
+		eval $cmd
+	else
+		eval $cmd &>/dev/null
+	fi
+
+	if [[ -n "$debug" ]]; then
+		echo "Sync ./ with $rhost:$REMOTE_PATH"
+	fi
 	# Copy framework files to remote
-	eval rsync $OPT $SSH_KEY --include-from "rsyncinclude_framework.txt" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/
+	cmd="rsync $OPT $SSH_KEY --include-from rsyncinclude_framework.txt --exclude='*' ./ $rhost:$REMOTE_PATH/"
+	if [[ -n "$debug" ]]; then
+		echo $cmd
+		eval $cmd
+	else
+		eval $cmd &>/dev/null
+	fi
 done
 
-
+message "Starting master at $master_host. Celery Flower will be available at http://$master_host:5555"
 # Starting master
 if [[ -n "$START_MASTER" ]]; then
-	cat <<- CMDBLOCK > $cmd_filename
-	echo "Starting master at $master_host"
-	CMDBLOCK
 
+	echo "#!/bin/bash" > $cmd_filename
 	if [[ "$master_host" != "localhost" ]]; then
 		echo "cd $REMOTE_PATH" >> $cmd_filename
 	fi
 
 	cat <<- CMDBLOCK2 >> $cmd_filename
 	./start_celery_master.sh
-	docker ps
+	if [[ -n "$debug" ]]; then
+		docker ps
+	fi
 	CMDBLOCK2
-	echo "Command file:"
-	cat $cmd_filename
+
+	if [[ -n "$debug" ]]; then
+		echo "Command file $cmd_filename:"
+		cat $cmd_filename
+	fi
+
 	if [[ "$master_host" == "localhost" ]]; then
 		LocalExec $cmd_filename
 	else
 		RemoteExec $cmd_filename $master_host $KEY
 	fi
+
 	if [[ -z "$BROKER_ADDRESS" ]]; then
 		if [[ "$master_host" == "localhost" ]]; then
 			BROKER_ADDRESS=$LOCAL_EXTERNAL_IP
 		else
 			BROKER_ADDRESS="$master_host"
 		fi
-		echo "Set Broker address to $BROKER_ADDRESS."
+		if [[ -n "$debug" ]]; then
+			echo "Set Broker address to $BROKER_ADDRESS."
+		fi
 	fi
 fi
 
+worker_host_list=""
 
+message "Starting workers"
 # Starting workers
 if [[ -n "$START_WORKER" ]]; then
-	echo "Workers: ${#worker_hosts[@]}"
+	if [[ -n "$debug" ]]; then
+		echo "Workers: ${#worker_hosts[@]}"
+	fi
 	for i in "${worker_hosts[@]}"; do
-		echo "worker $((i+1))"
+		if [[ -n "$debug" ]]; then
+			echo "worker $((i+1))"
+		fi
 		host=${remote_hosts[$i]}
 
+		# Add host to worker_host_list.
+		if [[ -n "$worker_host_list" ]]; then
+			worker_host_list="$worker_host_list, "
+		fi
+		worker_host_list="$worker_host_list$host"
+
+		# Options for start_celery_worker.sh
 		if [[ -n "$BROKER_ADDRESS" ]]; then
 			BROKER_OPTIONS="-b $BROKER_ADDRESS"
 		fi
 		if [[ -n "$PROJ_FOLDER" ]]; then
-			PROJ_FOLDER_OPTIONS="-l $PROJ_FOLDER"
+			PROJ_FOLDER_OPTIONS="-d $PROJ_FOLDER"
 		fi
 
 		cat <<- CMDBLOCK3 > $cmd_filename
-		echo "Starting workers at $host. BROKER_ADDRESS=$BROKER_ADDRESS PROJ_FOLDER=$PROJ_FOLDER"
+		if [[ -n "$debug" ]]; then
+			echo "Starting workers on $host. BROKER_ADDRESS=$BROKER_ADDRESS PROJ_FOLDER=$PROJ_FOLDER"
+		fi
 		CMDBLOCK3
 
 		if [[ "$host" != "localhost" ]]; then
 			echo "cd $REMOTE_PATH" >> $cmd_filename
 		fi
 		cat <<- CMDBLOCK4 >> $cmd_filename
-		echo "$(hostname):$(pwd)"
-		./start_celery_worker.sh $BROKER_options $PROJ_FOLDER_OPTIONS
-		docker ps
+		if [[ -n "$debug" ]]; then
+			echo "\$(hostname):\$(pwd)"
+		fi
+		./start_celery_worker.sh $BROKER_OPTIONS $PROJ_FOLDER_OPTIONS
+		if [[ -n "$debug" ]]; then
+			docker ps
+		fi
 		CMDBLOCK4
 
 		if [[ "$host" == "localhost" ]];then
 			LocalExec "$cmd_filename"
 		else
 			output_string=$(RemoteExec $cmd_filename $host $KEY)
-			echo "$output_string"
+			if [[ -n "$debug" ]]; then
+				echo "$output_string"
+			fi
 		fi
 	done
 fi
 
+message "Infrastructure is ready. Master and broker are running on $master_host. Workers on $worker_host_list."
