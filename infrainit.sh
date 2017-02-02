@@ -37,6 +37,7 @@ REMOTE=""
 ssh_com=""
 
 debug="1"
+make_ssh_tunnels=YES
 
 while test $# -gt 0; do
     case "$1" in
@@ -408,6 +409,29 @@ if [[ -n "$START_WORKER" ]]; then
 			worker_host_list="$worker_host_list, "
 		fi
 		worker_host_list="$worker_host_list$host"
+
+		# Start SSH tunnel
+		if [[ -n "$make_ssh_tunnels" ]] && [[ "$host" != "localhost" ]]; then
+			if [[ -n "$debug" ]]; then
+				echo "Starting reversed SSH tunnel from $host:5672 to $master_host:5672"
+			fi
+			cmd="ssh -R 5672:localhost:5672 $KEY $host -f -N"
+			if [[ -n "$debug" ]]; then
+				echo $cmd
+			fi
+			echo $cmd > $cmd_filename
+			echo "echo \$!" >> $cmd_filename
+
+			if [[ "$master_host" == "localhost" ]]; then
+				LocalExec $cmd_filename
+			else
+				RemoteExec $cmd_filename $master_host $KEY
+			fi
+
+			# Change BROKER_ADDRESS so that workers connect to SSH tunnel on host machine of Docker container.
+			BROKER_ADDRESS="172.17.0.2"
+		fi
+
 
 		# Options for start_celery_worker.sh
 		if [[ -n "$BROKER_ADDRESS" ]]; then
