@@ -3,6 +3,8 @@
 # Start framework infrastructure on local and/or remote hosts.
 # Copyright (C) 2017 Bryzgalov Peter @ Stair Lab CHITECH
 
+# Version 0.1alpha
+
 # TODO
 # [V] Check that remote folders exist (before calling rsync)
 # [V] Check that docker installed
@@ -13,11 +15,11 @@
 
 usage=$(cat <<USAGEBLOCK
 Usage:
-$0 -a <[user@]host1,[user@]host2...> [-f] [-i <ssh key file>] -l <dirname> -r <path> [-b <broker address>] [-m local/N] [-w local,N1,N2...]
+$0 -a <[user@]host1,[user@]host2...> [-f] [-i <ssh key file>] -r <path> -d <dirname> [-b <broker address>] [-m local/N] [-w local,N1,N2...]
 Options:
 	-a	Remote hosts addresses, comma-separated list.
-	-d	Local directory with task (project) files.
 	-r	Remote path for storing task and framework files relative to home directory.
+	-d	Name of directory with task (project) files.
 	-b	External address of the machine with Master and Broker containers.
 	-m	Start Celery master and broker on local machine or on host N (N is a number).
 	-w	Start workers on specified hosts. N1,N2... - comma separated numbers of hosts, listed in -a. First host has number 1.
