@@ -9,7 +9,7 @@
 # [?] Check taht docker images exist. Pushed images with Chainer to dockerhub.
 # [ ] Before starting RabbitMQ and Celery Flower containers check that ports are not used
 # [ ] Use better terms for explaining broker, project folder, task, framework
-
+# [ ] Check that GatewayPorts set to yes in /etc/ssh/sshd_config on worker hosts.
 
 usage=$(cat <<USAGEBLOCK
 Usage:
@@ -37,7 +37,7 @@ REMOTE=""
 ssh_com=""
 
 debug="1"
-make_ssh_tunnels=YES
+make_ssh_tunnels=""
 
 while test $# -gt 0; do
     case "$1" in
@@ -144,12 +144,12 @@ RemoteExec() {
 		cmd="scp $key $filename $host:"
 		#echo "Executing command: $cmd"
 		eval $cmd
-	} &> /dev/null
+	}
 	{
 		cmd="ssh $key $host ./$filename"
 		#echo "Executing command: $cmd"
 		eval $cmd
-	} 2> /dev/null
+	}
 }
 
 LocalExec() {
@@ -192,6 +192,20 @@ function error_message {
     echo " "
 }
 
+# Remove user name from host address: ubuntu@host.com -> host.com
+function hostAddress {
+	set -x
+	host=$1
+	ifs=$IFS
+	IFS='@' arr=( $(echo "$host") )
+	IFS=$ifs
+	if [ ${#arr[@]} -gt 1 ]; then
+		echo ${arr[1]}
+	else
+		echo $host
+	fi
+	set +x
+}
 
 set -e
 
@@ -276,28 +290,6 @@ for rhost in "${remote_hosts[@]}"; do
 		echo $HOSTNAME
 	fi
 
-	# Testing docker on remote hosts
-	if [[ -n "$debug" ]]; then
-		echo "Testing installed docker version on $rhost"
-	fi
-	cat <<- CMDBLOCK_docker > $cmd_filename
-	{
-		docker version | grep -i "version"
-	} 2>/dev/null
-	echo \$version
-	CMDBLOCK_docker
-	#RemoteExec $cmd_filename $rhost $KEY
-	docker_version=$(RemoteExec $cmd_filename $rhost $KEY)
-	if [[ -z "$docker_version" ]]; then
-		error_message "Docker is not installed on $rhost."
-		exit 1
-	else
-		if [[ -n "$debug" ]]; then
-			echo "On $rhost installed docker $docker_version."
-		fi
-	fi
-
-
 
 	if [[ -z "$BROKER_ADDRESS" ]] && [[ -z "$LOCAL_EXTERNAL_IP" ]]; then
 		# Get local machine external address
@@ -323,7 +315,7 @@ for rhost in "${remote_hosts[@]}"; do
 		SSH_KEY=""
 	fi
 
-	message "Copying files"
+	message "Copying files to $rhost"
 
 	if [[ -n "$debug" ]]; then
 		echo "Sync ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
@@ -351,7 +343,35 @@ for rhost in "${remote_hosts[@]}"; do
 	fi
 done
 
-message "Starting master at $master_host. Celery Flower will be available at http://$master_host:5555"
+
+# Testing docker on remote hosts
+for rhost in "${remote_hosts[@]}"; do
+	if [[ "$rhost" == "localhost" ]]; then
+		continue
+	fi
+	if [[ -n "$debug" ]]; then
+		echo "Testing installed docker version on $rhost"
+	fi
+	cat <<- CMDBLOCK_docker > $cmd_filename
+	{
+		docker version | grep -i "version"
+	} 2>/dev/null
+	echo \$version
+	CMDBLOCK_docker
+	#RemoteExec $cmd_filename $rhost $KEY
+	docker_version=$(RemoteExec $cmd_filename $rhost $KEY)
+	if [[ -z "$docker_version" ]]; then
+		error_message "Docker is not installed on $rhost."
+		exit 1
+	else
+		if [[ -n "$debug" ]]; then
+			echo "On $rhost installed docker $docker_version."
+		fi
+	fi
+done
+
+
+message "Starting master at $master_host. Celery Flower will be available at http://$(hostAddress "$master_host"):5555"
 # Starting master
 if [[ -n "$START_MASTER" ]]; then
 
@@ -366,6 +386,10 @@ if [[ -n "$START_MASTER" ]]; then
 		docker ps
 	fi
 	CMDBLOCK2
+
+	if [[ "$master_host" != "localhost" ]]; then
+		echo "cd -" >> $cmd_filename
+	fi
 
 	if [[ -n "$debug" ]]; then
 		echo "Command file $cmd_filename:"
@@ -382,7 +406,7 @@ if [[ -n "$START_MASTER" ]]; then
 		if [[ "$master_host" == "localhost" ]]; then
 			BROKER_ADDRESS=$LOCAL_EXTERNAL_IP
 		else
-			BROKER_ADDRESS="$master_host"
+			BROKER_ADDRESS=$(hostAddress "$master_host")
 		fi
 		if [[ -n "$debug" ]]; then
 			echo "Set Broker address to $BROKER_ADDRESS."
@@ -413,15 +437,15 @@ if [[ -n "$START_WORKER" ]]; then
 		# Start SSH tunnel
 		if [[ -n "$make_ssh_tunnels" ]] && [[ "$host" != "localhost" ]]; then
 			if [[ -n "$debug" ]]; then
-				echo "Starting reversed SSH tunnel from $host:5672 to $master_host:5672"
+				echo "Starting SSH tunnel from $host:5672 to $master_host:5672"
 			fi
-			cmd="ssh -R 5672:localhost:5672 $KEY $host -f -N"
+			cmd="ssh -R 0.0.0.0:5672:localhost:5672 $KEY $host -f -N -o ServerAliveInterval=10"
 			if [[ -n "$debug" ]]; then
 				echo $cmd
 			fi
 			echo $cmd > $cmd_filename
 			echo "echo \$!" >> $cmd_filename
-
+			set -x
 			if [[ "$master_host" == "localhost" ]]; then
 				LocalExec $cmd_filename
 			else
@@ -429,7 +453,8 @@ if [[ -n "$START_WORKER" ]]; then
 			fi
 
 			# Change BROKER_ADDRESS so that workers connect to SSH tunnel on host machine of Docker container.
-			BROKER_ADDRESS="172.17.0.2"
+			BROKER_ADDRESS="localhost"
+			set +x
 		fi
 
 
@@ -459,6 +484,9 @@ if [[ -n "$START_WORKER" ]]; then
 			docker ps
 		fi
 		CMDBLOCK4
+		if [[ "$host" != "localhost" ]]; then
+			echo "cd -" >> $cmd_filename
+		fi
 
 		if [[ "$host" == "localhost" ]];then
 			LocalExec "$cmd_filename"

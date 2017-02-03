@@ -4,6 +4,30 @@
 		"selected_items":
 		[
 			[
+				"m",
+				"make_ssh_tunnels"
+			],
+			[
+				"brok",
+				"broker_address"
+			],
+			[
+				"version",
+				"docker_version"
+			],
+			[
+				"RE",
+				"READ_FROM_CONFIG"
+			],
+			[
+				"ST",
+				"START_WORKER"
+			],
+			[
+				"config",
+				"config_file"
+			],
+			[
 				"optionslis",
 				"optionslist_global"
 			],
@@ -54,10 +78,6 @@
 			[
 				"worker",
 				"worker_hosts"
-			],
-			[
-				"RE",
-				"REMOTE"
 			],
 			[
 				"con",
@@ -494,40 +514,9 @@
 			[
 				"run",
 				"run_flag"
-			],
-			[
-				"write",
-				"write_flag"
-			],
-			[
-				"line",
-				"line_counter"
-			],
-			[
-				"block_cou",
-				"block_counter"
-			],
-			[
-				"ece",
-				"exec_button_NNN"
-			],
-			[
-				"outpu",
-				"output_file_handler"
 			]
 		]
 	},
-	"buffers":
-	[
-		{
-			"file": "infrainit.sh",
-			"settings":
-			{
-				"buffer_size": 7786,
-				"line_ending": "Unix"
-			}
-		}
-	],
 	"build_system": "",
 	"build_system_choices":
 	[
@@ -707,29 +696,29 @@
 		"side_bar_visible": false,
 		"status_bar_visible": false
 	},
-	"expanded_folders":
-	[
-		"/Users/peterbryzgalov/work/ML/mlframework"
-	],
 	"file_history":
 	[
+		"/Users/peterbryzgalov/work/ML/mlframework/clean_celery_worker.sh",
+		"/Users/peterbryzgalov/work/kportal/release/installkportal_ubuntu.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_master.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_worker.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/remote_command.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/config.sh",
+		"/Users/peterbryzgalov/work/kportal/release/install",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/plotting2.js",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/lib.js",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/index2.html",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/index.html",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/plotting.js",
-		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_worker.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/proj/task_fasttext.py",
 		"/Users/peterbryzgalov/work/ML/mlframework/infrainit.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/proj/baselines/fasttext.py",
 		"/Users/peterbryzgalov/work/ML/mlframework/proj/test_training.py",
 		"/Users/peterbryzgalov/work/ML/mlframework/initinfra.sh",
-		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_master.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/inithost.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/celery_rabbit.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/proj/test_echo.py",
 		"/Users/peterbryzgalov/work/ML/mlframework/send-rabbit.py",
-		"/Users/peterbryzgalov/work/kportal/release/install",
 		"/Users/peterbryzgalov/work/ML/mlframework/Dockerfile-worker",
 		"/Users/peterbryzgalov/work/ML/mlframework/Dockerfile-flower",
 		"/Users/peterbryzgalov/work/kportal/release/sync_up.sh",
@@ -836,15 +825,11 @@
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J29155334941477976881/J29155334941477976881_post.sh",
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J29155334941477976881/pre.log",
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J63352192061477969367/movie.mp4",
-		"/Users/peterbryzgalov/Desktop/sshfs/OpenFOAM/run/multiphase/interDyMFoam/ras/mixerVesselAMI/log.interDyMFoam",
-		"/Users/peterbryzgalov/Desktop/sshfs/OpenFOAM/run/FoamCases/mixerVesselAMI2D/system/topoSetDict",
-		"/Users/peterbryzgalov/Desktop/sshfs/OpenFOAM/run/multiphase/interDyMFoam/ras/job_mixerAMI_libscotch.o5458222",
-		"/Users/peterbryzgalov/Desktop/sshfs/OpenFOAM/run/multiphase/interDyMFoam/ras/mixerVesselAMI/constant/dynamicMeshDict",
-		"/Users/peterbryzgalov/Desktop/sshfs/OpenFOAM/run/multiphase/interDyMFoam/ras/mixerVesselAMI/constant/RASProperties"
+		"/Users/peterbryzgalov/Desktop/sshfs/OpenFOAM/run/multiphase/interDyMFoam/ras/mixerVesselAMI/log.interDyMFoam"
 	],
 	"find":
 	{
-		"height": 24.0
+		"height": 35.0
 	},
 	"find_in_files":
 	{
@@ -863,6 +848,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"set ",
 			"layout",
 			"traces",
 			"new_trace",
@@ -989,8 +975,7 @@
 			"Exectuing",
 			"OK",
 			"<div",
-			"OK",
-			"result"
+			"OK"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1070,44 +1055,6 @@
 		"whole_word": false,
 		"wrap": true
 	},
-	"groups":
-	[
-		{
-			"selected": 0,
-			"sheets":
-			[
-				{
-					"buffer": 0,
-					"file": "infrainit.sh",
-					"semi_transient": false,
-					"settings":
-					{
-						"buffer_size": 7786,
-						"regions":
-						{
-						},
-						"selection":
-						[
-							[
-								0,
-								0
-							]
-						],
-						"settings":
-						{
-							"syntax": "Packages/ShellScript/Shell-Unix-Generic.sublime-syntax",
-							"translate_tabs_to_spaces": false
-						},
-						"translation.x": 0.0,
-						"translation.y": 0.0,
-						"zoom_level": 1.0
-					},
-					"stack_index": 0,
-					"type": "text"
-				}
-			]
-		}
-	],
 	"incremental_find":
 	{
 		"height": 24.0
@@ -1164,7 +1111,6 @@
 		"height": 186.0
 	},
 	"pinned_build_system": "",
-	"project": "MLframework.sublime-project",
 	"replace":
 	{
 		"height": 44.0
@@ -1197,14 +1143,13 @@
 		],
 		"width": 392.0
 	},
-	"selected_group": 0,
 	"settings":
 	{
 	},
 	"show_minimap": true,
 	"show_open_files": true,
 	"show_tabs": true,
-	"side_bar_visible": false,
+	"side_bar_visible": true,
 	"side_bar_width": 197.0,
 	"status_bar_visible": true,
 	"template_settings":
