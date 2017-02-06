@@ -3,7 +3,7 @@
 # Start framework infrastructure on local and/or remote hosts.
 # Copyright (C) 2017 Bryzgalov Peter @ Stair Lab CHITECH
 
-# Version 0.1alpha
+# Version 0.2alpha
 
 # TODO
 # [V] Check that remote folders exist (before calling rsync)
@@ -32,13 +32,15 @@ if [[ $# < 1 ]]; then
     exit 0
 fi
 
-config_file="config.sh"
+
+# Variables initialisation
+. init.sh
 
 KEY=""
+key_opt=""
 REMOTE=""
 ssh_com=""
 
-debug="1"
 make_ssh_tunnels=""
 
 while test $# -gt 0; do
@@ -48,7 +50,7 @@ while test $# -gt 0; do
             exit 0
             ;;
         -i)
-            KEY="-i $2";shift;
+            KEY="$2";key_opt="-i $2";shift;
             ;;
         -a)
             REMOTE="$2";shift;
@@ -98,6 +100,7 @@ function saveVar {
 if [[ -n "$READ_FROM_CONFIG" ]]; then
 	echo "Reading configuration from $config_file"
 	. $config_file
+	key_opt="-i $KEY"
 fi
 
 if [[ -n "$REMOTE" ]]; then
@@ -134,51 +137,20 @@ $(saveVar START_WORKER)
 CMDBLOCK_CFG
 
 
-RemoteExec() {
-	filename=$1
-	host=$2
-	key=$3
-	#filename="remote_command.sh"
-	echo "" >> $filename
-	printf "rm $filename" >> $filename
-	chmod +x $filename
-	{
-		cmd="scp $key $filename $host:"
-		#echo "Executing command: $cmd"
-		eval $cmd
-	}
-	{
-		cmd="ssh $key $host ./$filename"
-		#echo "Executing command: $cmd"
-		eval $cmd
-	}
-}
-
-LocalExec() {
-	filename=$1
-	if [[ -n "$debug" ]]; then
-		echo "Executing commands from $filename on local machine"
-		cat $filename
-	fi
-	echo "" >> $filename
-	printf "rm $filename" >> $filename
-	chmod +x $filename
-	./$filename
-}
-
-
 SaveHostData() {
 	filename=$1
 	hosts=$2
 	master=$3
 	broker=$4
 	workers=$5
+	key=$6
 	echo "hosts,$hosts" > $filename
 	echo "master,$master" >> $filename
 	echo "broker,$broker" >> $filename
 	echo "workers,$workers" >> $filename
 	echo "remote_path,$REMOTE_PATH" >> $filename
 	echo "folder,$PROJ_FOLDER" >> $filename
+	echo "key,$key" >> $filename
 	#cat $filename
 }
 
@@ -229,16 +201,14 @@ fi
 master_host=${remote_hosts[$START_MASTER]}
 
 
-CSV_file="infra.csv"
-SaveHostData "$CSV_file" "localhost,$REMOTE" "$START_MASTER" "$START_MASTER" "${START_WORKER//local/0}"
+SaveHostData "$CSV_file" "localhost,$REMOTE" "$START_MASTER" "$START_MASTER" "${START_WORKER//local/0}" "$KEY"
 
 # Create infrastructure cleaning script
-clean_script="infra_clean.sh"
 echo "#!/bin/bash" > $clean_script
 for i in "${worker_hosts[@]}"; do
 	# echo "$i ${remote_hosts[$i]}"
 	if [[ "${remote_hosts[$i]}" != "localhost" ]];then
-		cmd="ssh $KEY ${remote_hosts[$i]} $REMOTE_PATH/clean_celery_worker.sh"
+		cmd="ssh $key_opt ${remote_hosts[$i]} $REMOTE_PATH/clean_celery_worker.sh"
 	else
 		cmd="./clean_celery_worker.sh"
 	fi
@@ -246,7 +216,7 @@ for i in "${worker_hosts[@]}"; do
 done
 
 if [[ "$master_host" != "localhost" ]]; then
-	cmd="ssh $KEY $master_host $REMOTE_PATH/clean_celery_master.sh"
+	cmd="ssh $key_opt $master_host $REMOTE_PATH/clean_celery_master.sh"
 else
 	cmd="./clean_celery_master.sh"
 fi
@@ -255,9 +225,6 @@ echo "rm $CSV_file" >> $clean_script
 echo "rm $clean_script" >> $clean_script
 
 chmod +x $clean_script
-
-
-cmd_filename="remote_command.sh"
 
 if [[ -n "$debug" ]]; then
 	echo "Have ${#remote_hosts[@]} hosts: ${remote_hosts[@]}"
@@ -283,7 +250,7 @@ for rhost in "${remote_hosts[@]}"; do
 	hostname
 	CMDBLOCK0
 	#RemoteExec $cmd_filename $rhost $KEY
-	HOSTNAME=$(RemoteExec $cmd_filename $rhost $KEY)
+	HOSTNAME=$(RemoteExec $cmd_filename $rhost "$key_opt")
 	if [[ -z "$HOSTNAME" ]]; then
 		error_message "Cannot connect with ssh $KEY $rhost."
 		exit 1
@@ -297,7 +264,7 @@ for rhost in "${remote_hosts[@]}"; do
 		# Get local machine external address
 		printf "echo \"\$SSH_CONNECTION\"" > $cmd_filename
 		echo "" >> $cmd_filename
-		output_string=$(RemoteExec $cmd_filename $rhost $KEY)
+		output_string=$(RemoteExec $cmd_filename $rhost "$key_opt")
 		IFS=" " read -ra arr <<< "$output_string"
 		LOCAL_EXTERNAL_IP=${arr[0]}
 
@@ -311,8 +278,8 @@ for rhost in "${remote_hosts[@]}"; do
 	fi
 
 	OPT="-av"
-	if [[ -n "$KEY" ]]; then
-		SSH_KEY="-e \"ssh $KEY\""
+	if [[ -n "$key_opt" ]]; then
+		SSH_KEY="-e \"ssh $key_opt\""
 	else
 		SSH_KEY=""
 	fi
@@ -360,8 +327,7 @@ for rhost in "${remote_hosts[@]}"; do
 	} 2>/dev/null
 	echo \$version
 	CMDBLOCK_docker
-	#RemoteExec $cmd_filename $rhost $KEY
-	docker_version=$(RemoteExec $cmd_filename $rhost $KEY)
+	docker_version=$(RemoteExec $cmd_filename $rhost "$key_opt")
 	if [[ -z "$docker_version" ]]; then
 		error_message "Docker is not installed on $rhost."
 		exit 1
@@ -401,7 +367,7 @@ if [[ -n "$START_MASTER" ]]; then
 	if [[ "$master_host" == "localhost" ]]; then
 		LocalExec $cmd_filename
 	else
-		RemoteExec $cmd_filename $master_host $KEY
+		RemoteExec $cmd_filename $master_host "$key_opt"
 	fi
 
 	if [[ -z "$BROKER_ADDRESS" ]]; then
@@ -441,7 +407,7 @@ if [[ -n "$START_WORKER" ]]; then
 			if [[ -n "$debug" ]]; then
 				echo "Starting SSH tunnel from $host:5672 to $master_host:5672"
 			fi
-			cmd="ssh -R 0.0.0.0:5672:localhost:5672 $KEY $host -f -N -o ServerAliveInterval=10"
+			cmd="ssh -R 0.0.0.0:5672:localhost:5672 $key_opt $host -f -N -o ServerAliveInterval=10"
 			if [[ -n "$debug" ]]; then
 				echo $cmd
 			fi
@@ -451,7 +417,7 @@ if [[ -n "$START_WORKER" ]]; then
 			if [[ "$master_host" == "localhost" ]]; then
 				LocalExec $cmd_filename
 			else
-				RemoteExec $cmd_filename $master_host $KEY
+				RemoteExec $cmd_filename $master_host "$key_opt"
 			fi
 
 			# Change BROKER_ADDRESS so that workers connect to SSH tunnel on host machine of Docker container.
@@ -493,7 +459,7 @@ if [[ -n "$START_WORKER" ]]; then
 		if [[ "$host" == "localhost" ]];then
 			LocalExec "$cmd_filename"
 		else
-			output_string=$(RemoteExec $cmd_filename $host $KEY)
+			output_string=$(RemoteExec $cmd_filename $host "$key_opt")
 			if [[ -n "$debug" ]]; then
 				echo "$output_string"
 			fi

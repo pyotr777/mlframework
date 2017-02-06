@@ -19,6 +19,9 @@ if [[ $# < 1 ]]; then
 	exit 0;
 fi
 
+# Variables initialisation
+. init.sh
+
 #docker run -ti -v "$(pwd)":/root --name celery-worker1 pyotr777/celery-chainer-worker bash
 
 while test $# -gt 0; do
@@ -56,7 +59,7 @@ else
 fi
 
 # Starting worker container with workers
-cmd="docker run -d -v "$(pwd)":/root $BROKER_OPT --name celery-worker pyotr777/celery-chainer-worker celery -A $proj_folder worker --loglevel=info -E"
+cmd="docker run -d -v "$(pwd)":/root $BROKER_OPT --name $worker_cont_name $worker_image celery -A $proj_folder worker --loglevel=info -E"
 #echo $cmd
 eval $cmd
 

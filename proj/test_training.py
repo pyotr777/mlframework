@@ -6,8 +6,8 @@ import time
 from sklearn.cross_validation import train_test_split, KFold
 from sklearn.preprocessing import normalize
 import numpy as np
-import chainer
-from chainer import cuda, Function, FunctionSet, gradient_check, Variable, optimizers, serializers
+#import chainer
+#from chainer import cuda, Function, FunctionSet, gradient_check, Variable, optimizers, serializers
 from .preprocessing import convert_sparse_array_to_variable, convert_numpy_array_to_variable
 import codecs, json
 
