@@ -4,6 +4,18 @@
 		"selected_items":
 		[
 			[
+				"master",
+				"master_image"
+			],
+			[
+				"ke",
+				"key_opt"
+			],
+			[
+				"inf",
+				"infra_CSV"
+			],
+			[
 				"ho",
 				"hostAddress"
 			],
@@ -130,10 +142,6 @@
 			[
 				"S",
 				"START_MASTER"
-			],
-			[
-				"master",
-				"master_host"
 			],
 			[
 				"LOCAL",
@@ -506,14 +514,6 @@
 			[
 				"is",
 				"isfile"
-			],
-			[
-				"batc",
-				"batch_size"
-			],
-			[
-				"blo",
-				"block_counter"
 			]
 		]
 	},
@@ -699,12 +699,16 @@
 	"file_history":
 	[
 		"/Users/peterbryzgalov/work/ML/mlframework/infra.csv",
+		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_worker.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/get_master_host.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/init.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/config.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/init_vars.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/get_master_host",
 		"/Users/peterbryzgalov/work/ML/mlframework/clean_celery_worker.sh",
 		"/Users/peterbryzgalov/work/kportal/release/installkportal_ubuntu.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_master.sh",
-		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_worker.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/remote_command.sh",
-		"/Users/peterbryzgalov/work/ML/mlframework/config.sh",
 		"/Users/peterbryzgalov/work/kportal/release/install",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/plotting2.js",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/lib.js",
@@ -821,11 +825,7 @@
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J15343284181478046201/J15343284181478046201.sh",
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J15343284181478046201/run_mixer_sample.sh",
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J15343284181478046201/job.o5465716",
-		"/Users/peterbryzgalov/work/kportal/release/sample_application/mixerVessel2D/change_case_pars.sh",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J81878555691478051263/run_mixer_sample.sh",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J29155334941477976881/J29155334941477976881_post.sh",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J29155334941477976881/pre.log",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J63352192061477969367/movie.mp4"
+		"/Users/peterbryzgalov/work/kportal/release/sample_application/mixerVessel2D/change_case_pars.sh"
 	],
 	"find":
 	{
@@ -836,6 +836,7 @@
 		"height": 93.0,
 		"where_history":
 		[
+			"/Users/peterbryzgalov/work/ML/mlframework",
 			"/Users/peterbryzgalov/work/docker-fork/docker/",
 			"/Users/peterbryzgalov/work/docker-fork/docker/runconfig",
 			"/Users/peterbryzgalov/work/docker-fork/docker/api/server",
@@ -848,6 +849,12 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"RemoteExec",
+			"init_vars.sh",
+			"init_vars",
+			"Model",
+			"fasttex",
+			"fasttexp",
 			"flower",
 			"cd ",
 			"set ",
@@ -969,13 +976,7 @@
 			"Loading next",
 			"Server address",
 			"Load next",
-			"Refresh",
-			"Loading next block",
-			"]No session",
-			"SESSION",
-			"shutdown",
-			"Exectuing",
-			"OK"
+			"Refresh"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -983,6 +984,7 @@
 		"regex": false,
 		"replace_history":
 		[
+			"init.sh",
 			"/home/ra000007/a03106/OpenFOAM/OpenFOAM-2.4.0/",
 			"<h4>$1</h4>",
 			"<h3>$1</h3>",
@@ -1072,6 +1074,12 @@
 				0,
 				1,
 				1
+			],
+			[
+				0,
+				1,
+				1,
+				2
 			]
 		],
 		"cols":
@@ -1082,6 +1090,7 @@
 		"rows":
 		[
 			0.0,
+			0.5,
 			1.0
 		]
 	},

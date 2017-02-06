@@ -27,6 +27,9 @@ def unjsonify(a):
 
 def report_state(msg):
     print "Received message of type "+ str(type(msg))
+    for k in msg:
+        print k,":",msg[k]
+    print ""
     status = msg[u'status']
     res = msg[u'result']
     if status == "SUCCESS":
@@ -46,9 +49,9 @@ def report_state(msg):
 
 
 if __name__ == '__main__':
-    n_folds = 2
+    n_folds = 4
     random_state = 0
-    n_epoches = 1
+    n_epoches = 2
     n_emb = 50
     dropout_rate = 0.3
     minibatch_size = 20

@@ -100,7 +100,9 @@ function saveVar {
 if [[ -n "$READ_FROM_CONFIG" ]]; then
 	echo "Reading configuration from $config_file"
 	. $config_file
-	key_opt="-i $KEY"
+	if [[ -n "$KEY" ]]; then
+		key_opt="-i $KEY"
+	fi
 fi
 
 if [[ -n "$REMOTE" ]]; then
