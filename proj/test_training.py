@@ -26,6 +26,7 @@ def unjsonify(a):
         return a
 
 def report_state(msg):
+    print "Received message of type "+ str(type(msg))
     status = msg[u'status']
     res = msg[u'result']
     if status == "SUCCESS":

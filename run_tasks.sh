@@ -27,7 +27,7 @@ fi
 master_host="$(./get_master_host.sh)"
 
 cmd="python -m $PROJ_FOLDER.$TASK"
-cmd="docker exec -ti $celery_cont_name $cmd"
+cmd="docker exec -t $celery_cont_name $cmd"
 echo "Run $cmd in container $celery_cont_name on host $master_host with ssh $key_opt"
 
 echo "#!/bin/bash" > $cmd_filename

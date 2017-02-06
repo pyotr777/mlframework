@@ -7,6 +7,7 @@ config_file="config.sh"
 CSV_file="infra.csv"
 clean_script="infra_clean.sh"
 cmd_filename="remote_command.sh"
+ssh_options="-o ServerAliveInterval=10"
 
 debug="1"
 
@@ -26,7 +27,7 @@ RemoteExec() {
 		eval $cmd
 	}
 	{
-		cmd="ssh $key $host ./$filename"
+		cmd="ssh $key $ssh_options $host ./$filename"
 		#echo "Executing command: $cmd"
 		eval $cmd
 	}

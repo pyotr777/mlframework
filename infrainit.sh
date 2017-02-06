@@ -467,4 +467,16 @@ if [[ -n "$START_WORKER" ]]; then
 	done
 fi
 
+sleep 3
+cmd="docker run --link $rabbit_cont_name:rabbit --rm $master_image celery status"
+if [[ -n "$debug" ]]; then
+	echo $cmd
+fi
+echo $cmd > $cmd_filename
+if [[ "$master_host" == "localhost" ]]; then
+	LocalExec $cmd_filename
+else
+	RemoteExec $cmd_filename $master_host "$key_opt"
+fi
+
 message "Infrastructure is ready. Master and broker are running on $master_host. Workers on $worker_host_list."
