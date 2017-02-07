@@ -21,9 +21,9 @@ RemoteExec() {
 	chmod +x $filename
 	{
 		cmd="scp $key $filename $host:"
-		if [[ -n "$debug" ]]; then
-			echo "Executing command: $cmd"
-		fi
+		#if [[ -n "$debug" ]]; then
+		#		echo "Executing command: $cmd"
+		#fi
 		eval $cmd
 	}
 	{
@@ -35,10 +35,10 @@ RemoteExec() {
 
 LocalExec() {
 	filename=$1
-	if [[ -n "$debug" ]]; then
-		echo "Executing commands from $filename on local machine"
-		cat $filename
-	fi
+	#if [[ -n "$debug" ]]; then
+	#	echo "Executing commands from $filename on local machine"
+	#	cat $filename
+	#fi
 	echo "" >> $filename
 	printf "rm $filename" >> $filename
 	chmod +x $filename

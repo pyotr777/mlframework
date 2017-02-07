@@ -698,16 +698,20 @@
 	},
 	"file_history":
 	[
+		"/Users/peterbryzgalov/work/ML/mlframework/proj/task_fasttext.py",
+		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_master.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/init.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/run_tasks.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/infrainit.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/proj/test_training.py",
 		"/Users/peterbryzgalov/work/ML/mlframework/infra.csv",
 		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_worker.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/get_master_host.sh",
-		"/Users/peterbryzgalov/work/ML/mlframework/init.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/config.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/init_vars.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/get_master_host",
 		"/Users/peterbryzgalov/work/ML/mlframework/clean_celery_worker.sh",
 		"/Users/peterbryzgalov/work/kportal/release/installkportal_ubuntu.sh",
-		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_master.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/remote_command.sh",
 		"/Users/peterbryzgalov/work/kportal/release/install",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/plotting2.js",
@@ -715,10 +719,7 @@
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/index2.html",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/index.html",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/plotting.js",
-		"/Users/peterbryzgalov/work/ML/mlframework/proj/task_fasttext.py",
-		"/Users/peterbryzgalov/work/ML/mlframework/infrainit.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/proj/baselines/fasttext.py",
-		"/Users/peterbryzgalov/work/ML/mlframework/proj/test_training.py",
 		"/Users/peterbryzgalov/work/ML/mlframework/initinfra.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/inithost.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/celery_rabbit.sh",
@@ -824,8 +825,7 @@
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J84855404161478053002/J84855404161478053002.sh",
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J15343284181478046201/J15343284181478046201.sh",
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J15343284181478046201/run_mixer_sample.sh",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J15343284181478046201/job.o5465716",
-		"/Users/peterbryzgalov/work/kportal/release/sample_application/mixerVessel2D/change_case_pars.sh"
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J15343284181478046201/job.o5465716"
 	],
 	"find":
 	{

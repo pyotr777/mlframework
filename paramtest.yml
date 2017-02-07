@@ -1,4 +1,3 @@
 description: >
-    Define range of parameters.
-    "[start, end, step]" defines range of integers equal to python expression range(start,end,step)
-maxiter: [10, 30, 3]
+    Define range of parameters. "[start, end, step]" defines range of integers equal to python expression range(start,end,step)
+model: [fasttext,mpl3l]

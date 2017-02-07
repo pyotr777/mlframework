@@ -1,6 +1,7 @@
 .*
 !.gitignore
 *.pyc
+*.ipynb
 __pycache__/
 remote_command.sh
 infra_clean.sh

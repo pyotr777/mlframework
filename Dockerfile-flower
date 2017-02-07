@@ -4,5 +4,6 @@ FROM pyotr777/celery-chainer:latest
 MAINTAINER Bryzgalov Peter <peterbryz@yahoo.com>
 
 RUN pip install flower
+RUN pip install -U pyyaml
 
 CMD ["celery","flower"]

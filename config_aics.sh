@@ -1,0 +1,5 @@
+REMOTE_PATH="ML/mlframework"
+PROJ_FOLDER="bowcnn"
+REMOTE="power,pwr321"
+START_MASTER="local"
+START_WORKER="local,1,2"
