@@ -9,7 +9,7 @@ clean_script="infra_clean.sh"
 cmd_filename="remote_command.sh"
 ssh_options="-o ServerAliveInterval=10"
 
-debug="1"
+debug=""
 
 RemoteExec() {
 	filename=$1

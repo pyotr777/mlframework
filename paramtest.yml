@@ -1,3 +1,1 @@
-description: >
-    Define range of parameters. "[start, end, step]" defines range of integers equal to python expression range(start,end,step)
-model: [fasttext,mpl3l]
+model: [fasttext,mlp3l]

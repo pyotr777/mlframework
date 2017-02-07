@@ -82,7 +82,30 @@ kf = KFold(n_all_samples, n_folds=args.nfolds, shuffle=True, random_state=args.r
 if args.output:
     sys.stdout = open(args.output, "w")
 
+print __name__
 print vars(args)
+
+print "Using model "+args.model+"."
+""" set up model """
+if args.model == "fasttext":
+    from .baselines.fasttext import Model
+    model = Model(n_vocab, n_emb, n_classes)
+    print "Model fasttext"
+if args.model == "mlp3l":
+    from .baselines.mlp3l import Model
+    model = Model(n_vocab, n_emb, n_classes, dropout_rate=args.dropoutrate)
+    print "Model mlp3l"
+if args.model == "mlp4l":
+    from .baselines.mlp4l import Model
+    model = Model(n_vocab, n_emb, n_classes, dropout_rate=args.dropoutrate)
+if args.model == "mlp5l":
+    from .baselines.mlp5l import Model
+    model = Model(n_vocab, n_emb, n_classes, dropout_rate=args.dropoutrate)
+
+
+if model is None:
+    print "Model "+args.model+" not found in baselines."
+    sys.exit(1)
 
 """ cross validation start """
 fold = 1
@@ -94,20 +117,6 @@ for index_tr, index_te in kf:
     X_te, Y_te = X_all[index_te], Y_all[index_te]
     n_train = X_tr.shape[0]
     n_test = X_te.shape[0]
-
-    """ set up model """
-    if args.model == "fasttext":
-        from .baselines.fasttext import Model
-        model = Model(n_vocab, n_emb, n_classes)
-    if args.model == "mlp3l":
-        from .baselines.mlp3l import Model
-        model = Model(n_vocab, n_emb, n_classes, dropout_rate=args.dropoutrate)
-    if args.model == "mlp4l":
-        from .baselines.mlp4l import Model
-        model = Model(n_vocab, n_emb, n_classes, dropout_rate=args.dropoutrate)
-    if args.model == "mlp5l":
-        from .baselines.mlp5l import Model
-        model = Model(n_vocab, n_emb, n_classes, dropout_rate=args.dropoutrate)
 
     # elif args.model == 3:
     #     from nets.model3 import Network

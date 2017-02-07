@@ -5,21 +5,16 @@ from __future__ import absolute_import, unicode_literals
 from .celery import app
 
 import time
-
+import json
+from subprocess import Popen, PIPE, STDOUT
 
 def unjsonify(a):
     try:
         arr = json.loads(a)
-        np_arr = np.array(arr)
-        return np_arr
+        return arr
     except TypeError:
         print  "unjsonify recieved object of type",type(a)
         return a
-
-
-def jsonify(numpy_array):
-    a = numpy_array.tolist()
-    return a
 
 def report(self, message):
     self.update_state(state="PROGRESS",meta={"message":message})
@@ -31,15 +26,24 @@ def echo(self, s="Hello world!"):
 
 @app.task(bind=True)
 def train(self, pars):
-    print "Parameter pars type: "+ str(type(pars))
-    report(self,"Parameter pars type: "+ str(type(pars)))
-    cmd = ["python","-m",".cv_baseline"]
-    for key in pars:
+    report(self,"name:"+__name__+" pars:"+ str(pars))
+    par = unjsonify(pars)
+
+    # Check current dir
+    pipe = Popen(["pwd"], stdout=PIPE, stderr=PIPE, close_fds=True)
+    for line in iter(pipe.stdout.readline, b''):
+        report(self,line)
+    for line in iter(pipe.stderr.readline, b''):
+        if len(line)>0:
+            report(self,"err:"+line)
+
+    cmd = ["python","-m","bowcnn.cv_baseline"]
+    for key in par:
         cmd.append(str("--"+key))
-        cmd.append(str(pars[key]))
+        cmd.append(str(par[key]))
     report(self, "Command:"+str(cmd))
     print cmd
-    pipe = subprocess.Popen(cmd, stdout=PIPE, stderr=PIPE, close_fds=True)
+    pipe = Popen(cmd, stdout=PIPE, stderr=PIPE, close_fds=True)
 
     for line in iter(pipe.stdout.readline, b''):
         report(self,line)

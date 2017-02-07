@@ -35,20 +35,16 @@ def unjsonify(a):
         return a
 
 def report_state(msg):
-    print "Received message of type "+ str(type(msg))
-    for k in msg:
-        print k,":",msg[k]
-    print ""
+    #print "Received message of type "+ str(type(msg))
+    #for k in msg:
+    #    print k,":",msg[k]
+    #print ""
     status = msg[u'status']
     res = msg[u'result']
     if status == "SUCCESS":
         print "Finished with result ", res
-        min_train_loss, max_train_acc, max_test_acc = res
-        cv_train_loss_list.append(unjsonify(min_train_loss))
-        cv_train_acc_list.append(unjsonify(max_train_acc))
-        cv_test_acc_list.append(float(unjsonify(max_test_acc)))
         return
-
+    #print status
     # Intermediate results
     if type(res) is dict:
         for k in res:
@@ -71,29 +67,17 @@ if __name__ == '__main__':
             print k + " : " + str(data[k])
             paramrange = data[k]
             if type(paramrange) is list:
-                llength = len(paramrange)
-                print "List length = " + str(llength)
-                if llength < 2:
-                    print "Need range stat and end values: [start, end]."
-                    print "Only one value provided:" + str(paramrange)
-                    break
-                start=paramrange[0]
-                end  =paramrange[1]
-                if llength > 2:
-                    step = paramrange[2]
-                else:
-                    step = 1
-
-                for val in range(start, end, step):
-                    print k+"="+str(val)
+                for par in paramrange:
+                    llength = len(paramrange)
+                    print k+"="+str(par)
                     pars=base_pars
-                    pars[k]=val
+                    pars[k]=par
                     result = train.delay(jsonify(pars))
                     results.append(result)
 
     print "All tasks sent"
     for r in results:
-        r.get(on_message=report_state, propagate=False)
+        r.get(on_message=report_state, propagate=True)
 
     print "All tasks finished."
 

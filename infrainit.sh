@@ -170,7 +170,6 @@ function error_message {
 
 # Remove user name from host address: ubuntu@host.com -> host.com
 function hostAddress {
-	set -x
 	host=$1
 	ifs=$IFS
 	IFS='@' arr=( $(echo "$host") )
@@ -180,7 +179,6 @@ function hostAddress {
 	else
 		echo $host
 	fi
-	set +x
 }
 
 set -e
