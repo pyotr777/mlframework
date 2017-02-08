@@ -1,5 +1,5 @@
 model: [fasttext,mlp3l]
 maxiter: !!python/tuple [1,6,2]
-decay: !!python/tuple [0,0.8,0.2]
-tfdif: True
-nodif: False
+#decay: !!python/tuple [0,0.8,0.2]
+#tfdif: True
+#nodif: False
