@@ -4,12 +4,12 @@
 		"selected_items":
 		[
 			[
-				"data",
-				"datasets"
+				"master",
+				"master_host"
 			],
 			[
-				"master",
-				"master_image"
+				"data",
+				"datasets"
 			],
 			[
 				"ke",
@@ -698,26 +698,30 @@
 	},
 	"file_history":
 	[
+		"/Users/peterbryzgalov/work/ML/mlframework/infra.csv",
+		"/Users/peterbryzgalov/work/ML/mlframework/clean_celery_worker.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/bowcnn/run_training.py",
+		"/Users/peterbryzgalov/work/ML/mlframework/run_tasks.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/bowcnn/cv_baseline.py",
+		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_worker.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/bowcnn/paramtest.yml",
+		"/Users/peterbryzgalov/work/ML/mlframework/config.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/infrainit.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/config_ec2.sh",
+		"/Users/peterbryzgalov/Library/Application Support/Sublime Text 3/Packages/GoSublime/USAGE.md",
 		"/Users/peterbryzgalov/work/ML/mlframework/proj/test_training.py",
 		"/Users/peterbryzgalov/work/ML/mlframework/proj/task_fasttext.py",
-		"/Users/peterbryzgalov/work/ML/mlframework/bowcnn/paramtest.yml",
 		"/Users/peterbryzgalov/work/ML/mlframework/paramtest.yml",
 		"/Users/peterbryzgalov/work/ML/mlframework/init.sh",
-		"/Users/peterbryzgalov/work/ML/mlframework/infrainit.sh",
-		"/Users/peterbryzgalov/work/ML/mlframework/config.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/bowcnn/datasets/twenty_ng.py",
 		"/Users/peterbryzgalov/work/ML/mlframework/show_args.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/start_jupyter.sh",
 		"/Users/peterbryzgalov/work/ML/bowcnn/cv_baseline.py",
 		"/Users/peterbryzgalov/work/ML/mlframework/Dockerfile-jupyter",
 		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_master.sh",
-		"/Users/peterbryzgalov/work/ML/mlframework/run_tasks.sh",
-		"/Users/peterbryzgalov/work/ML/mlframework/infra.csv",
-		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_worker.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/get_master_host.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/init_vars.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/get_master_host",
-		"/Users/peterbryzgalov/work/ML/mlframework/clean_celery_worker.sh",
 		"/Users/peterbryzgalov/work/kportal/release/installkportal_ubuntu.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/remote_command.sh",
 		"/Users/peterbryzgalov/work/kportal/release/install",
@@ -802,7 +806,6 @@
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/plotting..html",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/C3/c3-0.4.11/c3.css",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/index 2.html",
-		"/Users/peterbryzgalov/Library/Application Support/Sublime Text 3/Packages/GoSublime/USAGE.md",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/2016-weather-data-seattle.csv",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/cost-period.csv",
 		"/Users/peterbryzgalov/work/ML/Cloud Providers/HTML/2014_apple_stock.csv",
@@ -822,10 +825,7 @@
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/J72945527361478082697.info",
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J62435606341478073885/job.o5466643",
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J62435606341478073885/J62435606341478073885.sh",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J62435606341478073885/sample/change_case_pars.sh",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J62435606341478073885/J62435606341478073885_post.sh",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J39076085011478058042/job.i5466152",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J39076085011478058042/job.o5466152"
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J62435606341478073885/sample/change_case_pars.sh"
 	],
 	"find":
 	{
@@ -849,6 +849,7 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			"rabbit_cont_name",
 			"set ",
 			"RemoteExec",
 			"init_vars.sh",
@@ -975,8 +976,7 @@
 			"()\n",
 			"]Get next",
 			"Loading next",
-			"Server address",
-			"Load next"
+			"Server address"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1090,7 +1090,7 @@
 		"rows":
 		[
 			0.0,
-			0.63528380102,
+			0.445818616748,
 			1.0
 		]
 	},
