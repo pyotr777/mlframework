@@ -4,14 +4,14 @@
 # Copyright (C) 2017 Bryzgalov Peter @ Stair Lab CHITECH
 
 # TODO
-# [ ] Read PROJ_FOLDER and REMOTE_PATH from CSV file.
+# [V] Read PROJ_FOLDER and REMOTE_PATH from CSV file.
 
 
 usage=$(cat <<USAGEBLOCK
 Update files on remote hosts with rsync.
 Remote hosts read from infra.csv file, which must exist.
 
-$0 -a <[user@]host1,[user@]host2...> [-i identity file] -l <dirname> -r <path>
+$0 [-a <[user@]host1,[user@]host2...>] [-i identity file] -l <dirname> -r <path>
 
 Options:
 	-a	Remote hosts addresses, comma-separated list.
@@ -20,8 +20,9 @@ Options:
 USAGEBLOCK
 )
 
+. init.sh
 
-KEY=""
+key_opt=""
 REMOTE=""
 ssh_com=""
 
@@ -41,7 +42,7 @@ while test $# -gt 0; do
             REMOTE_PATH="$2";shift;
             ;;
         -i)
-            KEY="-i $2";shift;
+            KEY="$2";key_opt="-i $2";shift;
             ;;
         -*)
             echo "Invalid option: $1"
@@ -51,51 +52,81 @@ while test $# -gt 0; do
     shift
 done
 
-if [[ -z "$REMOTE" ]] || [[ -z "$REMOTE_PATH" ]] || [[ -z "$PROJ_FOLDER" ]]; then
+
+echo "Reading from $CSV_file"
+while read -r line; do
+	IFS="," read -ra arr <<< "$line"
+	case "${arr[0]}" in
+        hosts)
+            remote_hosts=("${arr[@]/hosts}")
+            if [[ -n "$debug" ]]; then
+            	echo "hosts: ${remote_hosts[@]}"
+            fi
+            ;;
+        master)
+			START_MASTER="${arr[1]}"
+			if [[ -n "$START_MASTER" ]]; then
+				master_host=${remote_hosts[$((START_MASTER+1))]}
+				if [[ -n "$debug" ]]; then
+					echo "Using master host $master_host"
+				fi
+			fi
+			;;
+		remote_path)
+			REMOTE_PATH="${arr[1]}"
+			echo "Using remote path $REMOTE_PATH"
+			;;
+		folder)
+			PROJ_FOLDER="${arr[1]}"
+			echo "Using proj folder $PROJ_FOLDER"
+			;;
+		key)
+			KEY="${arr[1]}";key_opt="-i ${arr[1]}";shift;
+            ;;
+    esac
+done < $CSV_file
+
+
+if [[ -z "$REMOTE_PATH" ]] || [[ -z "$PROJ_FOLDER" ]]; then
+	if [[ -z "$REMOTE_PATH" ]]; then
+		echo "Remote path is empty"
+	fi
+	if  [[ -z "$PROJ_FOLDER" ]]; then
+		echo "proj folder is empty"
+	fi
+
 	echo "$usage"
-	echo "Necessary options: remote address (-a), project folder (-l) and remote path (-r)."
+	exit 1
+fi
+
+set -e
+
+
+if [[ -n "$REMOTE" ]]; then
+	rhost=$REMOTE
+	echo $rhost
+	if [[ -n "$KEY" ]]; then
+		ssh_com="$KEY $rhost"
+	else
+		ssh_com="$rhost"
+	fi
+	echo $ssh_com
+	OPT="-avii"
+
+	echo "Compare ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	# Copy task files to remote
+	eval rsync $OPT $KEY --exclude-from "rsyncexclude_task.txt" --size-only  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/
+	# Copy framework files to remote
+	eval rsync $OPT $KEY --include-from "rsyncinclude_framework.txt" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/
 	exit 0
 fi
 
 
-RemoteExec() {
-	filename=$1
-	host=$2
-	#filename="remote_command.sh"
-	#echo "Executing commands from $filename on $host"
-	echo "" >> $filename
-	printf "rm $filename" >> $filename
-	chmod +x $filename
-	{
-		scp $filename $host:
-	} &>/dev/null
-	{
-		ssh $host ./$filename
-	} 2>/dev/null
-}
-
-set -e
-
-CSV_file="infra.csv"
-cmd_filename="remote_command.sh"
-
-echo "Reading from $CSV_file"
-while read -r line; do
-	IFS="," read -ra remote_hosts <<< "$line"
-	if [[ "${remote_hosts[0]}" == "hosts" ]]; then
-		break
-	fi
-done < $CSV_file
-
-
-#remote_hosts=("${remote_hosts[@]/hosts}")
-
 echo "${remote_hosts[@]}"
-
 # Copy files to remote locations
 for rhost in "${remote_hosts[@]}"; do
-	echo "RHOST: $rhost"
-	if [[ "$rhost" == hosts ]] || [[ "$rhost" == "localhost" ]] || [[ -z "$rhost" ]]; then
+	echo $rhost
+	if [[ "$rhost" == "hosts" ]] || [[ "$rhost" == "localhost" ]] || [[ -z "$rhost" ]]; then
 		continue
 	fi
 
@@ -106,20 +137,30 @@ for rhost in "${remote_hosts[@]}"; do
 	fi
 	echo $ssh_com
 
-	echo "Testing SSH connection to $rhost with ssh $ssh_com"
+	if [[ -n "$debug" ]]; then
+		echo "Testing SSH connection to $rhost with ssh $ssh_com"
+	fi
 	printf "hostname" > $cmd_filename
-	HOSTNAME="$(RemoteExec $cmd_filename "$ssh_com")"
+	HOSTNAME=$(RemoteExec $cmd_filename "$ssh_com")
 	if [[ -z "$HOSTNAME" ]]; then
 		echo "Cannot connect with ssh $ssh_com."
 		exit 1
 	fi
-	echo $HOSTNAME
+	if [[ -n "$debug" ]]; then
+		echo $HOSTNAME
+	fi
 
-	OPT="-av"
+	if [[ -n "$debug" ]]; then
+		OPT="-avii --progress"
+	else
+		OPT="-av --progress"
+	fi
 
-	echo "Compare ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	if [[ -n "$debug" ]]; then
+		echo "Compare ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	fi
 	# Copy task files to remote
-	eval rsync $OPT $KEY --exclude-from "rsyncexclude_task.txt" --size-only  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/
+	eval {rsync $OPT $KEY --exclude-from "rsyncexclude_task.txt" --size-only  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/} 2>/dev/null
 	# Copy framework files to remote
-	eval rsync $OPT $KEY --include-from "rsyncinclude_framework.txt" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/
+	eval {rsync $OPT $KEY --include-from "rsyncinclude_framework.txt" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/} 2>/dev/null
 done

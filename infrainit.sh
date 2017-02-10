@@ -3,7 +3,7 @@
 # Start framework infrastructure on local and/or remote hosts.
 # Copyright (C) 2017 Bryzgalov Peter @ Stair Lab CHITECH
 
-# Version 0.2alpha
+# Version 0.3alpha
 
 # TODO
 # [V] Check that remote folders exist (before calling rsync)
@@ -11,7 +11,7 @@
 # [?] Check taht docker images exist. Pushed images with Chainer to dockerhub.
 # [ ] Before starting RabbitMQ and Celery Flower containers check that ports are not used
 # [ ] Use better terms for explaining broker, project folder, task, framework
-# [ ] Check that GatewayPorts set to yes in /etc/ssh/sshd_config on worker hosts.
+# [ ] Check that GatewayPorts set to yes in /etc/ssh/sshd_config on worker hosts (for SSH tunnels).
 
 usage=$(cat <<USAGEBLOCK
 Usage:
@@ -147,12 +147,15 @@ SaveHostData() {
 	key=$6
 	echo "hosts,$hosts" > $filename
 	echo "master,$master" >> $filename
-	echo "broker,$broker" >> $filename
+	if [[ -n "$broker" ]]; then
+		echo "broker,$broker" >> $filename
+	fi
 	echo "workers,$workers" >> $filename
 	echo "remote_path,$REMOTE_PATH" >> $filename
 	echo "folder,$PROJ_FOLDER" >> $filename
-	echo "key,$key" >> $filename
-	#cat $filename
+	if [[ -n "$key" ]]; then
+		echo "key,$key" >> $filename
+	fi
 }
 
 
@@ -295,7 +298,11 @@ for rhost in "${remote_hosts[@]}"; do
 		fi
 	fi
 
-	OPT="-av"
+	if [[ -n "$debug" ]]; then
+		OPT="-avii --progress"
+	else
+		OPT="-av --progress"
+	fi
 	if [[ -n "$key_opt" ]]; then
 		SSH_KEY="-e \"ssh $key_opt\""
 	else
@@ -308,7 +315,7 @@ for rhost in "${remote_hosts[@]}"; do
 		echo "Sync ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
 	fi
 	# Copy task files to remote
-	cmd="rsync $OPT $SSH_KEY --exclude-from rsyncexclude_task.txt ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	cmd="rsync $OPT $SSH_KEY --exclude-from rsyncexclude_task.txt $PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
 	#message $cmd
 	if [[ -n "$debug" ]]; then
 		echo $cmd
@@ -443,25 +450,13 @@ if [[ -n "$START_WORKER" ]]; then
 		if [[ "$host" == "localhost" ]];then
 			LocalExec "$cmd_filename"
 		else
-			output_string=$(RemoteExec $cmd_filename $host "$key_opt")
-			if [[ -n "$debug" ]]; then
-				echo "$output_string"
-			fi
+			RemoteExec $cmd_filename $host "$key_opt"
 		fi
 	done
 fi
 
 sleep 3
-cmd="docker run --link $rabbit_cont_name:rabbit --rm $master_image celery status"
-if [[ -n "$debug" ]]; then
-	echo $cmd
-fi
-echo $cmd > $cmd_filename
-if [[ "$master_host" == "localhost" ]]; then
-	LocalExec $cmd_filename
-else
-	RemoteExec $cmd_filename $master_host "$key_opt"
-fi
+./check_celery_status.sh
 
 message "Infrastructure initialisation complete."
 message "Master and broker are running on $master_host. Workers on $worker_host_list."
