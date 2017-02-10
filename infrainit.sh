@@ -155,17 +155,7 @@ SaveHostData() {
 	#cat $filename
 }
 
-function message {
-    echo ""
-    echo -en "\033[38;5;70m $1\033[m\n"
-    echo " "
-}
 
-function error_message {
-    echo ""
-    echo -en "\033[38;5;124m $1\033[m\n"
-    echo " "
-}
 
 # Remove user name from host address: ubuntu@host.com -> host.com
 function hostAddress {
@@ -229,6 +219,35 @@ if [[ -n "$debug" ]]; then
 	echo "Have ${#remote_hosts[@]} hosts: ${remote_hosts[@]}"
 	echo "Have ${#worker_hosts[@]} worker hosts: ${worker_hosts[@]}"
 fi
+
+
+# Testing docker on remote hosts
+for rhost in "${remote_hosts[@]}"; do
+	if [[ "$rhost" == "localhost" ]]; then
+		continue
+	fi
+	if [[ -n "$debug" ]]; then
+		echo "Testing installed docker version on $rhost"
+	fi
+	cat <<- CMDBLOCK_docker > $cmd_filename
+	{
+		docker version | grep -i "version"
+	} 2>/dev/null
+	echo \$version
+	CMDBLOCK_docker
+	docker_version=$(RemoteExec $cmd_filename $rhost "$key_opt")
+	if [[ -z "$docker_version" ]]; then
+		error_message "Docker is not installed on $rhost."
+		exit 1
+	else
+		if [[ -n "$debug" ]]; then
+			echo "On $rhost installed docker $docker_version."
+		fi
+	fi
+done
+
+
+
 # Copy files to remote locations
 for rhost in "${remote_hosts[@]}"; do
 	#echo $rhost
@@ -312,35 +331,11 @@ for rhost in "${remote_hosts[@]}"; do
 done
 
 
-# Testing docker on remote hosts
-for rhost in "${remote_hosts[@]}"; do
-	if [[ "$rhost" == "localhost" ]]; then
-		continue
-	fi
-	if [[ -n "$debug" ]]; then
-		echo "Testing installed docker version on $rhost"
-	fi
-	cat <<- CMDBLOCK_docker > $cmd_filename
-	{
-		docker version | grep -i "version"
-	} 2>/dev/null
-	echo \$version
-	CMDBLOCK_docker
-	docker_version=$(RemoteExec $cmd_filename $rhost "$key_opt")
-	if [[ -z "$docker_version" ]]; then
-		error_message "Docker is not installed on $rhost."
-		exit 1
-	else
-		if [[ -n "$debug" ]]; then
-			echo "On $rhost installed docker $docker_version."
-		fi
-	fi
-done
 
 
-message "Starting master at $master_host. Celery Flower will be available at http://$(hostAddress "$master_host"):5555"
 # Starting master
 if [[ -n "$START_MASTER" ]]; then
+	message "Starting master at $master_host. Celery Flower will be available at http://$(hostAddress "$master_host"):5555"
 
 	echo "#!/bin/bash" > $cmd_filename
 	if [[ "$master_host" != "localhost" ]]; then
@@ -350,13 +345,9 @@ if [[ -n "$START_MASTER" ]]; then
 	cat <<- CMDBLOCK2 >> $cmd_filename
 	./start_celery_master.sh
 	if [[ -n "$debug" ]]; then
-		docker ps
+		docker ps | grep "$celery_cont_name"
 	fi
 	CMDBLOCK2
-
-	if [[ "$master_host" != "localhost" ]]; then
-		echo "cd -" >> $cmd_filename
-	fi
 
 	if [[ -n "$debug" ]]; then
 		echo "Command file $cmd_filename:"
@@ -383,17 +374,14 @@ fi
 
 worker_host_list=""
 
-message "Starting workers"
 # Starting workers
 if [[ -n "$START_WORKER" ]]; then
 	if [[ -n "$debug" ]]; then
-		echo "Workers: ${#worker_hosts[@]}"
+		echo "Stargint workers: ${#worker_hosts[@]}"
 	fi
 	for i in "${worker_hosts[@]}"; do
-		if [[ -n "$debug" ]]; then
-			echo "worker $((i+1))"
-		fi
 		host=${remote_hosts[$i]}
+		message "Starting worker at host $host"
 
 		# Add host to worker_host_list.
 		if [[ -n "$worker_host_list" ]]; then
@@ -421,7 +409,6 @@ if [[ -n "$START_WORKER" ]]; then
 
 			# Change BROKER_ADDRESS so that workers connect to SSH tunnel on host machine of Docker container.
 			BROKER_ADDRESS="localhost"
-			set +x
 		fi
 
 
@@ -435,7 +422,7 @@ if [[ -n "$START_WORKER" ]]; then
 
 		cat <<- CMDBLOCK3 > $cmd_filename
 		if [[ -n "$debug" ]]; then
-			echo "Starting workers on $host. BROKER_ADDRESS=$BROKER_ADDRESS PROJ_FOLDER=$PROJ_FOLDER"
+			echo "BROKER_ADDRESS=$BROKER_ADDRESS PROJ_FOLDER=$PROJ_FOLDER"
 		fi
 		CMDBLOCK3
 
@@ -444,16 +431,14 @@ if [[ -n "$START_WORKER" ]]; then
 		fi
 		cat <<- CMDBLOCK4 >> $cmd_filename
 		if [[ -n "$debug" ]]; then
-			echo "\$(hostname):\$(pwd)"
+			echo "Working dir: \$(hostname):\$(pwd)"
 		fi
 		./start_celery_worker.sh $BROKER_OPTIONS $PROJ_FOLDER_OPTIONS
-		if [[ -n "$debug" ]]; then
-			docker ps
-		fi
+		#if [[ -n "$debug" ]]; then
+		sleep 1
+		docker ps | grep "$worker_cont_name"
+		#fi
 		CMDBLOCK4
-		if [[ "$host" != "localhost" ]]; then
-			echo "cd -" >> $cmd_filename
-		fi
 
 		if [[ "$host" == "localhost" ]];then
 			LocalExec "$cmd_filename"
@@ -478,4 +463,6 @@ else
 	RemoteExec $cmd_filename $master_host "$key_opt"
 fi
 
-message "Infrastructure is ready. Master and broker are running on $master_host. Workers on $worker_host_list."
+message "Infrastructure initialisation complete."
+message "Master and broker are running on $master_host. Workers on $worker_host_list."
+echo "Use ./infra_clean.sh command to remove infrastructure."

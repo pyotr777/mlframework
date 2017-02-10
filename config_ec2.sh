@@ -1,0 +1,5 @@
+REMOTE_PATH="ML/mlframework"
+PROJ_FOLDER="bowcnn"
+REMOTE="ubuntu@52.199.55.227,ubuntu@13.113.55.120"
+START_MASTER="1"
+START_WORKER="local,1,2"

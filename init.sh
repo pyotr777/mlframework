@@ -19,28 +19,44 @@ RemoteExec() {
 	echo "" >> $filename
 	printf "rm $filename" >> $filename
 	chmod +x $filename
-	{
-		cmd="scp $key $filename $host:"
-		#if [[ -n "$debug" ]]; then
-		#		echo "Executing command: $cmd"
-		#fi
-		eval $cmd
-	}
-	{
-		cmd="ssh $key $ssh_options $host ./$filename"
-		#echo "Executing command: $cmd"
-		eval $cmd
-	}
+	if [[ -n "$debug" ]]; then
+		{
+			cmd="scp $key $filename $host:"
+			eval $cmd
+		}
+	else
+		{
+			cmd="scp $key $filename $host:"
+			eval $cmd
+		} &>/dev/null
+	fi
+	if [[ -n "$debug" ]]; then
+		{
+			cmd="ssh $key $ssh_options $host ./$filename"
+			eval $cmd
+		}
+	else
+		{
+			cmd="ssh $key $ssh_options $host ./$filename"
+			eval $cmd
+		} 2>/dev/null
+	fi
 }
 
 LocalExec() {
 	filename=$1
-	#if [[ -n "$debug" ]]; then
-	#	echo "Executing commands from $filename on local machine"
-	#	cat $filename
-	#fi
 	echo "" >> $filename
 	printf "rm $filename" >> $filename
 	chmod +x $filename
 	./$filename
+}
+
+function message {
+    echo -en "\033[38;5;70m $1\033[m\n"
+}
+
+function error_message {
+    echo ""
+    echo -en "\033[38;5;124m $1\033[m\n"
+    echo " "
 }
