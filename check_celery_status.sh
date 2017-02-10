@@ -42,8 +42,9 @@ while read -r line; do
 			echo "Using proj folder $PROJ_FOLDER"
 			;;
 		key)
-			if
-			KEY="${arr[1]}";key_opt="-i ${arr[1]}";shift;
+			if [[ -n "${arr[1]}" ]]; then
+				KEY="${arr[1]}";key_opt="-i ${arr[1]}";shift;
+			fi
             ;;
     esac
 done < $CSV_file
