@@ -17,14 +17,24 @@ def unjsonify(a):
         return a
 
 def report(self, message):
-    self.update_state(state="PROGRESS",meta={"message":message})
+    print self
+    self.update_state(state="MSG",meta={"message":message})
 
-@app.task(bind=True)
+@app.task(bind=True,acks_late=True)
 def echo(self, s="Hello world!"):
     print "Echo: "+str(s)
-    return str(s)
+    for i in range(0,5):
+        time.sleep(1)
+        print "print "+str(i)
+        report(self, i)
+    dic = {
+        "a": "a string",
+        "b": 23.45,
+        "S" : s
+    }
+    return dic
 
-@app.task(bind=True)
+@app.task(bind=True,acks_late=True)
 def train(self, pars):
     report(self,"name:"+__name__+" pars:"+ str(pars))
     par = unjsonify(pars)
