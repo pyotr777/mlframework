@@ -173,14 +173,15 @@ if __name__ == '__main__':
         dic=base_pars
         for l in range(0, len(paramatrix)):
             dic[paramatrix[l][0]]=str(combinations[c][l])
-        print dic
         result = train.delay(jsonify(dic))
+        print "New task: "+str(result.id)
+        print "Paramters: "+str(dic)
         results.append(result)
 
     print "All tasks sent"
 
     for r in results:
-        r.get(on_message=report_state, propagate=True)
+        r.get(on_message=report_state, propagate=False)
 
     print "All tasks finished."
 

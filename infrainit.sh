@@ -128,15 +128,14 @@ fi
 
 
 # Save configuration
-cat <<- CMDBLOCK_CFG > $config_file
-$(saveVar REMOTE_PATH)
-$(saveVar PROJ_FOLDER)
-$(saveVar REMOTE)
-$(saveVar KEY)
-$(saveVar BROKER_ADDRESS)
-$(saveVar START_MASTER)
-$(saveVar START_WORKER)
-CMDBLOCK_CFG
+echo "" > $config_file
+save_vars=( REMOTE_PATH PROJ_FOLDER REMOTE KEY BROKER_ADDRESS START_MASTER START_WORKER )
+for var in "${save_vars[@]}"; do
+	line="$(saveVar $var)"
+	if [ -n "$line" ]; then
+		echo "$line" >> $config_file
+	fi
+done
 
 
 SaveHostData() {
