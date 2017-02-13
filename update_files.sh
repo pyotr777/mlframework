@@ -158,7 +158,14 @@ for rhost in "${remote_hosts[@]}"; do
 		echo "Compare ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
 	fi
 	# Copy task files to remote
-	eval {rsync $OPT $KEY --exclude-from "rsyncexclude_task.txt" --size-only  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/} 2>/dev/null
-	# Copy framework files to remote
-	eval {rsync $OPT $KEY --include-from "rsyncinclude_framework.txt" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/} 2>/dev/null
+	cmd="rsync $OPT $KEY --exclude-from \"rsyncexclude_task.txt\" --size-only  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	if [[ -n "$debug" ]]; then
+		echo $cmd
+	fi
+	eval $cmd 2>/dev/null
+	cmd="rsync $OPT $KEY --include-from \"rsyncinclude_framework.txt\" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/"
+	if [[ -n "$debug" ]]; then
+		echo $cmd
+	fi
+	eval $cmd 2>/dev/null
 done

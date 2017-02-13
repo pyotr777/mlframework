@@ -38,7 +38,14 @@ def report_state(msg):
         print "Finished with result ", res
         return
     elif status == "MSG":
-        print res["TID"],res["message"]
+        if type(res["message"]) is str or type(res["message"]) is unicode:
+            print res["TID"],res["message"]
+        elif type(res["message"]) is dict:
+            #print res["message"]
+            print res["TID"],res["message"]["title"]+":",
+            for var in res["message"]["vars"]:
+                print var+"="+res["message"]["vars"][var]
+
         return
     else:
         if type(res) is dict:

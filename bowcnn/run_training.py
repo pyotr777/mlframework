@@ -28,22 +28,29 @@ def unjsonify(a):
 
 
 def report_state(msg):
-    #print "Received message of type "+ str(type(msg))
-    #for k in msg:
-    #    print k,":",msg[k]
-    #print ""
+    print "Received message of type "+ str(type(msg))
+    for k in msg:
+        print k,":",msg[k]
+    print ""
     status = msg[u'status']
     res = msg[u'result']
     if status == "SUCCESS":
         print "Finished with result ", res
         return
-    #print status
-    # Intermediate results
-    if type(res) is dict:
-        for k in res:
-            print k,":",res[k]
+    elif status == "MSG":
+        if type(res["message"]) is dict:
+            print res["TID"],
+            for k in res["message"]:
+                print k,"=",res["message"][k],
+        else:
+            print res["TID"],res["message"]
+        return
     else:
-        print res
+        if type(res) is dict:
+            for k in res:
+                print k,":",res[k]
+        else:
+            print res
 
 
 # Load YAML into python object
@@ -160,6 +167,7 @@ if __name__ == '__main__':
         line = paramatrix[l][1:]
         combinations = joinLists(combinations, line)
 
+    print "Have "+str(len(combinations))+" combinations."
     # Wrap combinataions into dictionary
     base_pars = {
         'maxiter':3,
@@ -172,6 +180,7 @@ if __name__ == '__main__':
     for c in range(0,len(combinations)):
         dic=base_pars
         for l in range(0, len(paramatrix)):
+            print paramatrix[l][0],"=", combinations[c][l],
             dic[paramatrix[l][0]]=str(combinations[c][l])
         result = train.delay(jsonify(dic))
         print "New task: "+str(result.id)

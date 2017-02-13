@@ -195,7 +195,7 @@ for index_tr, index_te in kf:
         avg_test_acc /= n_test
         avg_test_loss /= n_test
 
-        print "epoch %3d: train loss = %.4f, train acc = %.4f, test acc = %.4f"\
+        print "epoch=%3d, train_loss=%.4f, train_acc = %.4f, test_acc = %.4f"\
               % (epoch + 1, avg_train_loss.data, avg_train_acc.data, avg_test_acc.data)
 
         if max_test_acc < avg_test_acc.data:
@@ -211,7 +211,7 @@ for index_tr, index_te in kf:
 
 """ result summary """
 print "--------------------------------- Summary: average test accuracy, std. ---------------------------------"
-print np.mean(cv_test_acc_list), np.std(cv_test_acc_list)
+print "Result: mean={0:.5f}, std={0:.5f}".format(np.mean(cv_test_acc_list), np.std(cv_test_acc_list))
 
 
 """ close """

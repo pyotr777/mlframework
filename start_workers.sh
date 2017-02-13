@@ -127,6 +127,9 @@ while test $# -gt 0; do
     shift
 done
 
+
+echo "worker_addresses=$worker_addresses"
+echo "worker hosts=${worker_hosts[@]}"
 if [[ -n "$worker_addresses" ]]; then
 	IFS="," read -ra worker_hosts <<< "$worker_addresses"
 	update_hosts="$worker_addresses"
@@ -159,8 +162,9 @@ if [[ -z "$REMOTE_PATH" ]] || [[ -z "$PROJ_FOLDER" ]]; then
 fi
 
 
+echo "./update_files.sh -a $update_hosts"
 # Updating files on remote hosts
-./update_files.sh -a "$update_hosts"
+./update_files.sh -a $update_hosts
 
 
 # Starting workers
@@ -208,7 +212,7 @@ if [[ -n "$worker_hosts" ]]; then
 	done
 fi
 
-sleep 5
+sleep 1
 ./check_celery_status.sh
 
 
