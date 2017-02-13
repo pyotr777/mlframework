@@ -17,19 +17,19 @@ def unjsonify(a):
         return a
 
 def report(self, message):
-    print self
-    self.update_state(state="MSG",meta={"message":message})
+    tid = self.request.id
+    self.update_state(state="MSG",meta={"message":message,"TID":tid})
 
 @app.task(bind=True,acks_late=True)
 def echo(self, s="Hello world!"):
+    tid = self.request.id
     print "Echo: "+str(s)
     for i in range(0,5):
         time.sleep(1)
-        print "print "+str(i)
+        print "print "+str(tid)+" "+str(i)
         report(self, i)
     dic = {
-        "a": "a string",
-        "b": 23.45,
+        "tid": tid,
         "S" : s
     }
     return dic

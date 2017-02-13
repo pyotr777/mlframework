@@ -38,7 +38,7 @@ def report_state(msg):
         print "Finished with result ", res
         return
     elif status == "MSG":
-        print res["message"]
+        print res["TID"],res["message"]
         return
     else:
         if type(res) is dict:
