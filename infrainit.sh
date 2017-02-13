@@ -3,7 +3,7 @@
 # Start framework infrastructure on local and/or remote hosts.
 # Copyright (C) 2017 Bryzgalov Peter @ Stair Lab CHITECH
 
-# Version 0.3alpha
+# Version 0.4alpha
 
 # TODO
 # [V] Check that remote folders exist (before calling rsync)
@@ -15,13 +15,12 @@
 
 usage=$(cat <<USAGEBLOCK
 Usage:
-$0 -a <[user@]host1,[user@]host2...> [-f] [-i <ssh key file>] -r <path> -d <dirname> [-b <broker address>] [-m local/N] [-w local,N1,N2...]
+$0 -a <[user@]host1,[user@]host2...> [-f] [-i <ssh key file>] -r <path> -d <dirname> [-m local/N] [-w local,N1,N2...]
 Options:
 	-a	Remote hosts addresses, comma-separated list.
 	-r	Remote path for storing task and framework files relative to home directory.
 	-d	Name of directory with task (project) files.
-	-b	External address of the machine with Master and Broker containers.
-	-m	Start Celery master and broker on local machine or on host N (N is a number).
+	-m	Master host: start Celery master and broker on local machine or on host N (N is a number).
 	-w	Start workers on specified hosts. N1,N2... - comma separated numbers of hosts, listed in -a. First host has number 1.
 	-f	Read all the above options from file config.sh. If -f option not used config.sh will be overwritten with new options provided as arguments to this script.
 USAGEBLOCK
@@ -159,20 +158,6 @@ SaveHostData() {
 }
 
 
-
-# Remove user name from host address: ubuntu@host.com -> host.com
-function hostAddress {
-	host=$1
-	ifs=$IFS
-	IFS='@' arr=( $(echo "$host") )
-	IFS=$ifs
-	if [ ${#arr[@]} -gt 1 ]; then
-		echo ${arr[1]}
-	else
-		echo $host
-	fi
-}
-
 set -e
 
 IFS="," remote_hosts=$REMOTE
@@ -183,8 +168,6 @@ remote_hosts=(localhost ${remote_hosts[@]})
 
 if [[ -n "$START_WORKER" ]]; then
 	IFS="," read -ra worker_hosts <<< "${START_WORKER//local/0}"
-	#echo "Worker hosts: ${worker_hosts[@]}"
-	#echo "Remote hosts: ${remote_hosts[@]}"
 fi
 
 if [[ "$START_MASTER" == "local" ]]; then

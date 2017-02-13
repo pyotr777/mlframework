@@ -6,51 +6,26 @@
 # TODO
 # [V] Read PROJ_FOLDER and REMOTE_PATH from CSV file.
 
+. init.sh
+
 
 usage=$(cat <<USAGEBLOCK
 Update files on remote hosts with rsync.
-Remote hosts read from infra.csv file, which must exist.
+Use CL arguments and $CSV_file file. CL arguments has priority.
 
-$0 [-a <[user@]host1,[user@]host2...>] [-i identity file] -l <dirname> -r <path>
+$0 [-a <[user@]host1,[user@]host2...>] [-i identity file] -d <dirname> -r <path>
 
 Options:
 	-a	Remote hosts addresses, comma-separated list.
-	-l	Local folder with task (project) files.
+	-d	Local folder with task (project) files.
 	-r	Remote path for storing task and framework files relative to home dir..
 USAGEBLOCK
 )
 
-. init.sh
 
 key_opt=""
 REMOTE=""
 ssh_com=""
-
-while test $# -gt 0; do
-    case "$1" in
-        -h | --help)
-            echo $usage
-            exit 0
-            ;;
-        -a)
-            REMOTE="$2";shift;
-            ;;
-        -l)
-            PROJ_FOLDER="$2";shift;
-            ;;
-        -r)
-            REMOTE_PATH="$2";shift;
-            ;;
-        -i)
-            KEY="$2";key_opt="-i $2";shift;
-            ;;
-        -*)
-            echo "Invalid option: $1"
-            echo "$usage"
-            exit 1;;
-    esac
-    shift
-done
 
 
 echo "Reading from $CSV_file"
@@ -63,15 +38,6 @@ while read -r line; do
             	echo "hosts: ${remote_hosts[@]}"
             fi
             ;;
-        master)
-			START_MASTER="${arr[1]}"
-			if [[ -n "$START_MASTER" ]]; then
-				master_host=${remote_hosts[$((START_MASTER+1))]}
-				if [[ -n "$debug" ]]; then
-					echo "Using master host $master_host"
-				fi
-			fi
-			;;
 		remote_path)
 			REMOTE_PATH="${arr[1]}"
 			echo "Using remote path $REMOTE_PATH"
@@ -85,6 +51,38 @@ while read -r line; do
             ;;
     esac
 done < $CSV_file
+
+
+# Reading CL arguments
+while test $# -gt 0; do
+    case "$1" in
+        -h | --help)
+            echo $usage
+            exit 0
+            ;;
+        -a)
+            REMOTE="$2";shift;
+            ;;
+        -d)
+            PROJ_FOLDER="$2";shift;
+            ;;
+        -r)
+            REMOTE_PATH="$2";shift;
+            ;;
+        -i)
+            KEY="$2";key_opt="-i $2";shift;
+            ;;
+        --debug)
+			debug=YES
+			;;
+        -*)
+            echo "Invalid option: $1"
+            echo "$usage"
+            exit 1;;
+    esac
+    shift
+done
+
 
 
 if [[ -z "$REMOTE_PATH" ]] || [[ -z "$PROJ_FOLDER" ]]; then

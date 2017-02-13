@@ -9,7 +9,7 @@ clean_script="infra_clean.sh"
 cmd_filename="remote_command.sh"
 ssh_options="-o ServerAliveInterval=10"
 
-debug=""
+debug="1"
 
 RemoteExec() {
 	filename=$1
@@ -17,6 +17,7 @@ RemoteExec() {
 	key=$3
 	#filename="remote_command.sh"
 	echo "" >> $filename
+	echo  'cd $HOME' >> $filename
 	printf "rm $filename" >> $filename
 	chmod +x $filename
 	if [[ -n "$debug" ]]; then
@@ -50,6 +51,21 @@ LocalExec() {
 	chmod +x $filename
 	./$filename
 }
+
+
+# Remove user name from host address: ubuntu@host.com -> host.com
+function hostAddress {
+	host=$1
+	ifs=$IFS
+	IFS='@' arr=( $(echo "$host") )
+	IFS=$ifs
+	if [ ${#arr[@]} -gt 1 ]; then
+		echo ${arr[1]}
+	else
+		echo $host
+	fi
+}
+
 
 function message {
     echo -en "\033[38;5;70m $1\033[m\n"
