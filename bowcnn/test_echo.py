@@ -61,10 +61,7 @@ if __name__ == '__main__':
 
     # Wrap combinataions into dictionary
     base_pars = {
-        'maxiter':3,
-        'dataset':"TwentyNg",
-        'minibatchsize':50,
-        'nfolds':2
+        'n':25,
     }
     results = []
 

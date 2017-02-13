@@ -197,6 +197,7 @@ SaveHostData "$CSV_file" "localhost,$REMOTE" "$START_MASTER" "$START_MASTER" "${
 
 # Create infrastructure cleaning script
 echo "#!/bin/bash" > $clean_script
+echo "set -e" >> $clean_script
 for i in "${worker_hosts[@]}"; do
 	# echo "$i ${remote_hosts[$i]}"
 	if [[ "${remote_hosts[$i]}" != "localhost" ]];then

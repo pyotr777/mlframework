@@ -9,6 +9,8 @@ import json
 from subprocess import Popen, PIPE, STDOUT
 
 def unjsonify(a):
+    if type(a) is dict:
+        return a
     try:
         arr = json.loads(a)
         return arr
@@ -21,17 +23,18 @@ def report(self, message):
     self.update_state(state="MSG",meta={"message":message,"TID":tid})
 
 @app.task(bind=True,acks_late=True)
-def echo(self, s="Hello world!"):
+def echo(self, dic={"n":2}):
     tid = self.request.id
-    print "Echo: "+str(s)
-    for i in range(0,5):
+    print "Echo: "+str(dic)
+    print type(dic)
+    dic = unjsonify(dic)
+    print type(dic)
+    n = int(dic["n"])
+    for i in range(0,n):
         time.sleep(1)
         print "print "+str(tid)+" "+str(i)
         report(self, i)
-    dic = {
-        "tid": tid,
-        "S" : s
-    }
+    dic["tid"]=tid
     return dic
 
 @app.task(bind=True,acks_late=True)
