@@ -10,10 +10,6 @@ from subprocess import Popen, PIPE, STDOUT
 import numpy as np
 
 
-
-
-
-
 # Load YAML into python object
 def yamlLoad(filepath):
     with open(filepath,"r") as fd:
@@ -138,7 +134,7 @@ if __name__ == '__main__':
         'dataset':"TwentyNg",
         'minibatchsize':50,
         'nfolds':2,
-        'jsonresult':1
+        'jsonresult':"worker_result.json"
     }
     results = []
 
