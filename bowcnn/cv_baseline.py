@@ -90,7 +90,7 @@ print "Using model "+args.model+"."
 if args.model == "fasttext":
     from .baselines.fasttext import Model
     model = Model(n_vocab, n_emb, n_classes)
-    print "Model fasttext"
+    #print "Model fasttext"
 if args.model == "mlp3l":
     from .baselines.mlp3l import Model
     model = Model(n_vocab, n_emb, n_classes, dropout_rate=args.dropoutrate)
@@ -211,7 +211,7 @@ for index_tr, index_te in kf:
 
 """ result summary """
 print "--------------------------------- Summary: average test accuracy, std. ---------------------------------"
-print "Result: mean={0:.5f}, std={0:.5f}".format(np.mean(cv_test_acc_list), np.std(cv_test_acc_list))
+print "Result: mean={0:.9f}, std={0:.9f}".format(np.mean(cv_test_acc_list), np.std(cv_test_acc_list))
 
 
 """ close """
@@ -225,7 +225,7 @@ if args.jsonresult:
                        "cv_mean": float(np.mean(cv_test_acc_list)),
                        "cv_std": float(np.std(cv_test_acc_list))}
 
-    with open(args.json_result, "w") as f:
+    with open(args.jsonresult, "w") as f:
         json.dump(info, f)
 
 

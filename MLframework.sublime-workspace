@@ -4,6 +4,50 @@
 		"selected_items":
 		[
 			[
+				"worke",
+				"worker_addresses"
+			],
+			[
+				"wor",
+				"worker_addresses"
+			],
+			[
+				"par",
+				"parseOutput"
+			],
+			[
+				"var",
+				"var_value"
+			],
+			[
+				"titl",
+				"title_contents"
+			],
+			[
+				"til",
+				"title_contents"
+			],
+			[
+				"up",
+				"update_hosts"
+			],
+			[
+				"w",
+				"worker_hosts"
+			],
+			[
+				"BROKE",
+				"BROKER_HOST"
+			],
+			[
+				"BRKO",
+				"BROKER_HOST"
+			],
+			[
+				"CSV",
+				"CSV_file"
+			],
+			[
 				"master",
 				"master_host"
 			],
@@ -470,50 +514,6 @@
 			[
 				"col",
 				"colon_split"
-			],
-			[
-				"ex",
-				"exclude"
-			],
-			[
-				"comma",
-				"command"
-			],
-			[
-				"REMO",
-				"REMOTEDIR"
-			],
-			[
-				"exec",
-				"exec_button_"
-			],
-			[
-				"test",
-				"teststr2"
-			],
-			[
-				"tr",
-				"teststr1"
-			],
-			[
-				"testr",
-				"teststr1"
-			],
-			[
-				"br",
-				"br_counter"
-			],
-			[
-				"block",
-				"block_counter"
-			],
-			[
-				"refre",
-				"refresh_script"
-			],
-			[
-				"bloc",
-				"block_counter"
 			]
 		]
 	},
@@ -698,21 +698,27 @@
 	},
 	"file_history":
 	[
+		"/Users/peterbryzgalov/work/ML/mlframework/testvars.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_worker.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/update_files.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/check_celery_status.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/init.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/start_workers.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/infrainit.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/run_tasks.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/bowcnn/run_training.py",
+		"/Users/peterbryzgalov/work/ML/mlframework/config.sh",
+		"/Users/peterbryzgalov/work/ML/mlframework/bowcnn/test_echo.py",
+		"/Users/peterbryzgalov/work/ML/mlframework/bowcnn/tasks.py",
+		"/Users/peterbryzgalov/work/ML/mlframework/config_ec2.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/infra.csv",
 		"/Users/peterbryzgalov/work/ML/mlframework/clean_celery_worker.sh",
-		"/Users/peterbryzgalov/work/ML/mlframework/bowcnn/run_training.py",
-		"/Users/peterbryzgalov/work/ML/mlframework/run_tasks.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/bowcnn/cv_baseline.py",
-		"/Users/peterbryzgalov/work/ML/mlframework/start_celery_worker.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/bowcnn/paramtest.yml",
-		"/Users/peterbryzgalov/work/ML/mlframework/config.sh",
-		"/Users/peterbryzgalov/work/ML/mlframework/infrainit.sh",
-		"/Users/peterbryzgalov/work/ML/mlframework/config_ec2.sh",
 		"/Users/peterbryzgalov/Library/Application Support/Sublime Text 3/Packages/GoSublime/USAGE.md",
 		"/Users/peterbryzgalov/work/ML/mlframework/proj/test_training.py",
 		"/Users/peterbryzgalov/work/ML/mlframework/proj/task_fasttext.py",
 		"/Users/peterbryzgalov/work/ML/mlframework/paramtest.yml",
-		"/Users/peterbryzgalov/work/ML/mlframework/init.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/bowcnn/datasets/twenty_ng.py",
 		"/Users/peterbryzgalov/work/ML/mlframework/show_args.sh",
 		"/Users/peterbryzgalov/work/ML/mlframework/start_jupyter.sh",
@@ -819,13 +825,7 @@
 		"/Users/peterbryzgalov/work/kportal/release/sample_application/tmp/jobinspect/job.o5469528",
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/job.o5466885",
 		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/J72945527361478082697.sh",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/sample/change_case_pars.sh",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/mail_body.txt",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/pre.log",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/J72945527361478082697.info",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J62435606341478073885/job.o5466643",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J62435606341478073885/J62435606341478073885.sh",
-		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J62435606341478073885/sample/change_case_pars.sh"
+		"/Users/peterbryzgalov/Desktop/sshfs/kportal/jobs/J72945527361478082697/sample/change_case_pars.sh"
 	],
 	"find":
 	{
@@ -849,6 +849,8 @@
 		"case_sensitive": false,
 		"find_history":
 		[
+			".\"",
+			"l",
 			"rabbit_cont_name",
 			"set ",
 			"RemoteExec",
@@ -974,9 +976,7 @@
 			"/next",
 			"shutdown",
 			"()\n",
-			"]Get next",
-			"Loading next",
-			"Server address"
+			"]Get next"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1090,7 +1090,7 @@
 		"rows":
 		[
 			0.0,
-			0.445818616748,
+			0.435199198298,
 			1.0
 		]
 	},

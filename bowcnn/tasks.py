@@ -19,21 +19,19 @@ def unjsonify(a):
         return a
 
 def report(self, message):
-    tid = self.request.id
-    print type(message)
+    #print type(message)
     print message
     if type(message) is str or type(message) is unicode:
         try:
             #print "Parcing "+message
             dic = parseOutput(message)
             #print "dic="+str(dic)
+            if dic is not None and type(dic) is dict:
+                message = dic
+                print "Parsed message (dict): ", message
         except Exception as exp:
             print exp
-        if dic is not None:
-            message = dic
-            print "Parsed dic=", message
-
-    self.update_state(state="MSG",meta={"message":message,"TID":tid})
+    self.update_state(state="MSG",meta={"message":message})
 
 @app.task(bind=True,acks_late=True)
 def echo(self, dic={"n":2}):
@@ -61,12 +59,13 @@ def train(self, pars):
         if len(line)>0:
             report(self,"err:"+line)
 
-    cmd = ["python","-m","bowcnn.cv_baseline"]
+    cmd = ["python","-u", "-m","bowcnn.cv_baseline"]
     for key in par:
         cmd.append(str("--"+key))
-        cmd.append(str(par[key]))
-    report(self, {"Command": cmd})
-    print cmd
+        if type(par[key]) is not bool:
+            cmd.append(str(par[key]))
+    report(self, {"Command": " ".join(cmd)})
+    print " ".join(cmd)
     pipe = Popen(cmd, stdout=PIPE, stderr=PIPE, close_fds=True)
 
     for line in iter(pipe.stdout.readline, b''):
@@ -87,24 +86,27 @@ def train(self, pars):
 #   }
 # }
 def parseOutput(s):
-    # print s
     if s.find("=") > 0 :
-        title_contents=s.split(":")
-        #print "title_contents="+str(title_contents)
+        #print " Parsing "+s
+        title_contents = s.split(":")
         dic = {}
         if len(title_contents) > 1:
-            title=title_contents[0]
-            dic["title"]=title
-            #print "dic[title]="+title
-            contents=title_contents[1].replace(" ","")
+            title = title_contents[0]
+            #print " title="+title
+            dic["title"] = title
+            contents = title_contents[1]
         else:
-            contents=s.replace(" ","")
+            contents = s
+
+        contents = contents.replace(" ","")
+        contents = contents.replace("\n","")
+        #print " conte="+contents
 
         dic["vars"] = {}
         #print "contents="+str(contents)
         tuples=contents.split(",")
         for pair in tuples:
-            #print "pair="+str(pair)+" "+str(len(pair))
+            #print " pair="+str(pair)+" ("+str(len(pair))+")"
             if len(pair) < 2:
                 continue
             var_value=pair.split("=")

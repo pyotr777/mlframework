@@ -59,7 +59,9 @@ else
 fi
 
 # Starting worker container with workers
-cmd="docker run -d -v "$(pwd)":/root $BROKER_OPT --name $worker_cont_name $worker_image celery -A $proj_folder worker --loglevel=info -E --concurrency=1 -n worker@%h"
-#echo $cmd
+cmd="docker run -d -v "$(pwd)":/root $BROKER_OPT --name $worker_cont_name $worker_image celery -A $proj_folder worker --loglevel=info -E --concurrency=$concurrency -n worker@%h"
+if [[ -n "$debug" ]]; then
+    echo $cmd
+fi
 eval $cmd
 

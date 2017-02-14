@@ -27,25 +27,37 @@ def unjsonify(a):
         return a
 
 
-def report_state(msg):
-    print "Received message of type "+ str(type(msg))
-    for k in msg:
-        print k,":",msg[k]
-    print ""
+def parse_message(msg):
+    debug_print("run_training received message "+ str(msg))
+    #for k in msg:
+    #    print " ", k,":",msg[k]
+    #print ""
     status = msg[u'status']
     res = msg[u'result']
+    tid = msg[u'task_id']
     if status == "SUCCESS":
-        print "Finished with result ", res
+        print tid+" finished with result ", res
         return
     elif status == "MSG":
-        if type(res["message"]) is dict:
-            print res["TID"],
-            for k in res["message"]:
-                print k,"=",res["message"][k],
-        else:
-            print res["TID"],res["message"]
+        msg = res["message"]
+        if type(msg) is str or type(msg) is unicode:
+            print tid, msg
+        elif type(msg) is dict:
+            print tid,
+            # Check if dict has structure produced by tasks.parseOutput()
+            if "vars" in msg:
+                if "title" in msg:
+                    print msg["title"]+":",
+                for var in msg["vars"]:
+                    print var+"="+msg["vars"][var],
+                print ""
+            else:
+                for k in msg:
+                    print k, ":", msg[k]
+
         return
     else:
+        print tid
         if type(res) is dict:
             for k in res:
                 print k,":",res[k]
@@ -147,6 +159,10 @@ def joinLists(a, b):
     return c
 
 
+# Print in color
+def debug_print(s,color=237):
+    print "\033[38;5;"+str(color)+"m"+str(s)+"\033[m"
+
 
 if __name__ == '__main__':
     # Check current dir
@@ -154,10 +170,10 @@ if __name__ == '__main__':
     pipe = Popen(["pwd"], stdout=PIPE, stderr=PIPE, close_fds=True)
     for line in iter(pipe.stdout.readline, b''):
         pwd = line
-        print "Current dir: "+ pwd
+        debug_print("Current dir: "+ pwd)
     for line in iter(pipe.stderr.readline, b''):
         if len(line)>0:
-            print "!"+line
+            debug_print("!"+line)
 
     paramatrix=yaml2Matrix("bowcnn/paramtest.yml")
 
@@ -167,30 +183,33 @@ if __name__ == '__main__':
         line = paramatrix[l][1:]
         combinations = joinLists(combinations, line)
 
-    print "Have "+str(len(combinations))+" combinations."
+    debug_print("Have "+str(len(combinations))+" combinations.",243)
     # Wrap combinataions into dictionary
     base_pars = {
         'maxiter':3,
         'dataset':"TwentyNg",
         'minibatchsize':50,
-        'nfolds':2
+        'nfolds':2,
+        'jsonresult':1
     }
     results = []
 
     for c in range(0,len(combinations)):
         dic=base_pars
         for l in range(0, len(paramatrix)):
-            print paramatrix[l][0],"=", combinations[c][l],
+            debug_print(str(paramatrix[l][0])+"="+str(combinations[c][l]))
             dic[paramatrix[l][0]]=str(combinations[c][l])
         result = train.delay(jsonify(dic))
-        print "New task: "+str(result.id)
-        print "Paramters: "+str(dic)
+        debug_print("New task: "+str(result.id), 20)
+        debug_print("Paramters: "+str(dic),20)
         results.append(result)
 
     print "All tasks sent"
 
     for r in results:
-        r.get(on_message=report_state, propagate=False)
+        r.get(on_message=parse_message, propagate=False)
 
     print "All tasks finished."
+
+
 
