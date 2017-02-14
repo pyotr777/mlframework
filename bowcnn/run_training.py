@@ -4,65 +4,14 @@
 from __future__ import absolute_import, unicode_literals
 from .celery import app
 import yaml, json
+from .master_functions import jsonify, unjsonify, parse_message, debug_print
 from .tasks import train, echo
 from subprocess import Popen, PIPE, STDOUT
 import numpy as np
 
 
-def jsonify(pars):
-    if type(pars) is list:
-        a = pars.tolist()
-    else:
-        a = json.dumps(pars)
-    return a
 
 
-def unjsonify(a):
-    try:
-        arr = json.loads(a)
-        np_arr = np.array(arr)
-        return np_arr
-    except TypeError:
-        #print  "unjsonify recieved object of type",type(a)
-        return a
-
-
-def parse_message(msg):
-    debug_print("run_training received message "+ str(msg))
-    #for k in msg:
-    #    print " ", k,":",msg[k]
-    #print ""
-    status = msg[u'status']
-    res = msg[u'result']
-    tid = msg[u'task_id']
-    if status == "SUCCESS":
-        print tid+" finished with result ", res
-        return
-    elif status == "MSG":
-        msg = res["message"]
-        if type(msg) is str or type(msg) is unicode:
-            print tid, msg
-        elif type(msg) is dict:
-            print tid,
-            # Check if dict has structure produced by tasks.parseOutput()
-            if "vars" in msg:
-                if "title" in msg:
-                    print msg["title"]+":",
-                for var in msg["vars"]:
-                    print var+"="+msg["vars"][var],
-                print ""
-            else:
-                for k in msg:
-                    print k, ":", msg[k]
-
-        return
-    else:
-        print tid
-        if type(res) is dict:
-            for k in res:
-                print k,":",res[k]
-        else:
-            print res
 
 
 # Load YAML into python object
@@ -159,10 +108,6 @@ def joinLists(a, b):
     return c
 
 
-# Print in color
-def debug_print(s,color=237):
-    print "\033[38;5;"+str(color)+"m"+str(s)+"\033[m"
-
 
 if __name__ == '__main__':
     # Check current dir
@@ -174,6 +119,9 @@ if __name__ == '__main__':
     for line in iter(pipe.stderr.readline, b''):
         if len(line)>0:
             debug_print("!"+line)
+
+    # Open file for writing results
+    f= open("output.csv","w")
 
     paramatrix=yaml2Matrix("bowcnn/paramtest.yml")
 

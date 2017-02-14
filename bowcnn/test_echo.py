@@ -3,56 +3,11 @@
 
 from __future__ import absolute_import, unicode_literals
 from .celery import app
-import yaml, json
+from .master_functions import jsonify, unjsonify, parse_message
 from .tasks import train, echo
 from subprocess import Popen, PIPE, STDOUT
 import numpy as np
 
-
-def jsonify(pars):
-    if type(pars) is list:
-        a = pars.tolist()
-    else:
-        a = json.dumps(pars)
-    return a
-
-
-def unjsonify(a):
-    try:
-        arr = json.loads(a)
-        np_arr = np.array(arr)
-        return np_arr
-    except TypeError:
-        #print  "unjsonify recieved object of type",type(a)
-        return a
-
-
-def report_state(msg):
-    #print "Received message of type "+ str(type(msg))
-    #for k in msg:
-    #    print k,":",msg[k]
-    #print ""
-    status = msg[u'status']
-    res = msg[u'result']
-    if status == "SUCCESS":
-        print "Finished with result ", res
-        return
-    elif status == "MSG":
-        if type(res["message"]) is str or type(res["message"]) is unicode:
-            print res["TID"],res["message"]
-        elif type(res["message"]) is dict:
-            #print res["message"]
-            print res["TID"],res["message"]["title"]+":",
-            for var in res["message"]["vars"]:
-                print var+"="+res["message"]["vars"][var]
-
-        return
-    else:
-        if type(res) is dict:
-            for k in res:
-                print k,":",res[k]
-        else:
-            print res
 
 
 if __name__ == '__main__':
@@ -66,9 +21,12 @@ if __name__ == '__main__':
         if len(line)>0:
             print "!"+line
 
+
+    f= open("output.csv","w")
+
     # Wrap combinataions into dictionary
     base_pars = {
-        'n':25,
+        'n':10,
     }
     results = []
 
@@ -82,6 +40,6 @@ if __name__ == '__main__':
     print "All tasks sent"
 
     for r in results:
-        r.get(on_message=report_state, propagate=False)
+        r.get(on_message=parse_message, propagate=False)
 
     print "All tasks finished."
