@@ -5,5 +5,3 @@ __pycache__/
 remote_command.sh
 infra_clean.sh
 infra.csv
-config.sh
-
