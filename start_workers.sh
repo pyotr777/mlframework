@@ -127,14 +127,17 @@ while test $# -gt 0; do
     shift
 done
 
-
-echo "worker_addresses=$worker_addresses"
-echo "worker hosts=${worker_hosts[@]}"
+if [[ -n "$debug" ]]; then
+	echo "worker_addresses=$worker_addresses"
+	echo "worker hosts=${worker_hosts[@]}"
+fi
 if [[ -n "$worker_addresses" ]]; then
 	IFS="," read -ra worker_hosts <<< "$worker_addresses"
 	update_hosts="$worker_addresses"
 else
-	update_hosts=$( IFS="," echo "${worker_hosts[*]}")
+	# Remove localhost from the list of hosts to update files
+	update_hosts="${worker_hosts[@]/localhost}"
+	update_hosts=$( IFS=","; echo "${update_hosts[*]}")
 fi
 
 
@@ -161,8 +164,9 @@ if [[ -z "$REMOTE_PATH" ]] || [[ -z "$PROJ_FOLDER" ]]; then
 	exit 1
 fi
 
-
-echo "./update_files.sh -a $update_hosts"
+if [[ -n "$debug" ]]; then
+	echo "./update_files.sh -a $update_hosts"
+fi
 # Updating files on remote hosts
 ./update_files.sh -a $update_hosts
 
