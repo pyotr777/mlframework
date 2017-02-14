@@ -7,4 +7,4 @@ if [ -n "$cont" ]; then
 fi
 docker run -d -v $(pwd):/root/ -p $PORT:8888 --name $CONTNAME $IMAGE
 sleep 2
-open "http://localhost:8888"
+open "http://localhost:$PORT"

@@ -1,8 +1,8 @@
-FROM debian:jessie
+FROM pyotr777/celery-chainer-flower
 
 MAINTAINER Bryzgalov Peter <peterbryz@yahoo.com>
 
-# Install Python and Jupyter
+# Install Jupyter
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 RUN apt-get update && apt-get install -y gfortran && apt-get -y autoremove
 
 RUN apt-get install -y libtiff5-dev libjpeg-dev && apt-get -y autoremove
-RUN apt-get install -y python-setuptools python-pip
+
 RUN apt-get install -y python-numpy python-scipy python-pandas \
     python-tk && apt-get -y autoremove
 
@@ -26,8 +26,7 @@ RUN pip install -U jupyter
 RUN pip install -U matplotlib
 RUN pip install -U Pillow
 RUN pip install -U sklearn
-RUN pip install -U chainer
-RUN pip install h5py
+RUN pip install -U h5py
 RUN pip install -U pyyaml
 
 WORKDIR /root/
