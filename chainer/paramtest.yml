@@ -1,4 +1,4 @@
-epoch: !!python/tuple [2,5,2]
+epoch: !!python/tuple [3,6]
 #decay: !!python/tuple [0,0.8,0.2]
 #tfdif: True
 #nodif: False

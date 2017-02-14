@@ -21,15 +21,15 @@ def unjsonify(a):
         print  "unjsonify recieved object of type",type(a)
         return a
 
-def parse_message(msg):
-    #debug_print("master received message "+ str(msg))
-    #for k in msg:
-    #    print " ", k,":",msg[k]
+def parse_message(message):
+    #debug_print("master received message "+ str(message))
+    #for k in message:
+    #    print " ", k,":",message[k]
     #print ""
 
-    status = msg[u'status']
-    res = msg[u'result']
-    tid = msg[u'task_id']
+    status = message[u'status']
+    res = message[u'result']
+    tid = message[u'task_id']
     if status == "SUCCESS":
         print tid+" finished with result ", res
         return
@@ -37,6 +37,8 @@ def parse_message(msg):
         f= open("output.csv","a+")
         msg = res["message"]
         if type(msg) is str or type(msg) is unicode:
+            contol_keys = dict.fromkeys(range(32))
+            msg = msg.translate(contol_keys)
             print tid, msg
             f.write(str(tid)+"," + str(msg)+"\n")
         elif type(msg) is dict:

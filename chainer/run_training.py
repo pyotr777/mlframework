@@ -92,11 +92,13 @@ def concat(a,b):
 # of the two input lists. Each list is a unique combination of elements
 # from the two input lists.
 def joinLists(a, b):
-    if len(a)==0:
-        return [b]
-    elif len(b)==0:
-        return [a]
     c = []
+    if len(a)==0:
+        for j in range (0, len(b)):
+            c.append([b[j]])
+    elif len(b)==0:
+        for i in range (0, len(a)):
+            c.append([a[i]])
     for i in range (0, len(a)):
         for j in range (0, len(b)):
             combination=concat(a[i],b[j])
@@ -106,15 +108,6 @@ def joinLists(a, b):
 
 
 if __name__ == '__main__':
-    # Check current dir
-    pwd = ""
-    pipe = Popen(["pwd"], stdout=PIPE, stderr=PIPE, close_fds=True)
-    for line in iter(pipe.stdout.readline, b''):
-        pwd = line
-        debug_print("Current dir: "+ pwd)
-    for line in iter(pipe.stderr.readline, b''):
-        if len(line)>0:
-            debug_print("!"+line)
 
     # Open file for writing results
     f= open("output.csv","w")
@@ -138,7 +131,6 @@ if __name__ == '__main__':
         debug_print("combinations:"+str(combinations))
         dic=base_pars
         for l in range(0, len(paramatrix)):
-            print l, c, paramatrix[l][0]
             debug_print(str(paramatrix[l][0])+"="+str(combinations[c][l]))
             dic[paramatrix[l][0]]=str(combinations[c][l])
         result = train.delay(jsonify(dic))

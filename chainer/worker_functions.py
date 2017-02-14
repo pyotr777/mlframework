@@ -73,44 +73,6 @@ def parseOutput(s):
         return s
 
 
-
-def parse_message(msg):
-    debug_print("run_training received message "+ str(msg))
-    #for k in msg:
-    #    print " ", k,":",msg[k]
-    #print ""
-    status = msg[u'status']
-    res = msg[u'result']
-    tid = msg[u'task_id']
-    if status == "SUCCESS":
-        print tid+" finished with result ", res
-        return
-    elif status == "MSG":
-        msg = res["message"]
-        if type(msg) is str or type(msg) is unicode:
-            print tid, msg
-        elif type(msg) is dict:
-            print tid,
-            # Check if dict has structure produced by tasks.parseOutput()
-            if "vars" in msg:
-                if "title" in msg:
-                    print msg["title"]+":",
-                for var in msg["vars"]:
-                    print var+"="+msg["vars"][var],
-                print ""
-            else:
-                for k in msg:
-                    print k, ":", msg[k]
-
-        return
-    else:
-        print tid
-        if type(res) is dict:
-            for k in res:
-                print k,":",res[k]
-        else:
-            print res
-
 # Print in color
 def debug_print(s,color=237):
     print "\033[38;5;"+str(color)+"m"+str(s)+"\033[m"

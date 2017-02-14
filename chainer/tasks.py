@@ -37,11 +37,11 @@ def train(self, pars):
     pipe = Popen(cmd, stdout=PIPE, stderr=PIPE, close_fds=True)
 
     for line in iter(pipe.stdout.readline, b''):
-        report(self,line)
+        report(self,line.rstrip())
 
     for line in iter(pipe.stderr.readline, b''):
         if len(line)>0:
-            debug_print(line)
+            debug_print(line.rstrip())
 
 
 
