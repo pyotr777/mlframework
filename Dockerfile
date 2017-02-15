@@ -40,3 +40,5 @@ ENV CELERY_BROKER_URL amqp://guest@rabbit
 WORKDIR /root
 
 CMD ["/bin/bash"]
+
+# docker build -f ML/mlframework/Dockerfile -t pyotr777/celery-chainer

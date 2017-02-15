@@ -7,3 +7,5 @@ RUN pip install flower
 RUN pip install -U pyyaml
 
 CMD ["celery","flower"]
+
+# docker build -f ML/mlframework/Dockerfile-flower -t pyotr777/celery-chainer-flower

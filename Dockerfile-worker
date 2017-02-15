@@ -10,3 +10,5 @@ ENV CELERY_BROKER_URL amqp://guest@rabbit
 
 USER user
 CMD ["celery", "worker"]
+
+# docker build -f ML/mlframework/Dockerfile-worker -t pyotr777/celery-chainer-worker

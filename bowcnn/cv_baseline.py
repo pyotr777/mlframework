@@ -210,8 +210,10 @@ for index_tr, index_te in kf:
     fold += 1
 
 """ result summary """
-print "--------------------------------- Summary: average test accuracy, std. ---------------------------------"
-print "Result: mean={0:.9f}, std={0:.9f}".format(np.mean(cv_test_acc_list), np.std(cv_test_acc_list))
+print "--------------------------------- Summary: average test accuracy (std.) ---------------------------------"
+mean = float(np.mean(cv_test_acc_list))
+std  = float(np.std(cv_test_acc_list))
+print "Result: mean={0:.9f}, std={0:.9f}".format(mean, std)
 
 
 """ close """
@@ -222,8 +224,8 @@ if args.jsonresult:
     info = dict()
     info["params"] = vars(args)
     info["results"] = {"cv_test_accuracy": cv_test_acc_list,
-                       "cv_mean": float(np.mean(cv_test_acc_list)),
-                       "cv_std": float(np.std(cv_test_acc_list))}
+                       "cv_mean": mean,
+                       "cv_std": std}
 
     with open(args.jsonresult, "w") as f:
         json.dump(info, f)

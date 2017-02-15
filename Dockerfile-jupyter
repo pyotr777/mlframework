@@ -31,3 +31,5 @@ RUN pip install -U pyyaml
 
 WORKDIR /root/
 CMD jupyter notebook --no-browser --ip=0.0.0.0 --NotebookApp.token=""
+
+# docker build -f ML/mlframework/Dockerfile-jupyter -t pyotr777/celery-chainer-jupyter
