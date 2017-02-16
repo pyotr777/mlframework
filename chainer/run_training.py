@@ -71,6 +71,10 @@ def yaml2Matrix(filepath):
                 print "Dictionary type is not used in parameters definition."
                 #for key1 in param:
                 #    print key1 + "=" + str(param[key1])
+            elif type(param) is str:
+                par_matrix.append([k,param])
+            else:
+                print "Unhandled parameter "+str(param)+" of type "+str(type(param))
 
     return par_matrix
 

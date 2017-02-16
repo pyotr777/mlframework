@@ -1,6 +1,0 @@
-
-REMOTE_PATH="mlframework"
-PROJ_FOLDER="chainer"
-REMOTE="ubuntu@52.199.55.227,ubuntu@52.196.224.123"
-START_MASTER="1"
-START_WORKER="local,2"

@@ -27,8 +27,8 @@ USAGEBLOCK
 )
 
 if [[ $# < 1 ]]; then
-    echo "$usage"
-    exit 0
+	echo "$usage"
+	exit 0
 fi
 
 
@@ -43,47 +43,47 @@ ssh_com=""
 make_ssh_tunnels=""
 
 while test $# -gt 0; do
-    case "$1" in
-        -h | --help)
-            echo $usage
-            exit 0
-            ;;
-        -i)
-            KEY="$2";key_opt="-i $2";shift;
-            ;;
-        -a)
-            REMOTE="$2";shift;
-            ;;
-        -d)
-            PROJ_FOLDER="$2";shift;
-            ;;
-        -r)
-            REMOTE_PATH="$2";shift;
-            ;;
-        -b)
-            BROKER_ADDRESS="$2";shift;
-            ;;
-        -m)
-            START_MASTER="$2";shift;
-            ;;
-        -w)
-            START_WORKER="$2";shift;
-            ;;
-        -f)
+	case "$1" in
+		-h | --help)
+			echo $usage
+			exit 0
+			;;
+		-i)
+			KEY="$2";key_opt="-i $2";shift;
+			;;
+		-a)
+			REMOTE="$2";shift;
+			;;
+		-d)
+			PROJ_FOLDER="$2";shift;
+			;;
+		-r)
+			REMOTE_PATH="$2";shift;
+			;;
+		-b)
+			BROKER_ADDRESS="$2";shift;
+			;;
+		-m)
+			START_MASTER="$2";shift;
+			;;
+		-w)
+			START_WORKER="$2";shift;
+			;;
+		-f)
 			READ_FROM_CONFIG=YES
 			;;
 		--debug)
 			debug=YES
 			;;
-        --)
-            shift
-            break;;
-        -*)
-            echo "Invalid option: $1"
-            echo "$usage"
-            exit 1;;
-    esac
-    shift
+		--)
+			shift
+			break;;
+		-*)
+			echo "Invalid option: $1"
+			echo "$usage"
+			exit 1;;
+	esac
+	shift
 done
 
 # Output variable assignment statement for configuration file
@@ -225,7 +225,14 @@ for rhost in "${remote_hosts[@]}"; do
 	docker_version=$(RemoteExec $cmd_filename $rhost "$key_opt")
 	if [[ -z "$docker_version" ]]; then
 		error_message "Docker is not installed on $rhost."
-		exit 1
+		while true; do
+			read -p "Use Docker installer script for Ubuntu? [y/n]" yn
+			case $yn in
+				[Yy]* ) cp install_docker_ubuntu.sh remote_command.sh; RemoteExec remote_command.sh $rhost "$key_opt"; break;;
+				[Nn]* ) exit;;
+				* ) echo "Please answer yes [y] or no [n].";;
+			esac
+		done
 	else
 		if [[ -n "$debug" ]]; then
 			echo "On $rhost installed docker $docker_version."
@@ -233,6 +240,7 @@ for rhost in "${remote_hosts[@]}"; do
 	fi
 done
 
+set -e
 
 
 # Copy files to remote locations
