@@ -1,4 +1,4 @@
-epoch: !!python/tuple [10,30,5]
+epoch: !!python/tuple [5,20,5]
 batchsize: 100
 gpu: "-1"
 unit: [1000]
