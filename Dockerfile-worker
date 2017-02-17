@@ -4,6 +4,10 @@ FROM pyotr777/celery-chainer:latest
 
 MAINTAINER Bryzgalov Peter <peterbryz@yahoo.com>
 
+# Update SSL and install matplotlib
+RUN apt-get update && apt-get install -y openssl
+RUN pip install matplotlib
+
 RUN groupadd user && useradd -m --home-dir /home/user -g user user
 
 ENV CELERY_BROKER_URL amqp://guest@rabbit

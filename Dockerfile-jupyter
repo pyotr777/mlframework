@@ -15,8 +15,8 @@ RUN apt-get update && apt-get install -y gfortran && apt-get -y autoremove
 
 RUN apt-get install -y libtiff5-dev libjpeg-dev && apt-get -y autoremove
 
-RUN apt-get install -y python-numpy python-scipy python-pandas \
-    python-tk && apt-get -y autoremove
+RUN apt-get install -y python-numpy python-scipy python-pandas && apt-get -y autoremove
+RUN apt-get install -y python-tk openssl && apt-get -y autoremove
 
 RUN /usr/bin/python --version
 
