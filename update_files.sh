@@ -104,7 +104,7 @@ if [[ -n "$REMOTE" ]]; then
 	rhost=$REMOTE
 	echo $rhost
 	if [[ -n "$KEY" ]]; then
-		ssh_com="$KEY $rhost"
+		ssh_com="$key_opt $rhost"
 	else
 		ssh_com="$rhost"
 	fi
@@ -113,9 +113,9 @@ if [[ -n "$REMOTE" ]]; then
 
 	echo "Compare ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
 	# Copy task files to remote
-	eval rsync $OPT $KEY --exclude-from "rsyncexclude_task.txt"  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/
+	eval rsync $OPT $key_opt --exclude-from "rsyncexclude_task.txt"  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/
 	# Copy framework files to remote
-	eval rsync $OPT $KEY --include-from "rsyncinclude_framework.txt" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/
+	eval rsync $OPT $key_opt --include-from "rsyncinclude_framework.txt" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/
 	exit 0
 fi
 
@@ -123,25 +123,26 @@ fi
 echo "${remote_hosts[@]}"
 # Copy files to remote locations
 for rhost in "${remote_hosts[@]}"; do
-	echo $rhost
 	if [[ "$rhost" == "hosts" ]] || [[ "$rhost" == "localhost" ]] || [[ -z "$rhost" ]]; then
 		continue
 	fi
-
-	if [[ -n "$KEY" ]]; then
-		ssh_com="$KEY $rhost"
+	echo $rhost
+	if [[ -n "$key_opt" ]]; then
+		SSH_KEY="-e \"ssh $key_opt\""
 	else
-		ssh_com="$rhost"
+		SSH_KEY=""
 	fi
-	echo $ssh_com
+
 
 	if [[ -n "$debug" ]]; then
-		echo "Testing SSH connection to $rhost with ssh $ssh_com"
+		echo "rsync ssh option: $SSH_KEY"
+		echo "Testing SSH connection to $rhost with ssh $key_opt $rhost"
+
 	fi
 	printf "hostname" > $cmd_filename
-	HOSTNAME=$(RemoteExec $cmd_filename "$ssh_com")
+	HOSTNAME=$(RemoteExec $cmd_filename $rhost "$key_opt")
 	if [[ -z "$HOSTNAME" ]]; then
-		echo "Cannot connect with ssh $ssh_com."
+		echo "Cannot connect with ssh $key_opt $rhost."
 		exit 1
 	fi
 	if [[ -n "$debug" ]]; then
@@ -158,12 +159,12 @@ for rhost in "${remote_hosts[@]}"; do
 		echo "Compare ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
 	fi
 	# Copy task files to remote
-	cmd="rsync $OPT $KEY --exclude-from \"rsyncexclude_task.txt\" --size-only  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	cmd="rsync $OPT $SSH_KEY --exclude-from \"rsyncexclude_task.txt\" --size-only  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
 	if [[ -n "$debug" ]]; then
 		echo $cmd
 	fi
 	eval $cmd 2>/dev/null
-	cmd="rsync $OPT $KEY --include-from \"rsyncinclude_framework.txt\" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/"
+	cmd="rsync $OPT $SSH_KEY --include-from \"rsyncinclude_framework.txt\" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/"
 	if [[ -n "$debug" ]]; then
 		echo $cmd
 	fi

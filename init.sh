@@ -24,6 +24,7 @@ RemoteExec() {
 	if [[ -n "$debug" ]]; then
 		{
 			cmd="scp $key $filename $host:"
+			echo "$cmd" >&2
 			eval $cmd
 		}
 	else
@@ -35,6 +36,7 @@ RemoteExec() {
 	if [[ -n "$debug" ]]; then
 		{
 			cmd="ssh $key $ssh_options $host ./$filename"
+			echo "$cmd" >&2
 			eval $cmd
 		}
 	else
