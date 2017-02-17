@@ -73,6 +73,8 @@ def yaml2Matrix(filepath):
                 #    print key1 + "=" + str(param[key1])
             elif type(param) is str:
                 par_matrix.append([k,param])
+            elif type(param) is int:
+                par_matrix.append([k,param])
             else:
                 print "Unhandled parameter "+str(param)+" of type "+str(type(param))
 
@@ -116,7 +118,7 @@ if __name__ == '__main__':
     # Open file for writing results
     f= open("output.csv","w")
 
-    paramatrix=yaml2Matrix("chainer/paramtest.yml")
+    paramatrix=yaml2Matrix("chainer/parameters.yml")
 
     # Create combinations matrix
     combinations=[]
