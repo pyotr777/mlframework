@@ -28,6 +28,7 @@ if __name__ == '__main__':
     }
     results = []
 
+    s = ""
     for c in range(0,len(combinations)):
         debug_print("paramatrix: "+str(paramatrix))
         debug_print("combinations:"+str(combinations))
@@ -39,6 +40,12 @@ if __name__ == '__main__':
         debug_print("New task: "+str(result.id), 20)
         debug_print("Paramters: "+str(dic),20)
         results.append(result)
+        line = str(result.id) + ","
+        for k in dic:
+            s += str(k)+"="+str(dic[k])+","
+        f.write(s+"\n")
+
+    f.close()
 
     print "All tasks sent"
 
