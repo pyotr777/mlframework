@@ -3,11 +3,10 @@
 
 from __future__ import absolute_import, unicode_literals
 from .celery import app
-from .master_functions import jsonify, unjsonify, parse_message
+from .master_functions import *
 from .tasks import train, echo
 from subprocess import Popen, PIPE, STDOUT
 import numpy as np
-
 
 
 if __name__ == '__main__':
@@ -22,20 +21,28 @@ if __name__ == '__main__':
             print "!"+line
 
 
+    # Create file / clear file contents
     f= open("output.csv","w")
+
 
     # Wrap combinataions into dictionary
     base_pars = {
-        'n':10,
+        'n':5,
     }
     results = []
 
     for c in range(0,5):
         dic=base_pars
+        dic["n"] = int(dic["n"]) + c
         result = echo.delay(jsonify(dic))
         print "New task: "+str(result.id)
         print "Paramters: "+str(dic)
         results.append(result)
+        line = str(result.id) + ","
+        for k in dic:
+            line += str(k)+"="+str(dic[k])+","
+        f.write(line+"\n")
+    f.close()
 
     print "All tasks sent"
 
