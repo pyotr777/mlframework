@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, unicode_literals
 from .celery import app
-from .worker_functions import unjsonify, report, parseOutput, debug_print
+from .worker_functions import *
 import time
 from subprocess import Popen, PIPE, STDOUT
 
@@ -24,6 +24,18 @@ def echo(self, dic={"n":2}):
 
 @app.task(bind=True,acks_late=True)
 def train(self, pars):
+    # Check current dir
+    hostname = ""
+    pipe = Popen(["hostname"], stdout=PIPE, stderr=PIPE, close_fds=True)
+    for line in iter(pipe.stdout.readline, b''):
+        hostname = line
+        print "Hostname: "+ hostname
+    for line in iter(pipe.stderr.readline, b''):
+        if len(line)>0:
+            print "!"+line
+
+    report(self, { "hostname": hostname })
+
     report(self, { "name": __name__, "pars": pars })
     par = unjsonify(pars)
 
