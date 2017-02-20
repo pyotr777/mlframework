@@ -7,7 +7,7 @@
 # [V] Read PROJ_FOLDER and REMOTE_PATH from CSV file.
 
 . init.sh
-
+. $config_file
 
 usage=$(cat <<USAGEBLOCK
 Update files on remote hosts with rsync.
@@ -104,18 +104,18 @@ if [[ -n "$REMOTE" ]]; then
 	rhost=$REMOTE
 	echo $rhost
 	if [[ -n "$KEY" ]]; then
-		ssh_com="$key_opt $rhost"
+		SSH_KEY="-e \"ssh $key_opt\""
 	else
-		ssh_com="$rhost"
+		SSH_KEY=""
 	fi
 	echo $ssh_com
 	OPT="-avii"
 
 	echo "Compare ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
 	# Copy task files to remote
-	eval rsync $OPT $key_opt --exclude-from "rsyncexclude_task.txt"  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/
+	eval rsync $OPT $SSH_KEY --exclude-from "rsyncexclude_task.txt"  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/
 	# Copy framework files to remote
-	eval rsync $OPT $key_opt --include-from "rsyncinclude_framework.txt" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/
+	eval rsync $OPT $SSH_KEY --include-from "rsyncinclude_framework.txt" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/
 	exit 0
 fi
 
