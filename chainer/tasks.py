@@ -36,7 +36,6 @@ def train(self, pars):
 
     report(self, { "hostname": hostname })
 
-    report(self, { "name": __name__, "pars": pars })
     par = unjsonify(pars)
 
     cmd = ["python","-u", "chainer/examples/mnist/train_mnist.py"]
