@@ -17,7 +17,7 @@ TASK=$1
 # Read fixed parameters
 . init.sh
 # Read configuration parameters
-. config.sh
+. $config_file
 
 if [[ -n "$KEY" ]]; then
 	key_opt="-i $KEY"
@@ -39,3 +39,26 @@ if [[ "$master_host" == "localhost" ]]; then
 else
 	RemoteExec $cmd_filename $master_host "$key_opt"
 fi
+
+# Download output.csv from master
+if [[ -n "$debug" ]]; then
+	OPT="-avii"
+else
+	OPT="-av"
+fi
+
+if [[ -n "$KEY" ]]; then
+	SSH_KEY="-e \"ssh $key_opt\""
+else
+	SSH_KEY=""
+fi
+
+cmd="rsync $OPT --exclude-from \"rsyncexclude_task.txt\" $master_host:$REMOTE_PATH/ . "
+if [[ -n "$debug" ]]; then
+	echo "Download files"
+	echo "$cmd"
+	eval $cmd
+else
+	eval $cmd 2>/dev/null
+fi
+
