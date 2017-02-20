@@ -36,12 +36,13 @@ def parse_message(message):
         return
     elif status == "MSG":
         f= open("output.csv","a+")
+        f.write(str(tid)+",")
         msg = res["message"]
         if type(msg) is str or type(msg) is unicode:
             contol_keys = dict.fromkeys(range(32))
             msg = msg.translate(contol_keys)
             print tid, msg
-            f.write(str(tid)+"," + str(msg)+"\n")
+            f.write(str(msg)+"\n")
         elif type(msg) is dict:
             print tid,
             s = str(tid)+","
