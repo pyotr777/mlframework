@@ -1,32 +1,80 @@
 # Python framework for distributed execution of computational tasks
 
-This framework helps execute computational tasks on a number of computers. Tasks are executed in parallel. This framework creates one _master_ process and a number of _worker_ processes. Master process is responsible for creating a number of computations tasks (commands) that would be executed by worker processes. 
+This framework is used to execute computational tasks on a number of computers. Tasks are executed in parallel. This framework creates one _master_ process and a number of _worker_ processes. Master process is responsible for creating a number of computational tasks (commands) that would be executed by worker processes. 
 
 
-This framework makes use of [Celery](http://www.celeryproject.org)  with RabbitMQ broker for distributing tasks among workers. [Flower](http://flower.readthedocs.io/en/latest/) is used for monitoring.
+This framework makes use of [Celery](http://www.celeryproject.org)  with RabbitMQ broker for distributing tasks among workers. [Flower](http://flower.readthedocs.io/en/latest/) can be used for monitoring.
+
+
+## TL;DR
+
+Start three machines to be used in computations. Make sure you can login to them with ssh. [Docker](https://www.docker.com) must be installed on all machines. Machine number 1 running master process must be accessible from all others and have required ports open (see Requirements section). Provide their addresses (with optional user names: user@hostname) after -a option of `infrainit.sh` command.
+
+Execute the following commands on you local computer in mlframework directory to run sample task testing communication between workers and master processes:
+
+```
+./infrainit.sh -a <remote host A>,<remote host B>,<remote host C> -r ML -d chainer -m 1 -w 2,3
+
+```
+
+This command will start master process on host A and worker processes on hosts B and C. <br>
+Wait for a few seconds. Check that all two workers started with:
+
+```
+./check_celery_status.sh
+```
+
+Start the task execution with:
+
+```
+./run_tasks.sh test_echo
+```
+
+In the terminal window of your local computer you should be able to see output from worker processes.
+
+To stop master and worker processes execute:
+
+```
+./infra_clean.sh
+```
+
+
+
+
+## Projects
+
+Projects define computational tasks that can be executed with this framework. 
+
+Every project must be placed in its own subdirectory, which could be later provided with -d option of `infrainit.sh` script (See Infrastructure setup section).
+
+Every project must have `tasks.py` file in its directory. This file defines computational tasks. See example projects incuded with this repository for tasks.py samples.
 
 
 ## Infrastructure setup
 
-Use _infrainit.sh_ bash script to start Celery master, broker, Celery workers and Flower monitor in Docker container on local and a number of remote hosts.
+Use _infrainit.sh_ bash script to start all processes necessary for execution computational tasks, namely Celery master, broker, Celery workers and Flower monitor in Docker containers on local machine and/or remote hosts.
 
 ### Requirements
 
-- Computer running _master_ and _broker_ must have global IP address accessible from all other computers and the following ports must be open: 22, 4369, 5555, 5671, 5672, 25672.
-- [Docker](http://docker.io) must be installed on all computers. 
+- Host running _master_ and _broker_ must have global IP address accessible from all other computers and the following ports must be open: 22, 4369, 5555, 5671, 5672, 25672.
+- [Docker](https://www.docker.com) must be installed on all computers. 
 
 ### Usage
 
+The following script can be executed on your local computer to set up infrastructure necessary for executing parallel tasks.
+
 ```
-infrainit.sh -a <[user@]host1,[user@]host2...> [-f] [-i <ssh key file>] -r <path> -d <dirname> [-b <broker address>] [-m local/N] [-w local,N1,N2...]
+infrainit.sh -a <[user@]host1,...> [-f] [-i <ssh key file>] -r <path> -d <dirname> [-m local/N] [-w local,N1,N2...]
 Options:
 	-a	Remote hosts addresses, comma-separated list.
 	-r	Remote path for storing task and framework files relative to home directory.
 	-d	Name of directory with task (project) files.
 	-m	Master host: start Celery master and broker on local machine or on remote host N (N is the ordinary number of remote hosts in the list of -a option).
-	-w	Start workers on specified hosts. N1,N2... - comma separated numbers of hosts listed in -a. First host has number 1.
+	-w	Start workers on specified hosts. N1,N2... - comma-separated numbers of hosts listed in -a. First host has number 1.
 	-f	Read all the above options from file config.sh. If -f option not used config.sh will be overwritten with new options provided as arguments to this script.
 ```
+
+Two sample projects (task definitions) are included with this repository. Use them with option -d. 
 
 #### Sample: 
 ```
@@ -63,11 +111,57 @@ After infrainit.sh script is executed a script for removing infrastructure `infr
 | `update_files.sh` | Update files on remote hosts. |
 | `check_celery_status.sh` | Display Celery master status by executing `celery status` command in master container. |
 | `install_docker_ubuntu.sh` | Install [Docker](docker.io) on Ubuntu machine |
+   
+&nbsp;
+
+&nbsp;
 
 
-# Exectuing ML tasks with a metaparameters set
 
-This framework can be used to execute a set of Machine Learning tasks with a set of metaparameters in parallel. 
+# Executing ML tasks with a metaparameters set
+
+This framework can be used to execute a number of Machine Learning tasks with a set of metaparameters in parallel. 
+Two sample projects (tasks definitions) included in this repository: _bowcnn_ and _chainer_. Both use [Chainer](chainer.org) to evaluate metaparameters for training ML models on sample datasets. 
+
+## chainer
+
+There are two tasks defined in `tasks.py` of _chainer_ project: __echo__ and __train__.
+
+__echo__ – sample task to test communication between workers and master processes.<br>
+__train__ – a task to train a sample model on  MNIST dataset with the script `chainer/examples/mnist/train_mnist.py`.
+
+To run task __echo__ execute on you local computer in mlframework directory:
+
+```./run_tasks.sh test_echo```
+
+`chainer/test_echo.py` is a script that actually executes __echo__ task defined in `task.py`. 
+`chainer/run_training.py` is a script that executes __train__ task.
+
+### _train_ task
+
+
+```./run_tasks.sh run_training```
+
+__train__ task executes a number of parallel tasks with a set of metaparameters. This set is defined with `chainer/parameters.yml` YAML file as _all possible combinations_ of parameters values. 
+
+### YAML file format
+
+```
+parameter_A: values_A
+parameter_B: values_B
+...
+```
+
+Parameters are translated to CLI options for `chainer/examples/mnist/train_mnist.py`. For example, `gpu: 0` will be translated to `train_mnist.py --gpu=0`.
+
+Parameter values can be defined as single values, lists or intervals. 
+
+| Type | Format | Description | Example |
+|:---|:---|:---|:---|
+| single value | `value` (with or without quotes) | Translates to `--parameter=value` in all dataset combinations. | `gpu: -1` |
+| list | `[value1,value2,...]` | All values from the list will be used to produce parameters combinations. |`batchsize: [100, 500]` |
+| interval | `!!python/tuple [start,end,step]` | Values from [_start_, _end_) interval with given _step_ will be used to produce parameters combinations. If _step_ is not defined 1 will be used by default. | `epoch: !!python/tuple [5,20,5]` will produce combinations with the following values: 5, 10, 15. |
+
 
 
 
