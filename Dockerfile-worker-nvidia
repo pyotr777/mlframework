@@ -1,0 +1,30 @@
+FROM pyotr777/celery-chainer:latest
+
+# Celery worker container with CUDA
+
+MAINTAINER Bryzgalov Peter <peterbryz@yahoo.com>
+
+ENV DEBIAN_FRONTEND noninteractive
+
+# Update SSL and install matplotlib
+RUN apt-get update && apt-get install -y openssl
+RUN pip install matplotlib
+
+# Install CUDA
+RUN apt-get install -y wget
+RUN wget http://developer.download.nvidia.com/compute/cuda/repos/ubuntu1404/x86_64/cuda-repo-ubuntu1404_8.0.61-1_amd64.deb
+RUN dpkg -i cuda-repo-ubuntu1404_8.0.61-1_amd64.deb
+#ADD cuda-repo-ubuntu1404-8-0-local-ga2_8.0.61-1_amd64.deb /root/
+#WORKDIR /root
+#RUN dpkg -i cuda-repo-ubuntu1404-8-0-local-ga2_8.0.61-1_amd64.deb
+RUN apt-get update
+RUN apt-get install -y cuda
+
+RUN groupadd user && useradd -m --home-dir /home/user -g user user
+
+ENV CELERY_BROKER_URL amqp://guest@rabbit
+
+USER user
+CMD ["celery", "worker"]
+
+# docker build -f ML/mlframework/Dockerfile-worker-nvidia -t pyotr777/celery-chainer-worker-nvidia

@@ -58,8 +58,25 @@ else
     #echo "Starting worker with link to rabbit container."
 fi
 
+USE_NVIDIA=""
+# Check if nvidia-docker installed
+nvdocker=$(nvidia-docker version 2>/dev/null)
+if [[ -n "$nvdocker" ]]; then
+    # Check if GPU is available
+    gpu=$(nvidia-docker run --rm nvidia/cuda nvidia-smi -L 2>/dev/null)
+    if [[ -n "$gpu" ]]; then
+        echo "GPU available on $(hostname)"
+        USE_NVIDIA="yes"
+    fi
+fi
+
+
 # Starting worker container with workers
-cmd="docker run -d -v "$(pwd)":/root $BROKER_OPT --name $worker_cont_name $worker_image celery -A $proj_folder worker --loglevel=info -E --concurrency=$concurrency -n worker@%h"
+if [[ -n "$USE_NVIDIA" ]]; then
+    cmd="nvidia-docker run -d -v "$(pwd)":/root $BROKER_OPT --name $worker_cont_name $worker_image_cuda celery -A $proj_folder worker --loglevel=info -E --concurrency=$concurrency -n worker@%h"
+else
+    cmd="docker run -d -v "$(pwd)":/root $BROKER_OPT --name $worker_cont_name $worker_image celery -A $proj_folder worker --loglevel=info -E --concurrency=$concurrency -n worker@%h"
+fi
 if [[ -n "$debug" ]]; then
     echo $cmd
 fi
