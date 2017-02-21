@@ -8,4 +8,6 @@ infra.csv
 config.sh
 *.yml
 **/result/
+*.deb
+*.tar
 

@@ -1,0 +1,55 @@
+FROM nvidia/cuda:8.0-devel-ubuntu16.04
+
+# Celery worker container with CUDA.
+
+MAINTAINER Bryzgalov Peter <peterbryz@yahoo.com>
+
+ENV DEBIAN_FRONTEND noninteractive
+
+RUN apt-get update && apt-get install -y python-pip python-dev
+RUN /usr/bin/python --version
+RUN pip install -U pip
+
+# Update SSL and install matplotlib
+RUN apt-get update && apt-get install -y openssl
+RUN pip install matplotlib
+
+# Chainer
+RUN pip install -U "setuptools"
+RUN pip install -U "cython"
+RUN pip install -U "numpy<1.12"
+RUN pip install -U "hacking"
+RUN pip install -U "nose"
+RUN pip install -U "mock"
+RUN pip install -U "coverage"
+
+# Install cudnn
+ADD cudnn-8.0-linux-x64-v5.1.tar /opt/nvidia/
+RUN ls -la /opt/nvidia
+WORKDIR /opt/nvidia/cuda
+RUN cp -P include/cudnn.h /usr/include
+RUN cp -P lib64/libcudnn* /usr/lib/x86_64-linux-gnu/
+RUN chmod a+r /usr/lib/x86_64-linux-gnu/libcudnn*
+
+RUN pip install filelock
+RUN pip install chainer
+
+# Celery
+ENV CELERY_VERSION 4.0.2
+RUN pip install celery=="$CELERY_VERSION"
+
+RUN pip install -U sklearn
+RUN pip install -U scipy
+
+ENV CELERY_BROKER_URL amqp://guest@rabbit
+
+RUN groupadd user && useradd -m --home-dir /home/user -g user user
+
+ENV CELERY_BROKER_URL amqp://guest@rabbit
+
+WORKDIR /root
+USER user
+CMD ["celery", "worker"]
+
+
+# docker build -f Dockerfile-worker-cuda -t pyotr777/celery-chainer-worker-cuda
