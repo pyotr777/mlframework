@@ -39,6 +39,23 @@ To stop master and worker processes execute:
 ```
 
 
+## Contents
+
+
+- **[TL;DR](#tldr)**
+- **[Projects](#projects)**
+- **[Infrastructure setup](#infrastructure-setup)**
+	- [Requirements](https://github.com/pyotr777/mlframework#requirements)
+	- [Usage](https://github.com/pyotr777/mlframework#usage)
+		- [Options reuse (configuration file)](https://github.com/pyotr777/mlframework#options-reuse-configuration-file)
+		- [Remove infrastructure](https://github.com/pyotr777/mlframework#remove-infrastructure)
+		- [Other scripts](https://github.com/pyotr777/mlframework#other-scripts)
+- **[Executing ML tasks with a metaparameters set](#executing-ml-tasks-with-a-metaparameters-set)** 
+	- [chainer](#chainer)
+		- [train task](#train-task)
+		- [YAML file format](#yaml-file-format)
+		
+		 
 
 
 ## Projects
