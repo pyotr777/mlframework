@@ -1,0 +1,3 @@
+[submodule "nvdocker_install"]
+	path = nvdocker_install
+	url = git@github.com:pyotr777/nvidia_docker_install.git
