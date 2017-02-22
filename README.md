@@ -6,6 +6,26 @@ This framework is used to execute computational tasks on a number of computers. 
 This framework makes use of [Celery](http://www.celeryproject.org)  with RabbitMQ broker for distributing tasks among workers. [Flower](http://flower.readthedocs.io/en/latest/) can be used for monitoring.
 
 
+## Contents
+
+
+- **[TL;DR](#tldr)**
+- **[Projects](#projects)**
+- **[Infrastructure setup](#infrastructure-setup)**
+	- [Requirements](https://github.com/pyotr777/mlframework#requirements)
+	- [Usage](https://github.com/pyotr777/mlframework#usage)
+		- [Options reuse (configuration file)](https://github.com/pyotr777/mlframework#options-reuse-configuration-file)
+		- [Remove infrastructure](https://github.com/pyotr777/mlframework#remove-infrastructure)
+		- [Other scripts](https://github.com/pyotr777/mlframework#other-scripts)
+	- [NVIDIA GPU support](#nvidia-gpu-support)
+- **[Executing ML tasks with a metaparameters set](#executing-ml-tasks-with-a-metaparameters-set)** 
+	- [chainer](#chainer)
+		- [train task](#train-task)
+		- [YAML file format](#yaml-file-format)
+
+
+&nbsp;
+
 ## TL;DR
 
 Start three machines to be used in computations. Make sure you can login to them with ssh. [Docker](https://www.docker.com) must be installed on all machines. Machine number 1 running master process must be accessible from all others and have required ports open (see Requirements section). Provide their addresses (with optional user names: user@hostname) after -a option of `infrainit.sh` command.
@@ -39,23 +59,6 @@ To stop master and worker processes execute:
 ```
 
 
-## Contents
-
-
-- **[TL;DR](#tldr)**
-- **[Projects](#projects)**
-- **[Infrastructure setup](#infrastructure-setup)**
-	- [Requirements](https://github.com/pyotr777/mlframework#requirements)
-	- [Usage](https://github.com/pyotr777/mlframework#usage)
-		- [Options reuse (configuration file)](https://github.com/pyotr777/mlframework#options-reuse-configuration-file)
-		- [Remove infrastructure](https://github.com/pyotr777/mlframework#remove-infrastructure)
-		- [Other scripts](https://github.com/pyotr777/mlframework#other-scripts)
-- **[Executing ML tasks with a metaparameters set](#executing-ml-tasks-with-a-metaparameters-set)** 
-	- [chainer](#chainer)
-		- [train task](#train-task)
-		- [YAML file format](#yaml-file-format)
-		
-		 
 
 
 ## Projects
@@ -127,7 +130,18 @@ After infrainit.sh script is executed a script for removing infrastructure `infr
 |:---|:---|
 | `update_files.sh` | Update files on remote hosts. |
 | `check_celery_status.sh` | Display Celery master status by executing `celery status` command in master container. |
-| `install_docker_ubuntu.sh` | Install [Docker](docker.io) on Ubuntu machine |
+
+&nbsp;
+
+
+### NVIDIA GPU support
+
+To make use of NVIDIA GPUs on worker machines you need to install [nvidia-docker](https://github.com/NVIDIA/nvidia-docker) on these machines. A script for automated installation of nvidia-docker on Ubuntu is included in this repository and is used with the following command:
+
+```
+nvdocker_install/install_ubuntu.sh <remote host address>
+```
+ 
    
 &nbsp;
 
