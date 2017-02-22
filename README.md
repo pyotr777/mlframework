@@ -58,7 +58,7 @@ To stop master and worker processes execute:
 ./infra_clean.sh
 ```
 
-
+&nbsp;
 
 
 ## Projects
@@ -69,6 +69,7 @@ Every project must be placed in its own subdirectory, which could be later provi
 
 Every project must have `tasks.py` file in its directory. This file defines computational tasks. See example projects incuded with this repository for tasks.py samples.
 
+&nbsp;
 
 ## Infrastructure setup
 
@@ -142,8 +143,7 @@ To make use of NVIDIA GPUs on worker machines you need to install [nvidia-docker
 nvdocker_install/install_ubuntu.sh <remote host address>
 ```
  
-   
-&nbsp;
+ 
 
 &nbsp;
 
@@ -151,7 +151,8 @@ nvdocker_install/install_ubuntu.sh <remote host address>
 
 # Executing ML tasks with a metaparameters set
 
-This framework can be used to execute a number of Machine Learning tasks with a set of metaparameters in parallel. 
+This framework can be used to execute a number of Machine Learning tasks with a set of metaparameters in parallel. A set is a number of combinations of metaparameters with values.
+
 Two sample projects (tasks definitions) included in this repository: _bowcnn_ and _chainer_. Both use [Chainer](chainer.org) to evaluate metaparameters for training ML models on sample datasets. 
 
 ## chainer
@@ -165,7 +166,7 @@ To run task __echo__ execute on you local computer in mlframework directory:
 
 ```./run_tasks.sh test_echo```
 
-`chainer/test_echo.py` is a script that actually executes __echo__ task defined in `task.py`. 
+`chainer/test_echo.py` is a script that actually executes __echo__ task defined in `tasks.py`. 
 `chainer/run_training.py` is a script that executes __train__ task.
 
 ### _train_ task
@@ -193,6 +194,7 @@ Parameter values can be defined as single values, lists or intervals.
 | list | `[value1,value2,...]` | All values from the list will be used to produce parameters combinations. |`batchsize: [100, 500]` |
 | interval | `!!python/tuple [start,end,step]` | Values from [_start_, _end_) interval with given _step_ will be used to produce parameters combinations. If _step_ is not defined 1 will be used by default. | `epoch: !!python/tuple [5,20,5]` will produce combinations with the following values: 5, 10, 15. |
 
+YAML file defines a set of ML task metaparameters as all possible combinations of parameters values where every parameter used exactly one time in every combination.
 
 
 
