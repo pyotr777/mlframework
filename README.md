@@ -12,11 +12,11 @@ This framework makes use of [Celery](http://www.celeryproject.org)  with RabbitM
 - **[TL;DR](#tldr)**
 - **[Projects](#projects)**
 - **[Infrastructure setup](#infrastructure-setup)**
-	- [Requirements](https://github.com/pyotr777/mlframework#requirements)
-	- [Usage](https://github.com/pyotr777/mlframework#usage)
-		- [Options reuse (configuration file)](https://github.com/pyotr777/mlframework#options-reuse-configuration-file)
-		- [Remove infrastructure](https://github.com/pyotr777/mlframework#remove-infrastructure)
-		- [Other scripts](https://github.com/pyotr777/mlframework#other-scripts)
+	- [Requirements](#requirements)
+	- [Usage](#usage)
+		- [Options reuse (configuration file)](#options-reuse-configuration-file)
+		- [Remove infrastructure](#remove-infrastructure)
+		- [Other scripts](#other-scripts)
 	- [NVIDIA GPU support](#nvidia-gpu-support)
 - **[Executing ML tasks with a metaparameters set](#executing-ml-tasks-with-a-metaparameters-set)** 
 	- [chainer](#chainer)
@@ -117,20 +117,20 @@ You must be able to connect to remote hosts with ssh using provided ssh key and 
 
 #### Options reuse (configuration file)
 
-After you executed infrainit.sh once with options -a, -r, -d, ... , parameters will be saved to configuration file config.sh. 
+After you executed `infrainit.sh` once with options -a, -r, -d, ... , parameters will be saved to configuration file config.sh. 
 To reuse these parameters use option -f: `./infrainit.sh -f`.
 
 
 #### Remove infrastructure
 
-After infrainit.sh script is executed a script for removing infrastructure `infra_clean.sh` is generated. It removes all started Docker containers effectively stopping all processes started with infrainit.sh. Files on remote hosts are not deleted.
+After `infrainit.sh` script is executed a script for removing infrastructure `infra_clean.sh` is generated. It removes all started Docker containers effectively stopping all processes started with infrainit.sh. Files on remote hosts are not deleted.
 
 #### Other scripts
 
 | Script name | Discription |
 |:---|:---|
 | `update_files.sh` | Update files on remote hosts. |
-| `check_celery_status.sh` | Display Celery master status by executing `celery status` command in master container. |
+| `check_celery_status.sh` | Display Celery workers status by executing `celery status` command in master container. |
 
 &nbsp;
 
