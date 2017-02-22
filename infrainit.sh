@@ -3,7 +3,7 @@
 # Start framework infrastructure on local and/or remote hosts.
 # Copyright (C) 2017 Bryzgalov Peter @ Stair Lab CHITECH
 
-# Version 0.4alpha
+# Version 0.5alpha
 
 # TODO
 # [V] Check that remote folders exist (before calling rsync)
