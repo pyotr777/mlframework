@@ -12,7 +12,7 @@ RemoveContainer() {
 	fi
 }
 
-echo "Remove celery-flower and rabbit containers"
+echo "Removing celery-flower and rabbit containers"
 
 # Remove Celery master container
 RemoveContainer "celery-flower"

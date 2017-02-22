@@ -11,7 +11,7 @@ cmd_filename="remote_command.sh"
 ssh_options="-o ServerAliveInterval=10"
 concurrency=1
 
-debug="1"
+debug=""
 
 RemoteExec() {
 	filename=$1

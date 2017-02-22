@@ -213,9 +213,32 @@ for rhost in "${remote_hosts[@]}"; do
 	if [[ "$rhost" == "localhost" ]]; then
 		continue
 	fi
+
 	if [[ -n "$debug" ]]; then
-		echo "Testing installed docker version on $rhost"
+		echo "Testing SSH connection to $rhost with ssh key $KEY"
+	else
+		echo "Testing SSH connection to $rhost"
 	fi
+
+	cat <<- CMDBLOCK0 > $cmd_filename
+	{
+		if [[ ! -d $REMOTE_PATH ]]; then
+			mkdir -p $REMOTE_PATH
+		fi
+	} &>/dev/null
+	hostname
+	CMDBLOCK0
+	#RemoteExec $cmd_filename $rhost $KEY
+	HOSTNAME=$(RemoteExec $cmd_filename $rhost "$key_opt")
+	if [[ -z "$HOSTNAME" ]]; then
+		error_message "Cannot connect with ssh $KEY $rhost."
+		exit 1
+	fi
+	if [[ -n "$debug" ]]; then
+		echo $HOSTNAME
+	fi
+
+	echo "Testing installed docker version on $rhost"
 	cat <<- CMDBLOCK_docker > $cmd_filename
 	{
 		docker version | grep -i "version"
@@ -250,29 +273,6 @@ for rhost in "${remote_hosts[@]}"; do
 		continue
 	fi
 
-	if [[ -n "$debug" ]]; then
-		echo "Testing SSH connection to $rhost with ssh key $KEY"
-	fi
-
-	cat <<- CMDBLOCK0 > $cmd_filename
-	{
-		if [[ ! -d $REMOTE_PATH ]]; then
-			mkdir -p $REMOTE_PATH
-		fi
-	} &>/dev/null
-	hostname
-	CMDBLOCK0
-	#RemoteExec $cmd_filename $rhost $KEY
-	HOSTNAME=$(RemoteExec $cmd_filename $rhost "$key_opt")
-	if [[ -z "$HOSTNAME" ]]; then
-		error_message "Cannot connect with ssh $KEY $rhost."
-		exit 1
-	fi
-	if [[ -n "$debug" ]]; then
-		echo $HOSTNAME
-	fi
-
-
 	if [[ -z "$BROKER_ADDRESS" ]] && [[ -z "$LOCAL_EXTERNAL_IP" ]]; then
 		# Get local machine external address
 		printf "echo \"\$SSH_CONNECTION\"" > $cmd_filename
@@ -301,7 +301,7 @@ for rhost in "${remote_hosts[@]}"; do
 		SSH_KEY=""
 	fi
 
-	message "Copying files to $rhost"
+	echo "Copying files to $rhost"
 
 	if [[ -n "$debug" ]]; then
 		echo "Sync ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"

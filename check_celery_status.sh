@@ -13,7 +13,7 @@ if [[ ! -f "$CSV_file" ]]; then
 	echo "No infrastructure information found. Create infrastructure with infrainit.sh."
 	exit 1
 fi
-
+message "Checking workers status"
 echo "Reading from $CSV_file"
 while read -r line; do
 	IFS="," read -ra arr <<< "$line"
@@ -35,11 +35,15 @@ while read -r line; do
 			;;
 		remote_path)
 			REMOTE_PATH="${arr[1]}"
-			echo "Using remote path $REMOTE_PATH"
+			if [[ -n "$debug" ]]; then
+				echo "Using remote path $REMOTE_PATH"
+			fi
 			;;
 		folder)
 			PROJ_FOLDER="${arr[1]}"
-			echo "Using proj folder $PROJ_FOLDER"
+			if [[ -n "$debug" ]]; then
+				echo "Using proj folder $PROJ_FOLDER"
+			fi
 			;;
 		key)
 			if [[ -n "${arr[1]}" ]]; then
