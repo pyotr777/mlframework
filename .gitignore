@@ -10,4 +10,4 @@ config.sh
 **/result/
 *.deb
 *.tar
-
+*.csv

@@ -102,7 +102,7 @@ def main():
          'main/accuracy', 'validation/main/accuracy', 'elapsed_time']))
 
     # Print a progress bar to stdout
-    trainer.extend(extensions.ProgressBar())
+    #trainer.extend(extensions.ProgressBar())
 
     if args.resume:
         # Resume from a snapshot
