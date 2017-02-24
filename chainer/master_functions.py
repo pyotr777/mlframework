@@ -37,26 +37,29 @@ def parse_message(message):
 
     if status == "MSG":
         f= open("output.csv","a+")
-        f.write(str(tid)+",")
         msg = res["message"]
         if type(msg) is dict:
             print tid,
             s = str(tid)+","
-            out = msg["out"]
-            err = msg["err"]
-            f.write(str(msg)+"\n")
-            print out
-            if len(err) > 0:
-                debug_print err
+            if "out" in msg:
+                out = msg["out"]
+                if len(out) > 0:
+                    f.write(s+out+"\n")
+                    print out
+            if "err" in msg:
+                err = msg["err"]
+                if len(err) > 0:
+                    debug_print(err)
         elif type(msg) is str or type(msg) is unicode:
             print tid, msg
-            f.write(str(msg)+"\n")
+            f.write(msg+"\n")
         f.close()
     elif status == "SUCCESS":
         print tid+" finished with result ", res
-        f= open("output.csv","a+")
-        f.write(str(tid)+","+ res)
-        f.close()
+        if res is not None:
+            f= open("output.csv","a+")
+            f.write(str(tid)+","+ str(res)+"\n")
+            f.close()
     else:
         print tid
         if type(res) is dict:

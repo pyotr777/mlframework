@@ -109,9 +109,19 @@ if [[ -n "$REMOTE" ]]; then
 		SSH_KEY=""
 	fi
 	echo $ssh_com
-	OPT="-avii"
+	if [[ -n "$debug" ]]; then
+		if [[ "$debug" == "2" ]]; then
+			OPT="-aviic --progress"
+		else
+			OPT="-avic --progress"
+		fi
+	else
+		OPT="-avc --progress"
+	fi
 
-	echo "Compare ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	if [[ -n "$debug" ]]; then
+		echo "Compare ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	fi
 	# Copy task files to remote
 	eval rsync $OPT $SSH_KEY --exclude-from "rsyncexclude_task.txt"  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/
 	# Copy framework files to remote
@@ -150,21 +160,25 @@ for rhost in "${remote_hosts[@]}"; do
 	fi
 
 	if [[ -n "$debug" ]]; then
-		OPT="-avii --progress"
+		if [[ "$debug" == "2" ]]; then
+			OPT="-aviic --progress"
+		else
+			OPT="-avic --progress"
+		fi
 	else
-		OPT="-av --progress"
+		OPT="-avc --progress"
 	fi
 
 	if [[ -n "$debug" ]]; then
 		echo "Compare ./$PROJ_FOLDER/ with $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
 	fi
 	# Copy task files to remote
-	cmd="rsync $OPT $SSH_KEY --exclude-from \"rsyncexclude_task.txt\" --size-only  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
+	cmd="rsync $OPT $SSH_KEY --exclude-from \"rsyncexclude_task.txt\" ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/"
 	if [[ -n "$debug" ]]; then
 		echo $cmd
 	fi
 	eval $cmd 2>/dev/null
-	cmd="rsync $OPT $SSH_KEY --include-from \"rsyncinclude_framework.txt\" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/"
+	cmd="rsync $OPT $SSH_KEY --include-from \"rsyncinclude_framework.txt\" --exclude='*' ./ $rhost:$REMOTE_PATH/"
 	if [[ -n "$debug" ]]; then
 		echo $cmd
 	fi

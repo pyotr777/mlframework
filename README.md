@@ -130,6 +130,7 @@ After `infrainit.sh` script is executed a script for removing infrastructure `in
 | Script name | Discription |
 |:---|:---|
 | `update_files.sh` | Update files on remote hosts. |
+| `start_workers.sh` | Update remote files and (re)start workers. |
 | `check_celery_status.sh` | Display Celery workers status by executing `celery status` command in master container. |
 
 &nbsp;

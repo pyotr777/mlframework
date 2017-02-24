@@ -53,7 +53,7 @@ else
 	SSH_KEY=""
 fi
 
-cmd="rsync $OPT --exclude-from \"rsyncexclude_task.txt\" $master_host:$REMOTE_PATH/ . "
+cmd="rsync $OPT --include-from \"rsyncinclude_results.txt\" --exclude='*' $master_host:$REMOTE_PATH/ . "
 if [[ -n "$debug" ]]; then
 	echo "Download files"
 	echo "$cmd"

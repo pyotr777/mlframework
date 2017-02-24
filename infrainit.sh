@@ -334,7 +334,7 @@ done
 
 # Starting master
 if [[ -n "$START_MASTER" ]]; then
-	message "Starting master at $master_host. Celery Flower will be available at http://$(hostAddress "$master_host"):5555"
+	message "Starting master and broker at $master_host. Celery Flower will be available at http://$(hostAddress "$master_host"):5555"
 
 	echo "#!/bin/bash" > $cmd_filename
 	if [[ "$master_host" != "localhost" ]]; then

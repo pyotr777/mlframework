@@ -5,8 +5,6 @@ from __future__ import absolute_import, unicode_literals
 from .celery import app
 from .worker_functions import *
 import time
-from subprocess import Popen, PIPE, STDOUT
-
 
 
 @app.task(bind=True,acks_late=True)
@@ -22,15 +20,16 @@ def echo(self, dic={"n":2}):
 @app.task(bind=True,acks_late=True)
 def train(self, pars):
     # Report hostname
-    cmd = ["echo","\"hostname=$(hostname)\""]
-    exec(self, exec(cmd))
+    cmd = "echo hostname=$(hostname)"
+    sync_exec(self, cmd)
 
     # Form command
     par = unjsonify(pars)
-    cmd = ["python","-u", "chainer/examples/mnist/train_mnist.py"]
+    cmd_l = ["python","-u", "chainer/examples/mnist/train_mnist.py"]
     for key in par:
-        cmd.append(str("--"+key))
+        cmd_l.append(str("--"+key))
         if type(par[key]) is not bool:
-            cmd.append(str(par[key]))
-    report(self, {"Command": " ".join(cmd)})
-    exec(self, exec(cmd))
+            cmd_l.append(str(par[key]))
+    cmd = " ".join(cmd_l)
+    report(self, "Command: " + cmd)
+    sync_exec(self, cmd)

@@ -1,34 +1,35 @@
 # Functions used by workers.
 # 2017 (C) Bryzgalov Peter @ CHITEC, Stair Lab
 
-import json
+import json, string
+from subprocess import Popen, PIPE, STDOUT
 
-
-def exec(task, command):
+def sync_exec(task, command):
     print command
-    pipe = Popen(command, stdout=PIPE, stderr=PIPE, close_fds=True)
-    out = ""
-    err = ""
+    pipe = Popen(command, stdout=PIPE, stderr=PIPE, close_fds=True, shell=True)
     for line in iter(pipe.stdout.readline, b''):
         print line
-        out += line.rstrip()
+        report(task, { "out": line})
     for line in iter(pipe.stderr.readline, b''):
         if len(line)>0:
             print "! "+line
-            err += line.rstrip()
-    report(task, { "out": out, "err": err })
+            report(task, { "err": line })
 
 
 def report(task, output_dic):
-    output_dic["out"] = parseOutput(output_dic["out"])
+    if type(output_dic) is dict:
+        if len(output_dic) < 1:
+            return
+        if "out" in output_dic and (type(output_dic["out"]) is str or  type(output_dic["out"]) is unicode):
+            output_dic["out"] = parseOutput(output_dic["out"])
     task.update_state(state="MSG",meta={"message":output_dic})
 
 
 # Parse output:
 # Remove ANSI control codes.
 def parseOutput(s):
-    contol_keys = dict.fromkeys(range(32))
-    s = s.translate(contol_keys)
+    all_bytes = string.maketrans('','')
+    s = s.translate(all_bytes, all_bytes[:32])
     return s
 
 
