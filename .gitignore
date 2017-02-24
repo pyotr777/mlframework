@@ -11,3 +11,4 @@ config.sh
 *.deb
 *.tar
 *.csv
+/config*
