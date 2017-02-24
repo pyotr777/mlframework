@@ -198,15 +198,79 @@ Parameter values can be defined as single values, lists or intervals.
 YAML file defines a set of ML task metaparameters as all possible combinations of parameters values where every parameter used exactly one time in every combination.
 
 
+## Creating new project
+
+Copy project_template folder with files and give it the name of your new project.
+Copy the files of the program to be run into the same folder. 
+
+Edit the following files in the new project folder:
+
+* celery.py
+* default.py
+* tasks.py
+
+If you wish to reuse infrastructure configuration, also edit 
+
+* config.sh in mlframework top folder.
 
 
+In instructions below `<project name>` is the name of your project folder, `<command to run>` is a relative path to the executable file of the program to be run or any other command that should be executed to run the project. Task parameters will be added to this command. 
+
+For example, if your project name is my_proj it should be copied into `my_proj` folder inside mlframework folder. Let's assume the executable file is a python script in `runnable` subfolder and its name is `run.py`. In this case `<project name>` is `my_proj` and `<command to run>` is `["python", "-u",  "runnable/run.py"]`*.
+
+*
+It is also possible to write command as a string: `"python -u runnable/run.py"`. Option -u is used to disable stdout buffering.
+
+
+#### celery.py
+
+on lines 4 and 7:
+
+```
+app = Celery('<project name>',
+             broker='amqp://',
+             backend='rpc://',
+             include=['<project name>.tasks'])
+```
+
+#### default.py
+
+on line 18:
+
+```
+paramatrix=yaml2Matrix("<project name>/parameters.yml")
+
+```
+
+
+#### tasks.py
  
+on line 18:
+
+```
+cmd = <command to run>
+```
 
 
+#### config.sh
+
+```
+PROJ_FOLDER="<project name>"
+```
+
+Finally edit **parameters.yml** file.
 
 
+### Run project
 
+To run the new project execute the following commands (we use config.sh file) in mlframework top folder.
 
+```
+./infrainit.sh -f
+```
+After a while when workers are ready, run
 
-
+```
+./run_task.sh default
+```
 
