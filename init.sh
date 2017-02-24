@@ -46,6 +46,7 @@ RemoteExec() {
 			eval $cmd
 		} 2>/dev/null
 	fi
+	rm $filename
 }
 
 LocalExec() {

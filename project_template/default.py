@@ -1,10 +1,11 @@
 # Produce number of tasks with parameters from given ranges.
+# Calls "default" task from tasks.py.
 # 2017 (C) Bryzgalov Peter @ CHITEC, Stair Lab
 
 from __future__ import absolute_import, unicode_literals
 from .celery import app
 from .master_functions import *
-from .tasks import train, echo
+from .tasks import *
 from subprocess import Popen, PIPE, STDOUT
 import numpy as np
 
@@ -14,7 +15,7 @@ if __name__ == '__main__':
     # Open file for writing results
     f= open("output.csv","w")
 
-    paramatrix=yaml2Matrix("chainer/parameters.yml")
+    paramatrix=yaml2Matrix("<>/parameters.yml")
 
     # Create combinations matrix
     combinations=[]
@@ -32,9 +33,8 @@ if __name__ == '__main__':
     for c in range(0,len(combinations)):
         dic=base_pars
         for l in range(0, len(paramatrix)):
-            debug_print(str(paramatrix[l][0])+"="+str(combinations[c][l]))
             dic[paramatrix[l][0]]=str(combinations[c][l])
-        result = train.delay(jsonify(dic))
+        result = default.delay(jsonify(dic))
         debug_print("New task: "+str(result.id), 20)
         debug_print("Paramters: "+str(dic),20)
         results.append(result)

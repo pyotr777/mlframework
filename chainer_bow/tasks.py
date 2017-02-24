@@ -25,7 +25,7 @@ def train(self, pars):
 
     # Form command
     par = unjsonify(pars)
-    cmd = ["python","-u", "chainer/examples/mnist/train_mnist.py"]
+    cmd = ["python","-u", "chainer_bow/examples/word2vec/train_word2vec.py"]
     for key in par:
         cmd.append(str("--"+key))
         if type(par[key]) is not bool:

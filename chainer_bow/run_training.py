@@ -14,7 +14,7 @@ if __name__ == '__main__':
     # Open file for writing results
     f= open("output.csv","w")
 
-    paramatrix=yaml2Matrix("chainer/parameters.yml")
+    paramatrix=yaml2Matrix("chainer_bow/parameters.yml")
 
     # Create combinations matrix
     combinations=[]
