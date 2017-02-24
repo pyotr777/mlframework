@@ -22,47 +22,41 @@ def unjsonify(a):
         print  "unjsonify recieved object of type",type(a)
         return a
 
-def parse_message(message):
-    debug_print("master received message "+ str(message))
-    #for k in message:
-    #    print " ", k,":",message[k]
-    #print ""
 
+# Recieve messages from workers.
+# If status is "MSG" received output.
+# Format: dictionary {"out":stdout, "err":stderr}.
+# Save TID and stdout to output.csv,
+# print TID, stdout and stderr.
+# If status is "SUCCESS" received result.
+# Print result
+def parse_message(message):
     status = message[u'status']
     res = message[u'result']
     tid = message[u'task_id']
-    if status == "SUCCESS":
-        print tid+" finished with result ", res
-        return
-    elif status == "MSG":
+
+    if status == "MSG":
         f= open("output.csv","a+")
         f.write(str(tid)+",")
         msg = res["message"]
-        if type(msg) is str or type(msg) is unicode:
-            contol_keys = dict.fromkeys(range(32))
-            msg = msg.translate(contol_keys)
-            print tid, msg
-            f.write(str(msg)+"\n")
-        elif type(msg) is dict:
+        if type(msg) is dict:
             print tid,
             s = str(tid)+","
-            # Check if dict has structure produced by tasks.parseOutput()
-            if "vars" in msg:
-                if "title" in msg:
-                    print msg["title"]+":",
-                    s += msg["title"]+","
-                for var in msg["vars"]:
-                    print var+"="+msg["vars"][var],
-                    s += str(var)+"="+str(msg["vars"][var])+","
-                print ""
-                f.write(s+"\n")
-            else:
-                s = ""
-                for k in msg:
-                    print k, ":", msg[k]
-                    s += str(k)+"="+str(msg[k])+","
-                f.write(s+"\n")
-        return
+            out = msg["out"]
+            err = msg["err"]
+            f.write(str(msg)+"\n")
+            print out
+            if len(err) > 0:
+                debug_print err
+        elif type(msg) is str or type(msg) is unicode:
+            print tid, msg
+            f.write(str(msg)+"\n")
+        f.close()
+    elif status == "SUCCESS":
+        print tid+" finished with result ", res
+        f= open("output.csv","a+")
+        f.write(str(tid)+","+ res)
+        f.close()
     else:
         print tid
         if type(res) is dict:
@@ -70,6 +64,7 @@ def parse_message(message):
                 print k,":",res[k]
         else:
             print res
+    return
 
 # Print in color
 def debug_print(s,color=237):

@@ -1,4 +1,4 @@
-# Produce number of tasks with parameters from given ranges.
+# Execute tasks with provided parameters
 # 2017 (C) Bryzgalov Peter @ CHITEC, Stair Lab
 
 from __future__ import absolute_import, unicode_literals
@@ -11,49 +11,26 @@ from subprocess import Popen, PIPE, STDOUT
 
 @app.task(bind=True,acks_late=True)
 def echo(self, dic={"n":2}):
-    tid = self.request.id
     dic = unjsonify(dic)
     n = int(dic["n"])
     for i in range(0,n):
         time.sleep(1)
-        s = "Title: i="+str(i)
-        print str(tid)+" "+s
-        report(self, s)
-    dic["tid"]=tid
+        report(self, "i="+str(i))
+        dic["i"]=i
     return dic
 
 @app.task(bind=True,acks_late=True)
 def train(self, pars):
-    # Check current dir
-    hostname = ""
-    pipe = Popen(["hostname"], stdout=PIPE, stderr=PIPE, close_fds=True)
-    for line in iter(pipe.stdout.readline, b''):
-        hostname = line
-        print "Hostname: "+ hostname
-    for line in iter(pipe.stderr.readline, b''):
-        if len(line)>0:
-            print "!"+line
+    # Report hostname
+    cmd = ["echo","\"hostname=$(hostname)\""]
+    exec(self, exec(cmd))
 
-    report(self, { "hostname": hostname })
-
+    # Form command
     par = unjsonify(pars)
-
     cmd = ["python","-u", "chainer/examples/mnist/train_mnist.py"]
     for key in par:
         cmd.append(str("--"+key))
         if type(par[key]) is not bool:
             cmd.append(str(par[key]))
     report(self, {"Command": " ".join(cmd)})
-    print " ".join(cmd)
-    pipe = Popen(cmd, stdout=PIPE, stderr=PIPE, close_fds=True)
-
-    for line in iter(pipe.stdout.readline, b''):
-        report(self,line.rstrip())
-
-    for line in iter(pipe.stderr.readline, b''):
-        if len(line)>0:
-            debug_print(line.rstrip())
-
-
-
-
+    exec(self, exec(cmd))
