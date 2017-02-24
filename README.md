@@ -22,6 +22,8 @@ This framework makes use of [Celery](http://www.celeryproject.org)  with RabbitM
 	- [chainer](#chainer)
 		- [train task](#train-task)
 		- [YAML file format](#yaml-file-format)
+- **[Creating new project](#creating-new-project)**
+
 
 
 &nbsp;
