@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, unicode_literals
 from .celery import app
-from .master_functions import *
+from lib.master_functions import *
 from .tasks import train, echo
 from subprocess import Popen, PIPE, STDOUT
 import numpy as np

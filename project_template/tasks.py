@@ -3,7 +3,7 @@
 
 from __future__ import absolute_import, unicode_literals
 from .celery import app
-from .worker_functions import *
+from lib.worker_functions import *
 import time
 
 

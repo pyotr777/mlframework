@@ -111,12 +111,12 @@ if [[ -n "$REMOTE" ]]; then
 	echo $ssh_com
 	if [[ -n "$debug" ]]; then
 		if [[ "$debug" == "2" ]]; then
-			OPT="-aviic --progress"
+			OPT="-avviic --progress"
 		else
 			OPT="-avic --progress"
 		fi
 	else
-		OPT="-avc --progress"
+		OPT="-ac --progress"
 	fi
 
 	if [[ -n "$debug" ]]; then
@@ -125,7 +125,7 @@ if [[ -n "$REMOTE" ]]; then
 	# Copy task files to remote
 	eval rsync $OPT $SSH_KEY --exclude-from "rsyncexclude_task.txt"  ./$PROJ_FOLDER/ $rhost:$REMOTE_PATH/$PROJ_FOLDER/
 	# Copy framework files to remote
-	eval rsync $OPT $SSH_KEY --include-from "rsyncinclude_framework.txt" --exclude='*' --size-only  ./ $rhost:$REMOTE_PATH/
+	eval rsync $OPT $SSH_KEY --include-from "rsyncinclude_framework.txt" --exclude='*' ./ $rhost:$REMOTE_PATH/
 	exit 0
 fi
 

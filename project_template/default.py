@@ -4,14 +4,18 @@
 
 from __future__ import absolute_import, unicode_literals
 from .celery import app
-from .master_functions import *
+from lib.master_functions import *
 from .tasks import *
 from subprocess import Popen, PIPE, STDOUT
 import numpy as np
+import os
 
 
 if __name__ == '__main__':
-
+    print os.environ.get('DEBUG')
+    if os.environ.get('DEBUG') is not None:
+        print "default.py is in debug mode"
+        debug = os.environ.get('DEBUG')
     # Open file for writing results
     f= open("output.csv","w")
 
@@ -23,20 +27,22 @@ if __name__ == '__main__':
         line = paramatrix[l][1:]
         combinations = joinLists(combinations, line)
 
-    debug_print("Have "+str(len(combinations))+" combinations.",243)
+    if debug is not None:
+        debug_print("Have "+str(len(combinations))+" combinations.",243)
     # Wrap combinataions into dictionary
     base_pars = {
     }
     results = []
-    debug_print("paramatrix: "+str(paramatrix))
-    debug_print("combinations:"+str(combinations))
+    if debug is not None:
+        debug_print("paramatrix: "+str(paramatrix))
+        debug_print("combinations:"+str(combinations))
     for c in range(0,len(combinations)):
         dic=base_pars
         for l in range(0, len(paramatrix)):
             dic[paramatrix[l][0]]=str(combinations[c][l])
         result = default.delay(jsonify(dic))
-        debug_print("New task: "+str(result.id), 20)
-        debug_print("Paramters: "+str(dic),20)
+        debug_print("Task ID: "+str(result.id), 20)
+        debug_print("Param-s: "+str(dic),20)
         results.append(result)
         s = str(result.id) + ","
         for k in dic:

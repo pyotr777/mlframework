@@ -26,11 +26,20 @@ fi
 
 master_host="$(./get_master_host.sh)"
 
+if [[ -n "$debug" ]]; then
+	ENV_OPT="-e DEBUG=$debug"
+fi
 cmd="python -m $PROJ_FOLDER.$TASK"
-cmd="docker exec -t $celery_cont_name $cmd"
-echo "Run $cmd in container $celery_cont_name on host $master_host with ssh $key_opt"
+cmd="docker exec -t $ENV_OPT $celery_cont_name $cmd"
+if [[ -n "$debug" ]]; then
+	echo "Run $cmd in container $celery_cont_name on host $master_host with ssh $key_opt"
+fi
 
 echo "#!/bin/bash" > $cmd_filename
+if [[ -n "$debug" ]]; then
+	echo "export DEBUG=$debug" >> $cmd_filename
+	echo "cat $cmd_filename" >> $cmd_filename
+fi
 echo "$cmd" >> $cmd_filename
 
 
