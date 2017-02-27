@@ -216,9 +216,9 @@ If you wish to reuse infrastructure configuration, also edit
 * config.sh in mlframework top folder.
 
 
-In instructions below `<project name>` is the name of your project folder, `<command to run>` is a relative path to the executable file of the program to be run or any other command that should be executed to run the project. Task parameters will be added to this command. 
+In instructions below `<project name>` is the name of your project folder, `<command to run>` is a relative path from mlframework folder to the executable file of the program to be run or any other command that should be executed to run the project. Task parameters will be added to this command. 
 
-For example, if your project name is my_proj it should be copied into `my_proj` folder inside mlframework folder. Let's assume the executable file is a python script in `runnable` subfolder and its name is `run.py`. In this case `<project name>` is `my_proj` and `<command to run>` is `["python", "-u",  "runnable/run.py"]`*.
+For example, if your project name is my_proj it should be copied into `my_proj` folder inside mlframework folder. Let's assume the executable file is a python script in `runnable` subfolder and its name is `run.py`. In this case `<project name>` is `my_proj` and `<command to run>` is `["python", "-u",  "my_proj/runnable/run.py"]`*.
 
 *
 It is also possible to write command as a string: `"python -u runnable/run.py"`. Option -u is used to disable stdout buffering.
