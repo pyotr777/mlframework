@@ -237,7 +237,7 @@ app = Celery('<project name>',
 
 #### default.py
 
-on line 18:
+on line 21:
 
 ```
 paramatrix=yaml2Matrix("<project name>/parameters.yml")
@@ -254,11 +254,6 @@ cmd = <command to run>
 ```
 
 
-#### config.sh
-
-```
-PROJ_FOLDER="<project name>"
-```
 
 Finally edit **parameters.yml** file.
 
