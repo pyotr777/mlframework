@@ -249,9 +249,11 @@ for rhost in "${remote_hosts[@]}"; do
 	if [[ -z "$docker_version" ]]; then
 		error_message "Docker is not installed on $rhost."
 		while true; do
-			read -p "Use Docker installer script for Ubuntu? [y/n]" yn
+			printf "Install docker / nvidia-docker?\n1 - Install docker,\n2 - install nvidia-docker,\nn - do not install and quit infrainit."
+			read -p "[1/2/n]" yn
 			case $yn in
-				[Yy]* ) cp install_docker_ubuntu.sh remote_command.sh; RemoteExec remote_command.sh $rhost "$key_opt"; break;;
+				[1]* ) cp nvdocker_install/install_docker_ubuntu.sh remote_command.sh; RemoteExec remote_command.sh $rhost "$key_opt"; break;;
+				[2]* ) cp nvdocker_install/install_nvdocker_ubuntu.sh remote_command.sh; RemoteExec remote_command.sh $rhost "$key_opt"; break;;
 				[Nn]* ) exit;;
 				* ) echo "Please answer yes [y] or no [n].";;
 			esac
