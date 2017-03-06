@@ -252,8 +252,8 @@ for rhost in "${remote_hosts[@]}"; do
 			printf "Install docker / nvidia-docker?\n1 - Install docker,\n2 - install nvidia-docker,\nn - do not install and quit infrainit."
 			read -p "[1/2/n]" yn
 			case $yn in
-				[1]* ) cp nvdocker_install/install_docker_ubuntu.sh remote_command.sh; RemoteExec remote_command.sh $rhost "$key_opt"; break;;
-				[2]* ) cp nvdocker_install/install_nvdocker_ubuntu.sh remote_command.sh; RemoteExec remote_command.sh $rhost "$key_opt"; break;;
+				[1]* ) cd nvdocker_install; ./install_docker_ubuntu.sh $rhost "$key_opt"; cd -; break;;
+				[2]* ) cd nvdocker_install; ./install_nvdocker_ubuntu.sh $rhost "$key_opt"; cd -; break;;
 				[Nn]* ) exit;;
 				* ) echo "Please answer yes [y] or no [n].";;
 			esac
