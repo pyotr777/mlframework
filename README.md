@@ -237,7 +237,7 @@ app = Celery('<project name>',
 
 #### default.py
 
-on line 21:
+on line 22:
 
 ```
 paramatrix=yaml2Matrix("<project name>/parameters.yml")
@@ -259,6 +259,8 @@ Finally edit **parameters.yml** file.
 
 
 ### Run project
+
+Make sure your machines, one for master and some for workers, are running and **docker** is installed on all of them. If you plan to use GPU on workers install **nvidia-docker** also.
 
 To run the new project execute the following commands (we use config.sh file) in mlframework top folder.
 
