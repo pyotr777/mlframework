@@ -12,6 +12,7 @@ import os
 
 
 if __name__ == '__main__':
+    debug = None
     if os.environ.get('DEBUG') is not None:
         print "default.py is in debug mode"
         debug = os.environ.get('DEBUG')
