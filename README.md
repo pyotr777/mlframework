@@ -1,6 +1,6 @@
 # Python framework for distributed execution of computational tasks
 
-This framework is used to execute computational tasks on a number of computers. Tasks are executed in parallel. This framework creates one _master_ process and a number of _worker_ processes. Master process is responsible for creating a number of computational tasks (commands) that would be executed by worker processes. 
+This framework is used to execute computational tasks on multiple computers. Tasks are executed in parallel. This framework creates one _master_ process and a number of _worker_ processes. Master process is responsible for creating a number of computational tasks (commands) that would be executed by worker processes. 
 
 
 This framework makes use of [Celery](http://www.celeryproject.org)  with RabbitMQ broker for distributing tasks among workers. [Flower](http://flower.readthedocs.io/en/latest/) can be used for monitoring.
