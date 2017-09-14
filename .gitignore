@@ -11,3 +11,5 @@ config.sh
 *.tar
 *.csv
 /config*
+*.sublime*
+
