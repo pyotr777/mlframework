@@ -10,6 +10,12 @@ NV_DRV="x"
 CUDA="x"
 cuDNN="x"
 
+debug="yes"
+
+if [ "$debug" ]; then
+	echo "$(basename $0) arguments: $@"
+fi
+
 function return_states {
 	echo "NVDRV:$NV_DRV,CUDA:$CUDA,cuDNN:$cuDNN"
 	exit 0
