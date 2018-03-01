@@ -29,7 +29,7 @@ ARGS_arr=($2)
 # If ARGS_arr has more than 1 element, then split.
 if [ ${#ARGS_arr[@]} -gt 1 ]; then
 	REMOTE_COMMAND=${ARGS_arr[0]}
-	unset ARGS_arr[0]
+	unset ARGS_arr[0]	
 	ARGS="${ARGS_arr[@]}"
 else
 	# Command and argumnets supplied as different parameters
