@@ -9,7 +9,7 @@
 
 usage=$(cat <<USAGEBLOCK
 Usage:
-$0 <remote address> <command>
+$(basename $0) <remote address> <command>
 USAGEBLOCK
 )
 
@@ -23,17 +23,17 @@ if [[ $# < 2 ]]; then
 fi
 
 REMOTE_ADDRESS="$1"
-# If command with arguments suplied as a string $2 has command with arguments. 
+# If command with arguments suplied as a string $2 has command with arguments.
 # Convert $2 to array and split it into REMOTE_COMMAND and ARGS.
 ARGS_arr=($2)
 # If ARGS_arr has more than 1 element, then split.
 if [ ${#ARGS_arr[@]} -gt 1 ]; then
 	REMOTE_COMMAND=${ARGS_arr[0]}
-	unset ARGS_arr[0]	
+	unset ARGS_arr[0]
 	ARGS="${ARGS_arr[@]}"
 else
 	# Command and argumnets supplied as different parameters
-	REMOTE_COMMAND=$2; shift
+	REMOTE_COMMAND=$2; shift; shift
 	ARGS="$@"
 fi
 SCRIPT_FILE_PATH="$SCRIPTS_FOLDER/$REMOTE_COMMAND"
@@ -58,12 +58,12 @@ if [ -x "$SCRIPT_FILE_PATH" ]; then
 		scp "$SCRIPT_FILE_PATH" "$REMOTE_ADDRESS:$TMP_FILE" 2>/dev/null
 		ssh "$REMOTE_ADDRESS" "./$TMP_FILE $ARGS && rm $TMP_FILE" 2>/dev/null
 	fi
-	
+
 else
 	if [ $DEBUG ]; then
-		echo "Run $REMOTE_COMMAND command on $REMOTE_ADDRESS"
-		ssh "$REMOTE_ADDRESS" "$REMOTE_COMMAND $ARGS"
+		echo "Run $REMOTE_COMMAND $ARGS command on $REMOTE_ADDRESS"
+		ssh "$REMOTE_ADDRESS" $REMOTE_COMMAND $ARGS
 	else
-		ssh "$REMOTE_ADDRESS" "$REMOTE_COMMAND $ARGS" 2>/dev/null
+		ssh "$REMOTE_ADDRESS" $REMOTE_COMMAND $ARGS 2>/dev/null
 	fi
 fi

@@ -60,6 +60,15 @@ def lscom():
     #print "globals:"
     #print globals().keys()
 
+def remote(host,command,*args):
+    if command in command_list:
+        # Command is in list of scripts
+        # Change command name to actual script name
+        command = os.path.join(scripts_location,globals()[command].command)
+        print "Command",command
+    else:
+        print "Command",command,"not found"
+
 # Adds a callable object with given name to the module namespace
 def addCommand(command,name=None,usage=""):
     if command is None:
