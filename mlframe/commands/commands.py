@@ -65,7 +65,7 @@ def remote(host,command,*args):
         # Command is in list of scripts
         # Change command name to actual script name
         command = os.path.join(scripts_location,globals()[command].command)
-        print "Command",command
+        print "Command file is",command
     else:
         print "Command",command,"not found"
 

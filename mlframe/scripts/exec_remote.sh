@@ -14,7 +14,6 @@ USAGEBLOCK
 )
 
 DEBUG="Yes"
-SCRIPTS_FOLDER="."
 TMP_FILE="remote_command_.sh"
 
 if [[ $# < 2 ]]; then
@@ -23,7 +22,7 @@ if [[ $# < 2 ]]; then
 fi
 
 REMOTE_ADDRESS="$1"
-# If command with arguments suplied as a string $2 has command with arguments.
+# If command with arguments supplied as a string, $2 has command with arguments.
 # Convert $2 to array and split it into REMOTE_COMMAND and ARGS.
 ARGS_arr=($2)
 # If ARGS_arr has more than 1 element, then split.
@@ -36,7 +35,7 @@ else
 	REMOTE_COMMAND=$2; shift; shift
 	ARGS="$@"
 fi
-SCRIPT_FILE_PATH="$SCRIPTS_FOLDER/$REMOTE_COMMAND"
+SCRIPT_FILE_PATH="$REMOTE_COMMAND"
 
 if [ $DEBUG ]; then
 	echo "REMOTE_ADDRESS=$REMOTE_ADDRESS"
@@ -53,10 +52,10 @@ if [ -x "$SCRIPT_FILE_PATH" ]; then
 	if [ $DEBUG ]; then
 		echo "Run $SCRIPT_FILE_PATH $ARGS on $REMOTE_ADDRESS"
 		scp "$SCRIPT_FILE_PATH" "$REMOTE_ADDRESS:$TMP_FILE"
-		ssh "$REMOTE_ADDRESS" "./$TMP_FILE $ARGS && rm $TMP_FILE"
+		ssh "$REMOTE_ADDRESS" "./$TMP_FILE $ARGS && echo \"Exit code \$?\" && rm $TMP_FILE"
 	else
 		scp "$SCRIPT_FILE_PATH" "$REMOTE_ADDRESS:$TMP_FILE" 2>/dev/null
-		ssh "$REMOTE_ADDRESS" "./$TMP_FILE $ARGS && rm $TMP_FILE" 2>/dev/null
+		ssh "$REMOTE_ADDRESS" "./$TMP_FILE $ARGS && echo \"Exit code \$?\" && rm $TMP_FILE" 2>/dev/null
 	fi
 
 else
@@ -67,3 +66,4 @@ else
 		ssh "$REMOTE_ADDRESS" $REMOTE_COMMAND $ARGS 2>/dev/null
 	fi
 fi
+
