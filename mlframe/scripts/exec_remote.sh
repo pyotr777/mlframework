@@ -17,6 +17,7 @@ DEBUG="Yes"
 TMP_FILE="remote_command_.sh"
 
 if [[ $# < 2 ]]; then
+	echo "ARGs: $@"
 	echo "$usage"
 	exit 0
 fi
@@ -60,7 +61,7 @@ if [ -x "$SCRIPT_FILE_PATH" ]; then
 
 else
 	if [ $DEBUG ]; then
-		echo "Run $REMOTE_COMMAND $ARGS command on $REMOTE_ADDRESS"
+		echo "Run command $REMOTE_COMMAND $ARGS on $REMOTE_ADDRESS"
 		ssh "$REMOTE_ADDRESS" $REMOTE_COMMAND $ARGS
 	else
 		ssh "$REMOTE_ADDRESS" $REMOTE_COMMAND $ARGS 2>/dev/null
