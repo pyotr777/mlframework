@@ -5,6 +5,7 @@ if [ $1 ]; then
 fi
 echo "Running test command on $(hostname)"
 for i in {1..6}; do
-	echo "$(hostname)$N:$i"
-	sleep 2
+	echo "$(hostname)($N):$i"
+	sleep 1
+	echo "$(hostname) err" >&2
 done

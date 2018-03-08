@@ -13,7 +13,7 @@ $(basename $0) <remote address> <command>
 USAGEBLOCK
 )
 
-DEBUG="Yes"
+DEBUG=""
 TMP_FILE="remote_command_.sh"
 
 if [[ $# < 2 ]]; then
@@ -56,7 +56,7 @@ if [ -x "$SCRIPT_FILE_PATH" ]; then
 		ssh "$REMOTE_ADDRESS" "./$TMP_FILE $ARGS && echo \"Exit code \$?\" && rm $TMP_FILE"
 	else
 		scp "$SCRIPT_FILE_PATH" "$REMOTE_ADDRESS:$TMP_FILE" 2>/dev/null
-		ssh "$REMOTE_ADDRESS" "./$TMP_FILE $ARGS && echo \"Exit code \$?\" && rm $TMP_FILE" 2>/dev/null
+		ssh "$REMOTE_ADDRESS" "./$TMP_FILE $ARGS && echo \"exitcode=\$?\" && rm $TMP_FILE"
 	fi
 
 else
